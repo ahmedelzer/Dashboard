@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
 import UnauthenticatedContent from './UnauthenticatedContent';
+import App2 from './Dashbord';
 
 function App() {
   const { user, loading } = useAuth();
@@ -34,6 +35,7 @@ export default function Root() {
         <NavigationProvider>
           <div className={`app ${screenSizeClass}`}>
             <App />
+            {/* <App2/> */}
           </div>
         </NavigationProvider>
       </AuthProvider>

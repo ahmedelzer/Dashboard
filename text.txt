@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test</title>
+</head>
+<body>
+  <script>
+    // Paste your JavaScript code here
+    const apiRequest = {
+      dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+      dashboardFormActionMethodType: "Get",
+      routeAdderss: "Dashboard/GetDashboardMenuCategories",
+      body: null,
+      dashboardFormSchemaActionQueryParamters: [
+        {
+          dashboardFormSchemaActionQueryParamterID: "5c060feb-679d-45fe-b48a-4ebce6fec77f",
+          dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+          paramterName: "Pagination.PageSize",
+          paramterFieldDashboardFormParamter: "pageSize"
+        },
+        {
+          dashboardFormSchemaActionQueryParamterID: "bc7e84f0-42d6-4124-a7e8-587b8ea1d480",
+          dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+          paramterName: "Pagination.PageNumber",
+          paramterFieldDashboardFormParamter: "pageIndex"
+        }
+      ]
+    };
+
+    // Create URL with parameters
+    const baseUrl = "http://ihs.ddnsking.com/api/";
+    const queryParams = apiRequest.dashboardFormSchemaActionQueryParamters
+      .map(param => ${param.paramterFieldDashboardFormParamter}=${encodeURIComponent(param.paramterName)})
+      .join("&");
+    const apiUrl = ${baseUrl}${apiRequest.routeAdderss}?${queryParams};
+
+    console.log(apiUrl);
+  </script>
+</body>
+</html>

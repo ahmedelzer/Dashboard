@@ -19,7 +19,6 @@ export default function SideNavOuterToolbar({ title, children }) {
   const [menuStatus, setMenuStatus] = useState(
     isLarge ? MenuStatus.Opened : MenuStatus.Closed
   );
-
   const toggleMenu = useCallback(({ event }) => {
     setMenuStatus(
       prevMenuStatus => prevMenuStatus === MenuStatus.Closed
@@ -107,6 +106,8 @@ export default function SideNavOuterToolbar({ title, children }) {
     </div>
   );
 }
+
+
 
 const MenuStatus = {
   Closed: 1,

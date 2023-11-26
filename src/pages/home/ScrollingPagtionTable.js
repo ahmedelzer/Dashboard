@@ -1,7 +1,4 @@
 import React ,{ useCallback, Suspense, useReducer, useState} from 'react';
-// // // import TextBox from 'devextreme-react/text-box';
-// // // import DateBox from 'devextreme-react/date-box';
-// // // import { VirtualTable } from '@devexpress/dx-react-grid-material-ui';
 import {
   VirtualTableState,
 } from '@devexpress/dx-react-grid';
@@ -21,6 +18,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import { DropDownBox} from 'devextreme-react';
 import { Switch } from "devextreme-react/switch";
+import { dataCellRender } from './DataCeller';
 
   const App2 = () => {
   const onValueChanged = useCallback((e) => {
@@ -92,20 +90,6 @@ console.log(dataSource)
     <React.Fragment>
     <h2 className={'content-block'}>tasks</h2>
     <Suspense fallback={<div>Loading...</div>}>
-      {/* <DropDownBox
-              valueExpr="ID"
-              displayExpr="name"
-              placeholder="Select a value..."
-              showClearButton={true}
-            >
-        <Switch 
-        onValueChanged={onValueChanged}
-        value={true}
-        width={80}
-        rtlEnabled={true}
-        hint={hintMessage}
-
-        /> */}
 <DataGrid
       className={'dx-card wide-card'}
       dataSource={dataSource}
@@ -115,24 +99,9 @@ console.log(dataSource)
       columnAutoWidth={true}
       columnHidingEnabled={true}
       onCellClick={Console}
-      // onScroll={()=>setscroll(scorll+1)}
-      // width={1450}
-      // loadPanel={true}
-      // customizeColumns={70}
-      // onContentReady={false}
-      // height={1000}
       showBorders={true}
       height={440}
-      // keyExpr="id"
-      // customizeColumns={customizeColumns}
     >
-       {/* <VirtualTableState
-          loading={loading}
-          totalRowCount={totalCount}
-          pageSize={VIRTUAL_PAGE_SIZE}
-          skip={skip}
-          getRows={getRemoteRows}
-        /> */}
       <Paging enabled={true} />
           <Editing
             mode="row"
@@ -140,68 +109,51 @@ console.log(dataSource)
             // allowDeleting={true}
             allowAdding={true} />
                     
-      {/* <Paging
-      pageSize={50}
-      pageIndex={currentPage - 1}
-      defaultPageIndex={50}
-      enabled={false}
-      onPageSizeChange={(e) => setPageSize(e.component.option('value'))}
-      onPageIndexChange={(e) => setCurrentPage(e.component.option('pageIndex') + 1)}
-      /> */}
-                <Scrolling mode='virtual'/>
+                <Scrolling mode=' ro'wRenderingMode="" />
         <LoadPanel enabled={true} />
         <FilterRow visible={true} />
         <Selection mode="single" />
         <Paging enabled={true} />
+        {data?.map((item, index) => (
+        <div key={index}>
+          <h2>{item.schemaType}</h2>
+          <Switch
+        onValueChanged={onValueChanged}
+        value={true}
+        width={80}
+        rtlEnabled={true}
+        />
+          <DataGrid
+            dataSource=
+            {datacatgory.data}
+            showBorders={true}
+            allowColumnReordering={false}
+            key={index}
+          >
+            <FilterRow visible={true} />
+        <Selection mode="single" />
+                <Scrolling mode='virtual' rowRenderingMode="" />
+                <Paging enabled={true} />
+          <Editing
+            mode="row"
+            allowUpdating={true}
+            allowAdding={true} />
+              
+            {item?.dashboardFormSchemaParamters?.map((property, propIndex) => (
+              
+              <Column
+                key={property.dashboardFormSchemaID}
+                dataField={property.parameterField}
+                caption={property.parameterTitel}
+                allowEditing={false}
+                cellRender={ dataCellRender(property.parameterType,property.isEnable,propIndex)}
+              />
+              ))}
+              <Lookup dataSource={item.parameterField} displayExpr="Name" valueExpr="ID" />
+          </DataGrid>
+        </div>
+      ))}
 
-      <Column dataField={'Task_ID'} width={90} hidingPriority={2} />
-      <Column
-        dataField={'Task_Subject'}
-        width={190}
-        caption={'Subject'}
-        hidingPriority={8}
-      />
-      <Column
-        dataField={'Task_Status'}
-        caption={'Status'}
-        hidingPriority={6}
-      />
-      <Column
-        dataField={'Task_Priority'}
-        caption={'Priority'}
-        hidingPriority={5}
-      >
-      </Column>
-      <Lookup dataSource={priorities} displayExpr="Name" valueExpr="ID" />
-      <Column
-        dataField={'ResponsibleEmployee.Employee_Full_Name'}
-        caption={'Assigned To'}
-        allowSorting={false}
-        hidingPriority={7}
-      />
-      <Column
-        dataField={'Task_Start_Date'}
-        caption={'Start Date'}
-        dataType={'date'}
-        hidingPriority={3}
-      />
-      <Column
-        dataField={'Task_Due_Date'}
-        caption={'Due Date'}
-        dataType={'date'}
-        hidingPriority={4}
-      />
-      <Column
-        dataField={'Task_Priority'}
-        caption={'Priority'}
-        name={'Priority'}
-        hidingPriority={1}
-      />
-      <Column
-        dataField={'Task_Completion'}
-        caption={'Completion'}
-        hidingPriority={0}
-      />
     </DataGrid>
             {/* </DropDownBox> */}
     </Suspense>
@@ -237,4 +189,3 @@ const priorities = [
   { name: 'Normal', value: 2 },
   { name: 'Low', value: 1 }
 ];
-  

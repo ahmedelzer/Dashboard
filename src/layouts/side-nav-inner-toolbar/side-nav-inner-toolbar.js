@@ -53,7 +53,6 @@ export default function SideNavInnerToolbar({ title, children }) {
       event.preventDefault();
       return;
     }
-
     navigate(itemData.path);
     scrollViewRef.current.instance.scrollTo(0);
 
@@ -62,7 +61,6 @@ export default function SideNavInnerToolbar({ title, children }) {
       event.stopPropagation();
     }
   }, [navigate, menuStatus, isLarge]);
-
   return (
     <div className={'side-nav-inner-toolbar'}>
       <Drawer

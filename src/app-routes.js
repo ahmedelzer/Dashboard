@@ -1,4 +1,4 @@
-import { HomePage, TasksPage, ProfilePage } from './pages';
+import { DynmicTable, TasksPage, ProfilePage } from './pages';
 import { withNavigationWatcher } from './contexts/navigation';
 
 const routes = [
@@ -11,8 +11,8 @@ const routes = [
         element: ProfilePage
     },
     {
-        path: '/home',
-        element: HomePage
+        path: '/dynmicTable/:id',
+        element: DynmicTable
     }
 ];
 

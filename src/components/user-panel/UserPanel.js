@@ -4,6 +4,7 @@ import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
 import { useAuth } from '../../contexts/auth';
 import './UserPanel.scss';
+import { BiWorld } from "react-icons/bi";
 
 
 export default function UserPanel({ menuMode }) {

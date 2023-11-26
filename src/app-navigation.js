@@ -1,6 +1,8 @@
-export const navigation = [
+
+export const navigation=
+[
   {
-    text: 'Home',
+    text: 'home',
     path: '/home',
     icon: 'home'
   },
@@ -9,7 +11,7 @@ export const navigation = [
     icon: 'folder',
     items: [
       {
-        text: 'Profile',
+        text: 'profile',
         path: '/profile'
       },
       {
@@ -19,3 +21,6 @@ export const navigation = [
     ]
   }
   ];
+
+
+

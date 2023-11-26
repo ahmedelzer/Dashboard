@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,94 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.spinner {
+  animation: rotate 2s linear infinite;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  width: 50px;
+  height: 50px;
+}
+.spinner .path {
+  stroke: #ff5722;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+/* .example::-webkit-scrollbar {
+  display: none;
+}
+::-webkit-scrollbar {
+  width: 0px !important;
+}
+::-webkit-scrollbar-track {
+  background-color: white;
+} */
+::-webkit-scrollbar-thumb {
+  background-color: red;
+}
+.dx-scrollable-scroll{
+  z-index: 200;
+  /* background-color: #ff5722;
+  color: #ff5722; */
+}
+.dx-scrollbar-hoverable .dx-scrollable-scroll.dx-state-invisible .dx-scrollable-scroll-content{
+  background-color: #ff5722;
+}
+.dx-scrollable-scroll-content {
+  position: absolute;
+  z-index: 200;
+}
+.dx-scrollbar-vertical .dx-scrollbar-hoverable {
+  width: 20px !important;
+  height: 100px !important;
+  background-color: #ff5722;
+  color: #ff5722;
+}
+
+.dx-scrollbar-vertical .dx-scrollable-scroll {
+  width: 20px !important;
+  height: 100px !important;
+  /* color: #ff5722;
+  background-color: #ff5722; */
+}
+/* 
+.dx-scrollbar-horizontal .dx-scrollbar-hoverable {
+  height: 20px !important;
+}
+
+.dx-scrollbar-horizontal .dx-scrollable-scroll {
+  height: 20px !important;
+  color: #ff5722;
+  background-color: #ff5722;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ff5722;
+} */
+.cards{
+  /* height: 2000px; */
 }
