@@ -1,6 +1,6 @@
-export default async function fetchDataWithHandling(url, methodType, sendBody) {
+export default async function APIHandling(url, methodType, sendBody) {
   try {
-    const response = await fetch(url, {
+    const response = await fetch("http://ihs.ddnsking.com/api/"+url, {
       method: methodType,
       headers: {
         'Content-Type': 'application/json',
@@ -8,7 +8,7 @@ export default async function fetchDataWithHandling(url, methodType, sendBody) {
       },
       body: methodType !== 'GET' ? JSON.stringify(sendBody) : null
     });
-
+    console.error('a11:', response);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

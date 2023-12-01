@@ -45,10 +45,12 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
         locateInMenu='auto'
         >
           <Button
-            width={open? 80:30}
+            width={open? 70:30}
             onClick={()=>setopen(true)}
             height={'100%'}
             stylingMode={'text'}
+            rtlEnabled={false}
+            className={open? '!cursor-auto':'!cursor-pointer'} 
           >
             {
               open?

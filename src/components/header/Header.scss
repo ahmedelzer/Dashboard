@@ -1,6 +1,16 @@
 @import "../../themes/generated/variables.base.scss";
 @import "../../dx-styles.scss";
 
+.circle-container {
+  width: 45px; /* Adjust the width and height based on your preference */
+  height: 45px;
+  border-radius: 50%;
+  background-color:  #ff5722; /* Change the background color as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .header-component {
   flex: 0 0 auto;
   z-index: 1;

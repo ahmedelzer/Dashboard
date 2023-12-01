@@ -21,29 +21,26 @@ import {
   Button, Modal, ModalHeader, ModalBody, ModalFooter,
   Container, Row, Col, Label, FormGroup, Input,
 } from 'reactstrap';
-import fetchDataWithHandling from '../../components/hooks/FechUrl'
+import { MdEdit } from "react-icons/md";
+import fetchDataWithHandling from '../hooks/APIsFunctions/APIHandling'
 import {
   Plugin, Template, TemplateConnector, TemplatePlaceholder,
 } from '@devexpress/dx-react-core';
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
-import useFetch from '../../components/hooks/useFetch';
+import useFetch from '../hooks/APIsFunctions/useFetch';
+import { FaCirclePlus } from "react-icons/fa6";
+import { buildApiUrl } from '../hooks/FormsFunctions/BuildApiUrl';
+import APIHandling from '../hooks/APIsFunctions/APIHandling';
+import DataCellRender from '../hooks/FormsFunctions/DataCeller';
+import { DataGrid } from 'devextreme-react';
 
-import { buildApiUrl } from './BuildApiUrl';
-import { Editing } from 'devextreme-react/data-grid';
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const URL = 'https://js.devexpress.com/Demos/WidgetsGalleryDataService/api/Sales';
 const buildQueryString = (skip, take) => (
   `${URL}?requireTotalCount=true&skip=${skip}&take=${take}`
 );
-function FieldGroup({ id, label, ...props }) {
-  return (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input {...props} />
-    </FormGroup>
-  );
-}
+
 const getRowId = row => row.dashboardMenuCategoryId;
 
 const initialState = {
@@ -94,21 +91,25 @@ const dataSourceAPI =(query,skip, take) =>  buildApiUrl(query,
   pageIndex: (skip/take)+1,
   pageSize: take
  });
-const DynamicTable = ({ schema }) => {
-  const { data } = useFetch(`/Dashboard/GetDashboardSchemaActionsBySchemaID?DashboardSchemaID=${schema[0].dashboardFormSchemaID}`);
+ const DynamicTable = ({ schema,isSearchingTable,rowDoubleClick=null }) => {
+
+  //s = schema[0];
+
+  console.log(schema)
+  const { data } = useFetch(`/Dashboard/GetDashboardSchemaActionsBySchemaID?DashboardSchemaID=${schema.dashboardFormSchemaID}`);
   const schemaActions = data;
+
 
 const getAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Get')[0];
 const postAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Post')[0];
 const putAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Put')[0];
-console.log(2)
-// console.log(getAction)
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
-
+console.log(14)
+console.log(data)
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
-    const dynamicColumns = schema[0]?.dashboardFormSchemaParameters?.map(param => ({
+    const dynamicColumns = schema?.dashboardFormSchemaParameters?.map(param => ({
       name: param.parameterField,
       title: param.parameterTitel,
       getCellValue: row => row[param.parameterField],
@@ -140,13 +141,7 @@ console.log(2)
     const {
       requestedSkip, take, lastQuery, loading,
     } = state;
-    console.log(4);
-    console.log(requestedSkip);
-    console.log(5);
-    console.log(take);
     const query = dataSourceAPI(getAction,requestedSkip, take);
-    console.log(1);
-    console.log(query);
     if (query !== lastQuery && !loading) {
       const cached = cache.getRows(requestedSkip, take);
       if (cached.length === take) {
@@ -156,7 +151,6 @@ console.log(2)
         fetch(query)
           .then(response => response.json())
           .then(({ dataSource, count  }) => {
-            //MAX_ROWS = count;
             cache.setRows(requestedSkip, dataSource);
             updateRows(requestedSkip, take, count);
           })
@@ -183,11 +177,11 @@ console.log(2)
     onApplyChanges,
     onCancelChanges,
     open,
+    tableSchema, // Assuming schema is passed as a prop
   }) => {
     const isNewRow = !row.dashboardMenuCategoryId;
-    console.log(row)
-    let rows= [row]
-    console.log(rows)
+    let rows = [row];
+    console.log(tableSchema?.dashboardFormSchemaParameters)
     return (
       <Modal isOpen={open} onClose={onCancelChanges} aria-labelledby="form-dialog-title">
         <ModalHeader id="form-dialog-title">
@@ -196,37 +190,33 @@ console.log(2)
         <ModalBody>
           <Container>
             <Row>
-              <Col sm={6} className="px-2">
-                <FieldGroup
-                  name="dashboardMenuCategoryId"
-                  label="Dashboard Menu Category Id"
-                  value={row.dashboardMenuCategoryId}
-                  onChange={onChange}
-                />
-              </Col>
-              <Col sm={6} className="px-2">
-                <FieldGroup
-                  name="dashboardMenuCategoryName"
-                  label="Dashboard Menu Category Name"
-                  value={row.dashboardMenuCategoryName}
-                  onChange={onChange}
-                />
-              </Col>
+              {tableSchema?.dashboardFormSchemaParameters?.map((param, index) => (
+                <Col sm={param.lookupID===null ? 6:12} className="px-2" key={index} >
+                  
+                <DataCellRender
+        data={param}
+        value={row[param.parameterField]}
+        onChange={onChange}
+      />
+
+                </Col>
+              ))}
             </Row>
           </Container>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onCancelChanges} color="secondary">
+          <Button onClick={onCancelChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
             Cancel
           </Button>
           {' '}
-          <Button onClick={onApplyChanges}  color="primary">
+          <Button onClick={onApplyChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
             Save
           </Button>
         </ModalFooter>
       </Modal>
     );
   };
+  
   
   const PopupEditing = React.memo(({ popupComponent: Popup }) => (
     <Plugin>
@@ -268,10 +258,20 @@ console.log(2)
               } else {
                 changeRow(changeArgs);
               }
+              console.log(144)
+              console.log(editedRow)
             };
             const rowIds = isNew ? [0] : editingRowIds;
+            
             const applyChanges = () => {
               if (isNew) {
+                console.log(145)
+              console.log(editedRow)
+               APIHandling(
+                   postAction.routeAdderss,
+                   postAction.dashboardFormActionMethodType,
+                   editedRow
+                   )
                 commitAddedRows({ rowIds });
               } else {
                 stopEditRows({ rowIds });
@@ -287,7 +287,6 @@ console.log(2)
               }
             };
   
-            console.log(rowId)
             const open = editingRowIds.length > 0 || isNew;
             return (
               <Popup
@@ -296,6 +295,7 @@ console.log(2)
                 onChange={processValueChange}
                 onApplyChanges={applyChanges}
                 onCancelChanges={cancelChanges}
+                tableSchema={schema}
               />
             );
           }}
@@ -324,29 +324,43 @@ console.log(2)
       changedRows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
     }
     // setRows(changedRows);
+   
   };
-  
+  const handleRowDoubleClick = (row) => {
+    console.log('Double-clicked row:', row);
+    // Handle double-click on the row
+  };
+
+  const CustomRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      onDoubleClick={() => rowDoubleClick(row)}
+      style={{ cursor: 'pointer' }}
+    />
+  );
   return (
     <div className="card">
       <Grid
         rows={rows}
         columns={columns}
         getRowId={getRowId}
+        i18nIsDynamicList={true}
+        
       >
-        {/* <Editing
-            mode="row"
-            allowUpdating={true}
-            // allowDeleting={true}
-            allowAdding={true} /> */}
         <EditingState
           onCommitChanges={commitChanges}
         />
-        <Table />
-        <TableHeaderRow />
+        <Table rowComponent={CustomRow}/>
+        
         <TableEditColumn
-          showAddCommand
-          showEditCommand
+        messages={{
+          addCommand: '+',  
+          editCommand: <MdEdit/>
+        }}
+          showAddCommand={!isSearchingTable}
+          showEditCommand={!isSearchingTable}
         />
+        <TableHeaderRow />
         <PopupEditing popupComponent={Popup} />
       </Grid>
     </div>
