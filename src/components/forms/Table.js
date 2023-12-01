@@ -326,10 +326,6 @@ console.log(data)
     // setRows(changedRows);
    
   };
-  const handleRowDoubleClick = (row) => {
-    console.log('Double-clicked row:', row);
-    // Handle double-click on the row
-  };
 
   const CustomRow = ({ row, ...restProps }) => (
     <Table.Row
