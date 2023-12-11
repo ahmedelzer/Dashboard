@@ -9,6 +9,7 @@ import {
   createRowCache,
 } from '@devexpress/dx-react-grid';
 import { EditingState } from '@devexpress/dx-react-grid';
+import Loading from '../loading/Loading'
 import {
   Grid,
   Table,
@@ -17,12 +18,12 @@ import {
   TableEditRow,
   TableEditColumn,
 } from '@devexpress/dx-react-grid-bootstrap4';
+import TestApi from '../hooks/APIsFunctions/TestApi'
 import {
   Button, Modal, ModalHeader, ModalBody, ModalFooter,
   Container, Row, Col, Label, FormGroup, Input,
 } from 'reactstrap';
 import { MdEdit } from "react-icons/md";
-import fetchDataWithHandling from '../hooks/APIsFunctions/APIHandling'
 import {
   Plugin, Template, TemplateConnector, TemplatePlaceholder,
 } from '@devexpress/dx-react-core';
@@ -30,7 +31,7 @@ import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
 import useFetch from '../hooks/APIsFunctions/useFetch';
 import { FaCirclePlus } from "react-icons/fa6";
 import { buildApiUrl } from '../hooks/FormsFunctions/BuildApiUrl';
-import APIHandling from '../hooks/APIsFunctions/APIHandling';
+// import APIHandling from '../hooks/APIsFunctions/APIHandling';
 import DataCellRender from '../hooks/FormsFunctions/DataCeller';
 import { DataGrid } from 'devextreme-react';
 
@@ -42,7 +43,22 @@ const buildQueryString = (skip, take) => (
 );
 
 const getRowId = row => row.dashboardMenuCategoryId;
+let api =[
+   
+{dashboardCategoryName: 'Dashboard Models k', dashboardMenuItems: Array(0)},
 
+{dashboardCategoryName: 'basic modules', dashboardMenuItems: Array(0)},
+
+{dashboardCategoryName: 'tytuitutiu', dashboardMenuItems: Array(0)},
+
+,{dashboardCategoryName: 'Dashboard Models', dashboardMenuItems: Array(2)}
+
+,{dashboardCategoryName: 'sss', dashboardMenuItems: Array(0)}
+
+,{dashboardCategoryName: 'ssss', dashboardMenuItems: Array(0)}
+
+,{dashboardCategoryName: 'Dashboard Mssodels', dashboardMenuItems: Array(0)}
+]
 const initialState = {
   rows: [],
   skip: 0,
@@ -100,12 +116,41 @@ const dataSourceAPI =(query,skip, take) =>  buildApiUrl(query,
   const schemaActions = data;
 
 
+
 const getAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Get')[0];
 const postAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Post')[0];
 const putAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Put')[0];
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
-console.log(14)
+  const [datapost, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+
+function APIHandling(url, methodType, sendBody) {
+    // useEffect(()=>{
+    //   const PostApi=async ()=>{
+        var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  var raw = JSON.stringify({
+    sendBody
+  });
+  
+  var requestOptions = {
+    method: methodType,
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  
+  fetch("http://ihs.ddnsking.com/api/"+url, requestOptions)
+    .then(response => response.text())
+    .then(result =>  setData(result))
+    .catch(error =>  setError(error));
+    
+      }
+    //   PostApi();
+    // },[url,methodType,sendBody])
+  
 console.log(data)
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
@@ -176,11 +221,12 @@ console.log(data)
     onChange,
     onApplyChanges,
     onCancelChanges,
+    Error,
     open,
     tableSchema, // Assuming schema is passed as a prop
   }) => {
     const isNewRow = !row.dashboardMenuCategoryId;
-    let rows = [row];
+    console.log(rows)
     console.log(tableSchema?.dashboardFormSchemaParameters)
     return (
       <Modal isOpen={open} onClose={onCancelChanges} aria-labelledby="form-dialog-title">
@@ -197,6 +243,7 @@ console.log(data)
         data={param}
         value={row[param.parameterField]}
         onChange={onChange}
+        dataeror={datapost}
       />
 
                 </Col>
@@ -239,6 +286,7 @@ console.log(data)
             const isNew = addedRows.length > 0;
             let editedRow;
             let rowId;
+            let Error;;
             if (isNew) {
               rowId = 0;
               editedRow = addedRows[rowId];
@@ -263,20 +311,30 @@ console.log(data)
             };
             const rowIds = isNew ? [0] : editingRowIds;
             
-            const applyChanges = () => {
+            const applyChanges = (event) => {
               if (isNew) {
-                console.log(145)
-              console.log(editedRow)
-               APIHandling(
-                   postAction.routeAdderss,
-                   postAction.dashboardFormActionMethodType,
-                   editedRow
-                   )
-                commitAddedRows({ rowIds });
-              } else {
+              // const postApi = APIHandling(postAction.routeAdderss, postAction.dashboardFormActionMethodType, editedRow);
+              // // postApi.then((res)=> setData(res)).catch((err)=> setError(err))
+              // postApi();
+              APIHandling(postAction.routeAdderss, postAction.dashboardFormActionMethodType, editedRow)
+              console.log(12222222222)
+              console.log(datapost)
+              // console.log(datapost.errors)
+              console.log(error)
+              // if(!data){
+              //   Error=error;
+              // }
+              //   console.log(data)
+              // console.log( editedRow)
+              
+              commitAddedRows({ rowIds });
+              } 
+              else {
                 stopEditRows({ rowIds });
-                commitChangedRows({ rowIds });
+                commitChangedRows({ rowIds }); 
               }
+              console.log(rowIds)
+              // window.location.reload();
             };
             const cancelChanges = () => {
               if (isNew) {
@@ -291,6 +349,7 @@ console.log(data)
             return (
               <Popup
                 open={open}
+                Error={Error}
                 row={editedRow}
                 onChange={processValueChange}
                 onApplyChanges={applyChanges}
@@ -334,6 +393,12 @@ console.log(data)
       style={{ cursor: 'pointer' }}
     />
   );
+  
+  useEffect(()=>{
+    if(!rows){
+      return <Loading/>
+    }
+  },[rows])
   return (
     <div className="card">
       <Grid

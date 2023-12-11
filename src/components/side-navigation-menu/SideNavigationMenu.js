@@ -32,7 +32,7 @@ const {
   Id
 } = props;
   [id, setId] = useState('');
-  console.log(data)
+  console.log('Menu',data)
   let navigation = [];
   data?.dataSource?.map((cat) => {
     navigation = [

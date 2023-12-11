@@ -15,14 +15,30 @@ const handleRowDoubleClick = (row) => {
   console.log('Double-clicked row:', row);
   // Handle double-click on the row
 };
-
-export default function dataCellRender({ data, value, onChange }) {
+export default function dataCellRender({ data, value, onChange,dataeror }) {
+  let dataerors={"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-1184b5a34c4fbbad0b92c62cabfe86d7-c9eeb0bb58f34e3f-00","errors":[{f:"DashboardMenuCategoryName",err:"The DashboardMenuCategoryName field is required."}]}
+  function displayErorr(){
+    if (dataerors !== null && dataerors.errors !== null) {
+      const filteredErrors = dataerors.errors.filter(err => err.f==='DashboardMenuCategoryName');
+      // Use filteredErrors as needed
+      console.log(filteredErrors)
+      if(filteredErrors.length>0){
+        return (
+          <p className=' text-[12px] font-bold text-[red] p-0 mb-[-10px]'>err{filteredErrors[0].err}</p>
+        )
+      };
+    }    
+    return null;
+  }
+  // displayErorr();
   const Enable = data.isEnable;
   console.log(data.lookupID)
   if(data.lookupID===null)
   {switch (data.parameterType) {
     case 'text':
       return (
+        <div>
+        {displayErorr()}
         <FieldGroup
           type="text"
           placeholder={data.parameterTitel}
@@ -32,6 +48,7 @@ export default function dataCellRender({ data, value, onChange }) {
           onChange={onChange}
           readOnly={!Enable}
         />
+        </div>
       );
     case 'datetime':
       return <DateBox value={new Date(value)} readOnly={!Enable} type="datetime" />;
