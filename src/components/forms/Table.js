@@ -122,7 +122,7 @@ const postAction = schemaActions&&schemaActions.filter(action => action.dashboar
 const putAction = schemaActions&&schemaActions.filter(action => action.dashboardFormActionMethodType === 'Put')[0];
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
-  const [datapost, setData] = useState(null);
+  const [datapost, setData] = useState({});
   const [error, setError] = useState(null);
 
 
@@ -228,8 +228,51 @@ console.log(data)
     const isNewRow = !row.dashboardMenuCategoryId;
     console.log(rows)
     console.log(tableSchema?.dashboardFormSchemaParameters)
+    const handleSubmit = (event) => {
+      if(datapost){
+        event.preventDefault();
+        onApplyChanges();
+      }else{
+        onApplyChanges();
+      }
+    };
+  
     return (
-      <Modal isOpen={open} onClose={onCancelChanges} aria-labelledby="form-dialog-title">
+      // <Modal isOpen={open} onSubmit={onApplyChanges} onClose={onCancelChanges} aria-labelledby="form-dialog-title">
+      //   <ModalHeader id="form-dialog-title">
+      //     {isNewRow ? 'Add New Employee' : 'Edit Employee'}
+      //   </ModalHeader>
+      //   <ModalBody>
+      //     <Container>
+      //       <Row>
+      //         {tableSchema?.dashboardFormSchemaParameters?.map((param, index) => (
+      //           <Col sm={param.lookupID===null ? 6:12} className="px-2" key={index} >
+                  
+      //           <DataCellRender
+      //   data={param}
+      //   value={row[param.parameterField]}
+      //   onChange={onChange}
+      //   dataeror={datapost}
+      // />
+
+      //           </Col>
+      //         ))}
+      //       </Row>
+      //     </Container>
+      //   </ModalBody>
+      //   <ModalFooter>
+      //     <Button onClick={onCancelChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
+      //       Cancel
+      //     </Button>
+      //     {' '}
+      //     <Button className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
+      //     <input type='submit' onClick={onApplyChanges} value={'Save'} className='bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'/>
+            
+      //     </Button>
+      //   </ModalFooter>
+      // </Modal>
+      <form onSubmit={(e)=>handleSubmit(e)}>
+      <Modal isOpen={open} onClose={(e)=>onCancelChanges} aria-labelledby="form-dialog-title">
         <ModalHeader id="form-dialog-title">
           {isNewRow ? 'Add New Employee' : 'Edit Employee'}
         </ModalHeader>
@@ -237,30 +280,29 @@ console.log(data)
           <Container>
             <Row>
               {tableSchema?.dashboardFormSchemaParameters?.map((param, index) => (
-                <Col sm={param.lookupID===null ? 6:12} className="px-2" key={index} >
-                  
-                <DataCellRender
-        data={param}
-        value={row[param.parameterField]}
-        onChange={onChange}
-        dataeror={datapost}
-      />
-
+                <Col sm={param.lookupID === null ? 6 : 12} className="px-2" key={index}>
+                  <DataCellRender
+                    data={param}
+                    value={row[param.parameterField]}
+                    onChange={onChange}
+                    dataeror={datapost} // Ensure datapost is defined
+                  />
                 </Col>
               ))}
             </Row>
           </Container>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onCancelChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
+          <Button onClick={onCancelChanges} className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
             Cancel
           </Button>
           {' '}
-          <Button onClick={onApplyChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
+          <Button type='submit' className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
             Save
           </Button>
         </ModalFooter>
-      </Modal>
+    </Modal>
+      </form>
     );
   };
   
@@ -329,11 +371,11 @@ console.log(data)
               
               commitAddedRows({ rowIds });
               } 
-              else {
-                stopEditRows({ rowIds });
-                commitChangedRows({ rowIds }); 
-              }
-              console.log(rowIds)
+              // else {
+              //   stopEditRows({ rowIds });
+              //   commitChangedRows({ rowIds }); 
+              // }
+              // console.log(rowIds)
               // window.location.reload();
             };
             const cancelChanges = () => {

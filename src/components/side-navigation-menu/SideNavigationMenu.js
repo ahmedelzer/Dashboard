@@ -33,25 +33,26 @@ const {
 } = props;
   [id, setId] = useState('');
   console.log('Menu',data)
-  let navigation = [];
-  data?.dataSource?.map((cat) => {
-    navigation = [
-      {
-        id: 1,
-        text: 'Home',
-        path: '/home',
-        icon: 'home',
-      },
-      {
-        text: cat.dashboardCategoryName,
+  // let navigation = [];
+  let navigation = [
+    {
+      id: 1,
+      text: 'Home',
+      path: '/home',
+      icon: 'home',
+    },
+  ];
+  // if(data){
+      data?.dataSource?.forEach((cat) => {
+      return navigation.push({text: cat?.dashboardCategoryName,
         icon: 'folder',
         items: cat?.dashboardMenuItems?.map((i) => {
-          return { id: i.dashboardItemId, text: i.dashboardMenuItemName, path: `/dynamicTable/${i.dashboardItemId}` };
+          return { id: i.dashboardItemId, text: i.dashboardMenuItemName, path: `/dynamicTable/${i?.dashboardItemId}` };
         }),
-      },
-    ];
-  });
-
+      })
+    })
+  // }
+console.log(navigation)
   const { children, onMenuReady } = props;
   const { isLarge } = useScreenSize();
 
