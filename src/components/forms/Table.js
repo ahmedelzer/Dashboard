@@ -30,8 +30,8 @@ import {
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
 import useFetch from '../hooks/APIsFunctions/useFetch';
 import { FaCirclePlus } from "react-icons/fa6";
-import { buildApiUrl } from '../hooks/FormsFunctions/BuildApiUrl';
-// import APIHandling from '../hooks/APIsFunctions/APIHandling';
+import { buildApiUrl } from '../hooks/APIsFunctions/BuildApiUrl';
+ import APIHandling from '../hooks/APIsFunctions/APIHandling';
 import DataCellRender from '../hooks/FormsFunctions/DataCeller';
 import { DataGrid } from 'devextreme-react';
 
@@ -123,31 +123,31 @@ const putAction = schemaActions&&schemaActions.filter(action => action.dashboard
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
   const [datapost, setData] = useState({});
-  const [error, setError] = useState(null);
+  const [result, setResult] = useState({});
 
 
-function APIHandling(url, methodType, sendBody) {
-    // useEffect(()=>{
-    //   const PostApi=async ()=>{
-        var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  var raw = JSON.stringify({
-    sendBody
-  });
+// function APIHandling(url, methodType, sendBody) {
+//     // useEffect(()=>{
+//     //   const PostApi=async ()=>{
+//         var myHeaders = new Headers();
+//   myHeaders.append("Content-Type", "application/json");
+//   var raw = JSON.stringify({
+//     sendBody
+//   });
   
-  var requestOptions = {
-    method: methodType,
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
+//   var requestOptions = {
+//     method: methodType,
+//     headers: myHeaders,
+//     body: raw,
+//     redirect: 'follow'
+//   };
   
-  fetch("http://ihs.ddnsking.com/api/"+url, requestOptions)
-    .then(response => response.text())
-    .then(result =>  setData(result))
-    .catch(error =>  setError(error));
+//   fetch("http://ihs.ddnsking.com/api/"+url, requestOptions)
+//     .then(response => response.text())
+//     .then(result =>  setData(result))
+//     .catch(error =>  setError(error));
     
-      }
+//       }
     //   PostApi();
     // },[url,methodType,sendBody])
   
@@ -221,7 +221,6 @@ console.log(data)
     onChange,
     onApplyChanges,
     onCancelChanges,
-    Error,
     open,
     tableSchema, // Assuming schema is passed as a prop
   }) => {
@@ -274,7 +273,7 @@ console.log(data)
       <form onSubmit={(e)=>handleSubmit(e)}>
       <Modal isOpen={open} onClose={(e)=>onCancelChanges} aria-labelledby="form-dialog-title">
         <ModalHeader id="form-dialog-title">
-          {isNewRow ? 'Add New Employee' : 'Edit Employee'}
+          {isNewRow ? 'Adding' : 'Editing'}
         </ModalHeader>
         <ModalBody>
           <Container>
@@ -285,7 +284,7 @@ console.log(data)
                     data={param}
                     value={row[param.parameterField]}
                     onChange={onChange}
-                    dataeror={datapost} // Ensure datapost is defined
+                    dataError={result} // Ensure datapost is defined
                   />
                 </Col>
               ))}
@@ -297,8 +296,8 @@ console.log(data)
             Cancel
           </Button>
           {' '}
-          <Button type='submit' className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
-            Save
+          <Button onClick={onApplyChanges}  className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
+            Done
           </Button>
         </ModalFooter>
     </Modal>
@@ -328,7 +327,7 @@ console.log(data)
             const isNew = addedRows.length > 0;
             let editedRow;
             let rowId;
-            let Error;;
+            let Error;
             if (isNew) {
               rowId = 0;
               editedRow = addedRows[rowId];
@@ -353,23 +352,20 @@ console.log(data)
             };
             const rowIds = isNew ? [0] : editingRowIds;
             
-            const applyChanges = (event) => {
+            const  applyChanges = async(event) => {
               if (isNew) {
-              // const postApi = APIHandling(postAction.routeAdderss, postAction.dashboardFormActionMethodType, editedRow);
-              // // postApi.then((res)=> setData(res)).catch((err)=> setError(err))
-              // postApi();
-              APIHandling(postAction.routeAdderss, postAction.dashboardFormActionMethodType, editedRow)
-              console.log(12222222222)
-              console.log(datapost)
-              // console.log(datapost.errors)
-              console.log(error)
+
+              const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,{ dashboardMenuCategoryName: '2' });
+
+              setResult(res)
+              console.log('res',res.success);
               // if(!data){
               //   Error=error;
               // }
               //   console.log(data)
               // console.log( editedRow)
               
-              commitAddedRows({ rowIds });
+              //commitAddedRows({ rowIds });
               } 
               // else {
               //   stopEditRows({ rowIds });
@@ -391,7 +387,6 @@ console.log(data)
             return (
               <Popup
                 open={open}
-                Error={Error}
                 row={editedRow}
                 onChange={processValueChange}
                 onApplyChanges={applyChanges}
@@ -410,6 +405,7 @@ console.log(data)
   ));
   
   const commitChanges = ({ added, changed }) => {
+    console.log('t','done')
     let changedRows;
     if (added) {
       const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
