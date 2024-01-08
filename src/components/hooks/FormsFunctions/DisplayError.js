@@ -24,9 +24,10 @@ dataError=obj;
     setTital(`${errorMessages}`)
     if (errorMessages && errorMessages.length > 0) {
       return (
-        errorMessages.map((err, index) => (
-          <p key={index} className='text-[12px] font-bold text-[red] p-0 mb-[-10px]'>{err}</p>
-        ))
+        // errorMessages.map((err, index) => (
+        //   <p key={index} className='text-[12px] font-bold text-[red] p-0 mb-[-10px]'>{err}</p>
+        // ))
+        null
       );
     }
   }
