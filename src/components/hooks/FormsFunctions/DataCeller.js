@@ -5,19 +5,25 @@ import { FormGroup, Label } from 'reactstrap';
 import {SearchingCellRender} from '../FormsFunctions/SearchingCellRender';
 import DisplayErorr from './DisplayError'
 
-function FieldGroup({ label,Title,data,setTital, ...props }) {
+function FieldGroup({ label,Title,data,focus,setTital,setfocus, ...props }) {
   console.log('aaaaaa',Title)
   const handleChange = (event) => {
-    console.log('inoppp')
-    setTital(`${data.parameterTitel}`);
+    setfocus(true);
   };
+  const style=()=>{
+    if(Title!==data.parameterTitel&&focus===false){
+      return (' focus:shadow-[0_0_0_0.2rem_red] focus:border-red-900');
+    }else{
+      return ''
+    }
+  }
 
   return (
     <FormGroup>
       <Label>{label}</Label>
       <input {...props}
       onInput={handleChange}
-      className={`${Title!==data.parameterTitel? ' focus:shadow-[0_0_0_0.2rem_red] focus:border-red-900':''} form-control`} />
+      className={`${style()} form-control`} />
     </FormGroup>
   );
 }
@@ -51,6 +57,7 @@ const s = {
 }
 const TextParameter = ({ data, value, onChange, Enable ,dataError}) => {
   const [Title,settital] = useState(`${data.parameterTitel}`);
+  const [focus,setFocus] = useState(false);
 
   return(
   <div>
@@ -63,6 +70,8 @@ const TextParameter = ({ data, value, onChange, Enable ,dataError}) => {
     title={Title}
     setTital={settital}
     Title={Title}
+    focus={focus}
+    setfocus={setFocus}
     data={data}
     name={data.parameterField}
     onChange={onChange}
