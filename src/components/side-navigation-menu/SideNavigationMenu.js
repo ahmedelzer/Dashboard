@@ -8,7 +8,7 @@ import useFetch from '../hooks/APIsFunctions/useFetch';
 
 let [id, setId] = ''
 function SideNavigationMenu(props) {
-  let { data } = useFetch('/Dashboard/GetDashboardMenuItems?pagination.PageSize=10&pagination.PageNumber=1');
+  let { data } = useFetch('/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1');
 //   const data=
 //   [
 //     {
@@ -47,7 +47,7 @@ const {
       return navigation.push({text: cat?.dashboardCategoryName,
         icon: 'folder',
         items: cat?.dashboardMenuItems?.map((i) => {
-          return { id: i.dashboardItemId, text: i.dashboardMenuItemName, path: `/dynamicTable/${i?.dashboardItemId}` };
+          return { id: i.dashboardItemID, text: i.dashboardMenuItemName, path: `/dynamicTable/${i?.dashboardItemID}` };
         }),
       })
     })

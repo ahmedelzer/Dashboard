@@ -1,10 +1,10 @@
-import { DynamicTable, ProfilePage } from './pages/index';
+import { DynamicTable, Data } from './pages/index';
 import { withNavigationWatcher } from './contexts/navigation';
 
 const routes = [
     {
         path: '/profile',
-        element: ProfilePage
+        element: Data
     },
     {
         path: '/dynamicTable/:dashboardItemID',

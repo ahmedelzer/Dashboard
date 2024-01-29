@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'reactstrap';
-import Table from '../../forms/Table';
+import Table from '../../forms/DynamicTable/Table';
 import { DropDownBox } from 'devextreme-react';
 import NativeDropdown from './CustomDropdown'; // Adjust the import path based on your file structure
 import CustomDropdown from './CustomDropdown';

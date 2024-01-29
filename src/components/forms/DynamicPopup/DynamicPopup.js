@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Container, Row, Col, Button } from 'reactstrap';
-import DataCellRender from '../hooks/FormsFunctions/DataCeller';
+import DataCellRender from '../../hooks/FormsFunctions/DataCeller';
 
 const DynamicPopup = ({
   row,

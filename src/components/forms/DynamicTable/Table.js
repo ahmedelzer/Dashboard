@@ -4,12 +4,13 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
+import Popup, { PopupEditing } from '../DynamicPopup/Popup'
 import {
   VirtualTableState,
   createRowCache,
 } from '@devexpress/dx-react-grid';
 import { EditingState } from '@devexpress/dx-react-grid';
-import Loading from '../loading/Loading'
+import Loading from '../../loading/Loading'
 import {
   Grid,
   Table,
@@ -18,7 +19,7 @@ import {
   TableEditRow,
   TableEditColumn,
 } from '@devexpress/dx-react-grid-bootstrap4';
-import TestApi from '../hooks/APIsFunctions/TestApi'
+import TestApi from '../../hooks/APIsFunctions/TestApi'
 import {
   Button, Modal, ModalHeader, ModalBody, ModalFooter,
   Container, Row, Col, Label, FormGroup, Input,
@@ -28,11 +29,11 @@ import {
   Plugin, Template, TemplateConnector, TemplatePlaceholder,
 } from '@devexpress/dx-react-core';
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
-import useFetch from '../hooks/APIsFunctions/useFetch';
+import useFetch from '../../hooks/APIsFunctions/useFetch';
 import { FaCirclePlus } from "react-icons/fa6";
-import { buildApiUrl } from '../hooks/APIsFunctions/BuildApiUrl';
- import APIHandling from '../hooks/APIsFunctions/APIHandling';
-import DataCellRender from '../hooks/FormsFunctions/DataCeller';
+import { buildApiUrl } from '../../hooks/APIsFunctions/BuildApiUrl';
+ import APIHandling from '../../hooks/APIsFunctions/APIHandling';
+import DataCellRender from '../../hooks/FormsFunctions/DataCeller';
 import { DataGrid } from 'devextreme-react';
 
 const VIRTUAL_PAGE_SIZE = 50;
@@ -113,6 +114,7 @@ const dataSourceAPI =(query,skip, take) =>  buildApiUrl(query,
 
   console.log(schema)
   const { data } = useFetch(`/Dashboard/GetDashboardSchemaActionsBySchemaID?DashboardSchemaID=${schema.dashboardFormSchemaID}`);
+  
   const schemaActions = data;
 
 
@@ -216,193 +218,144 @@ console.log(data)
   const {
     rows, skip, totalCount, loading,
   } = state;
-  const Popup = ({
-    row,
-    onChange,
-    onApplyChanges,
-    onCancelChanges,
-    open,
-    tableSchema, // Assuming schema is passed as a prop
-  }) => {
-    const isNewRow = !row.dashboardMenuCategoryId;
-    console.log(rows)
-    console.log(tableSchema?.dashboardFormSchemaParameters)
-    const handleSubmit = (event) => {
-      if(datapost){
-        event.preventDefault();
-        onApplyChanges();
-      }else{
-        onApplyChanges();
-      }
-    };
+  //commit 
+  // let commitChangedRow=(obj)=>{
+  //         const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
+  //     setResult(res)
+  //     console.log(123456789000000000000,state.rows);
+  //     console.log(res.data);
+  //     console.log(editedRow)
+      
+  //     {/* console.log(typeof res.data.dashboardCategoryId) */}
+  //     if(res.success===true
+  //     ){
+  //     const New={...res.data,...editedRow}
+  //     console.log(New)
+  //     {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
+  //       state.rows=[...state.rows,New]
+  //       cancelAddedRows({ rowIds });
+  //     }
+      
+  // }
+  // const commitAddedRow=()=>{
+  //   const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
+  //     setResult(res)
+  //     console.log(123456789000000000000,state.rows);
+  //     console.log(res.data);
+  //     console.log(editedRow)
+      
+  //     {/* console.log(typeof res.data.dashboardCategoryId) */}
+  //     if(res.success===true
+  //     ){
+  //     const New={...res.data,...editedRow}
+  //     console.log(New)
+  //     {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
+  //       state.rows=[...state.rows,New]
+  //       cancelAddedRows({ rowIds });
+  //     }
+  // }
+  // const PopupEditing = React.memo(({ popupComponent: Popup }) => (
+  //   <Plugin>
+  //     <Template name="popupEditing">
+  //       <TemplateConnector>
+  //         {(
+  //           {
+  //             rows,
+  //             getRowId,
+  //             addedRows,
+  //             editingRowIds,
+  //             createRowChange,
+  //             rowChanges,
+  //           },
+  //           {
+  //             changeRow, changeAddedRow, commitChangedRows, commitAddedRows,
+  //             stopEditRows, cancelAddedRows, cancelChangedRows,
+  //           },
+  //         ) => {
+  //           const isNew = addedRows.length > 0;
+  //           let editedRow;
+  //           let rowId;
+  //           let Error;
+  //           if (isNew) {
+  //             rowId = 0;
+  //             editedRow = addedRows[rowId];
+  //           } else {
+  //             [rowId] = editingRowIds;
+  //             const targetRow = rows.filter(row => getRowId(row) === rowId)[0];
+  //             editedRow = { ...targetRow, ...rowChanges[rowId] };
+  //           }
   
-    return (
-      // <Modal isOpen={open} onSubmit={onApplyChanges} onClose={onCancelChanges} aria-labelledby="form-dialog-title">
-      //   <ModalHeader id="form-dialog-title">
-      //     {isNewRow ? 'Add New Employee' : 'Edit Employee'}
-      //   </ModalHeader>
-      //   <ModalBody>
-      //     <Container>
-      //       <Row>
-      //         {tableSchema?.dashboardFormSchemaParameters?.map((param, index) => (
-      //           <Col sm={param.lookupID===null ? 6:12} className="px-2" key={index} >
-                  
-      //           <DataCellRender
-      //   data={param}
-      //   value={row[param.parameterField]}
-      //   onChange={onChange}
-      //   dataeror={datapost}
-      // />
-
-      //           </Col>
-      //         ))}
-      //       </Row>
-      //     </Container>
-      //   </ModalBody>
-      //   <ModalFooter>
-      //     <Button onClick={onCancelChanges} className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
-      //       Cancel
-      //     </Button>
-      //     {' '}
-      //     <Button className=' bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'>
-      //     <input type='submit' onClick={onApplyChanges} value={'Save'} className='bg-transparent text-[#ff5722]  hover:bg-[#ff5722] hover:text-black'/>
+  //           const processValueChange = ({ target: { name, value } }) => {
+  //             const changeArgs = {
+  //               rowId,
+  //               change: createRowChange(editedRow, value, name),
+  //             };
+  //             if (isNew) {
+  //               changeAddedRow(changeArgs);
+  //             } else {
+  //               changeRow(changeArgs);
+  //             }
+  //             console.log(144)
+  //             console.log(editedRow)
+  //           };
+  //           const rowIds = isNew ? [0] : editingRowIds;
             
-      //     </Button>
-      //   </ModalFooter>
-      // </Modal>
-      <form onSubmit={(e)=>handleSubmit(e)}>
-      <Modal isOpen={open} onClose={(e)=>onCancelChanges} aria-labelledby="form-dialog-title">
-        <ModalHeader id="form-dialog-title">
-          {isNewRow ? 'Adding' : 'Editing'}
-        </ModalHeader>
-        <ModalBody>
-          <Container>
-            <Row>
-              {tableSchema?.dashboardFormSchemaParameters?.map((param, index) => (
-                <Col sm={param.lookupID === null ? 6 : 12} className="px-2" key={index}>
-                  <DataCellRender
-                    data={param}
-                    value={row[param.parameterField]}
-                    onChange={onChange}
-                    dataError={result} // Ensure datapost is defined
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={onCancelChanges} className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
-            Cancel
-          </Button>
-          {' '}
-          <Button onClick={onApplyChanges}  className='bg-transparent text-[#ff5722] hover:bg-[#ff5722] hover:text-black'>
-            Done
-          </Button>
-        </ModalFooter>
-    </Modal>
-      </form>
-    );
-  };
-  
-  
-  const PopupEditing = React.memo(({ popupComponent: Popup }) => (
-    <Plugin>
-      <Template name="popupEditing">
-        <TemplateConnector>
-          {(
-            {
-              rows,
-              getRowId,
-              addedRows,
-              editingRowIds,
-              createRowChange,
-              rowChanges,
-            },
-            {
-              changeRow, changeAddedRow, commitChangedRows, commitAddedRows,
-              stopEditRows, cancelAddedRows, cancelChangedRows,
-            },
-          ) => {
-            const isNew = addedRows.length > 0;
-            let editedRow;
-            let rowId;
-            let Error;
-            if (isNew) {
-              rowId = 0;
-              editedRow = addedRows[rowId];
-            } else {
-              [rowId] = editingRowIds;
-              const targetRow = rows.filter(row => getRowId(row) === rowId)[0];
-              editedRow = { ...targetRow, ...rowChanges[rowId] };
-            }
-  
-            const processValueChange = ({ target: { name, value } }) => {
-              const changeArgs = {
-                rowId,
-                change: createRowChange(editedRow, value, name),
-              };
-              if (isNew) {
-                changeAddedRow(changeArgs);
-              } else {
-                changeRow(changeArgs);
-              }
-              console.log(144)
-              console.log(editedRow)
-            };
-            const rowIds = isNew ? [0] : editingRowIds;
-            
-            const  applyChanges = async(event) => {
-              if (isNew) {
-
-              const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,{ dashboardMenuCategoryName: '2' });
-
-              setResult(res)
-              console.log('res',res.success);
-              // if(!data){
-              //   Error=error;
-              // }
-              //   console.log(data)
-              // console.log( editedRow)
+  //           const  applyChanges = async(actionType) => {
+  //             if (isNew)  {
+  //             const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
+  //             setResult(res)
+  //             console.log(123456789000000000000,state.rows);
+  //             console.log(res.data);
+  //             console.log(editedRow)
               
-              //commitAddedRows({ rowIds });
-              } 
-              // else {
-              //   stopEditRows({ rowIds });
-              //   commitChangedRows({ rowIds }); 
-              // }
-              // console.log(rowIds)
-              // window.location.reload();
-            };
-            const cancelChanges = () => {
-              if (isNew) {
-                cancelAddedRows({ rowIds });
-              } else {
-                stopEditRows({ rowIds });
-                cancelChangedRows({ rowIds });
-              }
-            };
+  //             {/* console.log(typeof res.data.dashboardCategoryId) */}
+  //             if(res.success===true
+  //             ){
+  //             const New={...res.data,...editedRow}
+  //             console.log(New)
+  //             {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
+  //               state.rows=[...state.rows,New]
+  //               cancelAddedRows({ rowIds });
+  //             }
+  //             }
+  //               else {
+  //               stopEditRows({ rowIds });
+  //               commitChangedRows({ rowIds }); 
+  //              }
+  //              console.log(rowIds)
+  //              {/* window.location.reload();  */}
+  //           };
+  //           const cancelChanges = () => {
+  //             if (isNew) {
+  //               cancelAddedRows({ rowIds });
+  //             } else {
+  //               stopEditRows({ rowIds });
+  //               cancelChangedRows({ rowIds });
+  //             }
+  //           };
   
-            const open = editingRowIds.length > 0 || isNew;
-            return (
-              <Popup
-                open={open}
-                row={editedRow}
-                onChange={processValueChange}
-                onApplyChanges={applyChanges}
-                onCancelChanges={cancelChanges}
-                tableSchema={schema}
-              />
-            );
-          }}
-        </TemplateConnector>
-      </Template>
-      <Template name="root">
-        <TemplatePlaceholder />
-        <TemplatePlaceholder name="popupEditing" />
-      </Template>
-    </Plugin>
-  ));
+  //           const open = editingRowIds.length > 0 || isNew;
+  //           return (
+  //             <Popup
+  //               open={open}
+  //               row={editedRow}
+  //               onChange={processValueChange}
+  //               onApplyChanges={applyChanges}
+  //               onCancelChanges={cancelChanges}
+  //               tableSchema={schema}
+  //               result={result}
+  //               rows={state.rows}
+  //             />
+  //           );
+  //         }}
+  //       </TemplateConnector>
+  //     </Template>
+  //     <Template name="root">
+  //       <TemplatePlaceholder />
+  //       <TemplatePlaceholder name="popupEditing" />
+  //     </Template>
+  //   </Plugin>
+  // ));
   
   const commitChanges = ({ added, changed }) => {
     console.log('t','done')
@@ -423,7 +376,6 @@ console.log(data)
     // setRows(changedRows);
    
   };
-
   const CustomRow = ({ row, ...restProps }) => (
     <Table.Row
       {...restProps}
@@ -460,7 +412,7 @@ console.log(data)
           showEditCommand={!isSearchingTable}
         />
         <TableHeaderRow />
-        <PopupEditing popupComponent={Popup} />
+        {/* <PopupEditing popupComponent={Popup} action={postAction} state={state} setResult={setResult} result={result} schema={schema} /> */}
       </Grid>
     </div>
   );

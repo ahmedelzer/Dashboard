@@ -1,6 +1,6 @@
 import React from 'react';
 import './DynamicTable.scss';
-import Table from '../../components/forms/Table';
+import Table from '../../components/forms/DynamicTable/Table';
 import useFetch from '../../components/hooks/APIsFunctions/useFetch';
 import Loading from '../../components/loading/Loading';
 import { useParams } from 'react-router-dom';

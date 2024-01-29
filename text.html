@@ -21,6 +21,15 @@
   </form>
 
   <script>
+    let ee= {
+      "dashboardMenuCategoryName": "2"
+  }
+  let id=
+  {
+      "dashboardCategoryId": "94a62240-aedd-4ad9-ae1e-030d70c87f5c"
+  }
+  const merge={...ee,...id}
+  console.log(merge)
     function validateForm() {
       var inputElement = document.getElementById('myInput');
       var errorMessageElement = document.getElementById('error-message');
