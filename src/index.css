@@ -1,18 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "./themes/generated/variables.base.scss";
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 .spinner {
@@ -25,11 +26,7 @@ code {
   width: 50px;
   height: 50px;
 }
-.spinner .path {
-  stroke: #ff5722;
-  stroke-linecap: round;
-  animation: dash 1.5s ease-in-out infinite;
-}
+
 @keyframes rotate {
   100% {
     transform: rotate(360deg);
@@ -55,29 +52,6 @@ code {
 ::-webkit-scrollbar-thumb {
   background-color: red;
 }
-.dx-scrollable-scroll{
+.dx-scrollable-scroll {
   z-index: 200;
-}
-.dx-scrollbar-hoverable .dx-scrollable-scroll.dx-state-invisible .dx-scrollable-scroll-content{
-  background-color: #ff5722;
-}
-.dx-scrollable-scroll-content {
-  position: absolute;
-  z-index: 200;
-}
-.dx-scrollbar-vertical .dx-scrollbar-hoverable {
-  width: 20px !important;
-  height: 100px !important;
-  background-color: #ff5722;
-  color: #ff5722;
-}
-
-.dx-scrollbar-vertical .dx-scrollable-scroll {
-  width: 20px !important;
-  height: 100px !important;
-}
-.btn.btn-link.dx-g-bs4-table-edit-command-cell{
-  color: #ff5722 !important;
-  font-size: 22px;
-  font-weight: bold;
 }

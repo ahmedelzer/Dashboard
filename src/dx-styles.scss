@@ -1,7 +1,32 @@
 @import "./themes/generated/variables.base.scss";
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --main-color: $base-accent;
+}
+@layer base {
+  .h2 {
+    @apply text-3xl capitalize;
+  }
+  .grad {
+    @apply bg-gradient-to-t from-[#1F2126] to-[#33363D] drop-shadow-2xl;
+  }
+  .btn {
+    @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
+  }
+  .btn-accent {
+    @apply bg-accent hover:bg-accent-hover transition-all;
+  }
+  .input {
+    @apply h-[50px] rounded-[8px] w-full outline-none px-6;
+  }
+  .pop {
+    @apply bg-transparent text-[--main-color] hover:bg-[--main-color] hover:text-black;
+  }
+}
 .app {
-  background-color: darken($base-bg, 5.00);
+  background-color: darken($base-bg, 5);
   display: flex;
   height: 100%;
   width: 100%;
@@ -34,9 +59,45 @@
     margin-top: 20px;
   }
 }
+.spinner .path {
+  stroke: $base-accent;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+.color {
+  color: $base-accent;
+}
+.bg {
+  background: $base-accent;
+}
+.dx-scrollbar-hoverable
+  .dx-scrollable-scroll.dx-state-invisible
+  .dx-scrollable-scroll-content {
+  background-color: $base-accent;
+  text-align: left;
+}
+.dx-scrollable-scroll-content {
+  position: absolute;
+  z-index: 200;
+}
+.dx-scrollbar-vertical .dx-scrollbar-hoverable {
+  width: 20px !important;
+  height: 100px !important;
+  background-color: $base-accent;
+  color: $base-accent;
+}
 
+.dx-scrollbar-vertical .dx-scrollable-scroll {
+  width: 20px !important;
+  height: 100px !important;
+}
+.btn.btn-link.dx-g-bs4-table-edit-command-cell {
+  color: $base-accent !important;
+  font-size: 22px;
+  font-weight: bold;
+}
 .side-nav-outer-toolbar .dx-drawer {
-  height: calc(100% - 56px)
+  height: calc(100% - 56px);
 }
 
 .screen-x-small .content-block {
@@ -60,8 +121,10 @@
   border-left: 0;
 }
 
-.with-footer > .dx-scrollable-wrapper >
-.dx-scrollable-container > .dx-scrollable-content {
+.with-footer
+  > .dx-scrollable-wrapper
+  > .dx-scrollable-container
+  > .dx-scrollable-content {
   height: 100%;
 
   & > .dx-scrollview-content {
@@ -73,7 +136,8 @@
 
 $side-panel-min-width: 60px;
 
-html, body {
+html,
+body {
   margin: 0px;
   min-height: 100%;
   height: 100%;

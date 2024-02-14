@@ -1,19 +1,26 @@
-import 'devextreme/dist/css/dx.common.css';
-import './themes/generated/theme.base.css';
-import './themes/generated/theme.additional.css';
-import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
-import './dx-styles.scss';
-import LoadPanel from 'devextreme-react/load-panel';
-import { NavigationProvider } from './contexts/navigation';
-import { AuthProvider, useAuth } from './contexts/auth';
-import { useScreenSizeClass } from './utils/media-query';
-import Content from './Content';
-import UnauthenticatedContent from './UnauthenticatedContent';
-import App2 from './Dashbord';
+import "devextreme/dist/css/dx.common.css";
+import "./themes/generated/theme.base.css";
+import "./themes/generated/theme.additional.css";
+import React, { useContext } from "react";
+import { HashRouter as Router } from "react-router-dom";
+import "./dx-styles.scss";
+import LoadPanel from "devextreme-react/load-panel";
+import { NavigationProvider } from "./contexts/navigation";
+import { AuthProvider, useAuth } from "./contexts/auth";
+import { useScreenSizeClass } from "./utils/media-query";
+import Content from "./Content";
+import UnauthenticatedContent from "./UnauthenticatedContent";
+import Language, { LanguageContext } from "./contexts/Language";
 
 function App() {
   const { user, loading } = useAuth();
+  const { Right } = useContext(LanguageContext);
+  const SetRight = () => {
+    import("./themes/generated/Right.css");
+  };
+  if (Right) {
+    SetRight();
+  }
 
   if (loading) {
     return <LoadPanel visible={true} />;
@@ -33,10 +40,12 @@ export default function Root() {
     <Router>
       <AuthProvider>
         <NavigationProvider>
-          <div className={`app ${screenSizeClass}`}>
-            <App />
-            {/* <App2/> */}
-          </div>
+          <Language>
+            <div className={`app ${screenSizeClass}`}>
+              <App />
+              {/* <App2/> */}
+            </div>
+          </Language>
         </NavigationProvider>
       </AuthProvider>
     </Router>

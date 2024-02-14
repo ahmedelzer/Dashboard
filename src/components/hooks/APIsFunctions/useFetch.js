@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { baseURL } from "../../../request";
+import { request } from "../../../request";
 const useFetch = (url) => {
-  let realurl=`http://ihs.ddnsking.com/api${url}`
+  let realurl = `${baseURL}${url}`;
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +12,7 @@ const useFetch = (url) => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get(realurl);
+        const res = await request.get(realurl);
         setData(res.data);
       } catch (error) {
         setError(error);

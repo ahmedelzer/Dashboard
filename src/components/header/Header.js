@@ -1,74 +1,73 @@
-import React, { useState } from 'react';
-import Toolbar, { Item } from 'devextreme-react/toolbar';
-import Button from 'devextreme-react/button';
-import UserPanel from '../user-panel/UserPanel';
-import './Header.scss';
-import { Template } from 'devextreme-react/core/template';
+import React, { useContext, useState } from "react";
+import Toolbar, { Item } from "devextreme-react/toolbar";
+import Button from "devextreme-react/button";
+import UserPanel from "../user-panel/UserPanel";
+import "./Header.scss";
+import { Template } from "devextreme-react/core/template";
 import { BiWorld } from "react-icons/bi";
-import LanguageSelector from './LanguageSelector';
+import LanguageSelector from "./LanguageSelector";
+import { LanguageContext } from "../../contexts/Language";
 
 export default function Header({ menuToggleEnabled, title, toggleMenu }) {
-  const [open, setopen] =useState(false);
+  const [open, setopen] = useState(false);
+  const { Right } = useContext(LanguageContext);
   return (
-    <header className={'header-component flex'}>
-      <Toolbar className={'header-toolbar flex justify-content-center align-items-center'}>
+    <header className={"header-component flex"}>
+      <Toolbar
+        className={
+          "header-toolbar flex justify-content-center align-items-center"
+        }
+      >
         <Item
           visible={menuToggleEnabled}
-          location={'before'}
-          widget={'dxButton'}
-          cssClass={'menu-button'}
+          location={Right ? "after" : "before"}
+          widget={"dxButton"}
+          cssClass={"menu-button"}
         >
           <Button icon="menu" stylingMode="text" onClick={toggleMenu} />
         </Item>
         <Item
-          location={'before'}
-          cssClass={'header-title'}
+          location={Right ? "after" : "before"}
+          cssClass={"header-title"}
           text={title}
           visible={!!title}
         />
         <Item
-          location={'after'}
-          locateInMenu={'auto'}
-          menuItemTemplate={'userPanelTemplate'}
+          location={Right ? "before" : "after"}
+          locateInMenu={"auto"}
+          menuItemTemplate={"userPanelTemplate"}
         >
           <Button
-            className={'user-button authorization'}
+            className={"user-button authorization"}
             width={210}
-            height={'100%'}
-            stylingMode={'text'}
+            height={"100%"}
+            stylingMode={"text"}
           >
-            <UserPanel menuMode={'context'} />
+            <UserPanel menuMode={"context"} />
           </Button>
         </Item>
-        <Item 
-        location='after'
-        locateInMenu='auto'
-        >
+        <Item location={Right ? "before" : "after"} locateInMenu="auto">
           <Button
-            width={open? 70:30}
-            onClick={()=>setopen(true)}
-            height={'100%'}
-            stylingMode={'text'}
+            width={open ? 70 : 30}
+            onClick={() => setopen(true)}
+            height={"100%"}
+            stylingMode={"text"}
             rtlEnabled={false}
-            className={open? '!cursor-auto':'!cursor-pointer'} 
+            className={open ? "!cursor-auto" : "!cursor-pointer"}
           >
-            {
-              open?
-              (<div><LanguageSelector/>
-                </div>):
-                
-              (<div className='flex justify-content-end align-items-center'>
-              <BiWorld size={30} className=' text-[#ff5722]' />
-            </div>)
-            }
-            {/* <LanguageSelector/>
-        <div className='flex justify-content-end align-items-center'>
-          <BiWorld size={30} className=' text-[#ff5722]' />
-        </div> */}
+            {open ? (
+              <div>
+                <LanguageSelector />
+              </div>
+            ) : (
+              <div className="flex justify-content-end align-items-center">
+                <BiWorld size={30} className="color" />
+              </div>
+            )}
           </Button>
         </Item>
-        <Template name={'userPanelTemplate'}>
-          <UserPanel menuMode={'list'} />
+        <Template name={"userPanelTemplate"}>
+          <UserPanel menuMode={"list"} />
         </Template>
       </Toolbar>
       {/* <LanguageSelector/> */}

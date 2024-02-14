@@ -1,19 +1,21 @@
+import { baseURL } from "../../../request";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("languageName", "ARABIC");
   var raw = JSON.stringify(sendBody);
 
   var requestOptions = {
     method: methodType,
     headers: myHeaders,
     body: raw,
-    redirect: 'follow',
+    redirect: "follow",
   };
 
   try {
-    const response = await fetch("http://ihs.ddnsking.com/api/" + url, requestOptions);
+    const response = await fetch(baseURL + "/" + url, requestOptions);
     const result = await response.json();
-    
+
     // Check if the API call was successful based on the HTTP status code
     if (response.ok) {
       const successResponse = {
@@ -29,12 +31,12 @@ export default async function APIHandling(url, methodType, sendBody) {
       return errorResponse;
     }
   } catch (error) {
-    console.error('Error:', error);
-    
+    console.error("Error:", error);
+
     // If there's an exception, return an error response
     const exceptionResponse = {
       success: false,
-      error: 'An error occurred during the API call.',
+      error: "An error occurred during the API call.",
     };
     return exceptionResponse;
   }
