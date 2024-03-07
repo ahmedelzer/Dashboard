@@ -1,10 +1,24 @@
-import { DynamicTable, AddingDropdown, Form } from "./pages/index";
+import {
+  DynamicTable,
+  AddingDropdown,
+  Form,
+  Test,
+  DynamicLiveForm,
+} from "./pages/index";
 import { withNavigationWatcher } from "./contexts/navigation";
 
 const routes = [
   {
     path: "/profile",
     element: AddingDropdown,
+  },
+  {
+    path: "/dynamicLiveForm/:dashboardItemID",
+    element: DynamicLiveForm,
+  },
+  {
+    path: "/test",
+    element: Test,
   },
   {
     path: "/dynamicForm/:dashboardItemID",

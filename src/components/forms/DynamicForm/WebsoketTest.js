@@ -4,19 +4,16 @@ import {
   VirtualTableState,
   createRowCache,
 } from "@devexpress/dx-react-grid";
-import { PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { EditingState } from "@devexpress/dx-react-grid";
 import Loading from "../../loading/Loading";
 import {
   Grid,
   Table,
-  PagingPanel,
   TableHeaderRow,
   VirtualTable,
   TableEditRow,
   TableEditColumn,
 } from "@devexpress/dx-react-grid-bootstrap4";
-import { baseURLWithoutApi } from "../../../request";
 import TestApi from "../../hooks/APIsFunctions/TestApi";
 import {
   Button,
@@ -46,6 +43,8 @@ import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import Popup from "../DynamicPopup/Popup";
+
+const socket = new WebSocket("ws://localhost:8080/test");
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -105,9 +104,7 @@ const dataSourceAPI = (query, skip, take) =>
 const DynamicTable = ({
   schema,
   isSearchingTable,
-  setSelectedRow,
-  paging,
-  setPanelOpen,
+  // rowDoubleClick ,
 }) => {
   const getRowId = (row) => row[schema.idField];
   const { data, error, isLoading } = useFetch(
@@ -136,31 +133,6 @@ const DynamicTable = ({
   const [columns, setColumns] = useState([]);
   const [result, setResult] = useState({});
   console.log("putAction", putAction);
-
-  // function APIHandling(url, methodType, sendBody) {
-  //     // useEffect(()=>{
-  //     //   const PostApi=async ()=>{
-  //         var myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "application/json");
-  //   var raw = JSON.stringify({
-  //     sendBody
-  //   });
-
-  //   var requestOptions = {
-  //     method: methodType,
-  //     headers: myHeaders,
-  //     body: raw,
-  //     redirect: 'follow'
-  //   };
-
-  //   fetch("http://ihs.ddnsking.com/api/"+url, requestOptions)
-  //     .then(response => response.text())
-  //     .then(result =>  setData(result))
-  //     .catch(error =>  setError(error));
-
-  //       }
-  //   PostApi();
-  // },[url,methodType,sendBody])
 
   console.log(data);
   useEffect(() => {
@@ -221,144 +193,6 @@ const DynamicTable = ({
   useEffect(() => loadData());
 
   const { rows, skip, totalCount, loading } = state;
-  //commit
-  // let commitChangedRow=(obj)=>{
-  //         const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
-  //     setResult(res)
-  //     console.log(123456789000000000000,state.rows);
-  //     console.log(res.data);
-  //     console.log(editedRow)
-
-  //     {/* console.log(typeof res.data.dashboardCategoryId) */}
-  //     if(res.success===true
-  //     ){
-  //     const New={...res.data,...editedRow}
-  //     console.log(New)
-  //     {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
-  //       state.rows=[...state.rows,New]
-  //       cancelAddedRows({ rowIds });
-  //     }
-
-  // }
-  // const commitAddedRow=()=>{
-  //   const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
-  //     setResult(res)
-  //     console.log(123456789000000000000,state.rows);
-  //     console.log(res.data);
-  //     console.log(editedRow)
-
-  //     {/* console.log(typeof res.data.dashboardCategoryId) */}
-  //     if(res.success===true
-  //     ){
-  //     const New={...res.data,...editedRow}
-  //     console.log(New)
-  //     {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
-  //       state.rows=[...state.rows,New]
-  //       cancelAddedRows({ rowIds });
-  //     }
-  // }
-  // const PopupEditing = React.memo(({ popupComponent: Popup }) => (
-  //   <Plugin>
-  //     <Template name="popupEditing">
-  //       <TemplateConnector>
-  //         {(
-  //           {
-  //             rows,
-  //             getRowId,
-  //             addedRows,
-  //             editingRowIds,
-  //             createRowChange,
-  //             rowChanges,
-  //           },
-  //           {
-  //             changeRow, changeAddedRow, commitChangedRows, commitAddedRows,
-  //             stopEditRows, cancelAddedRows, cancelChangedRows,
-  //           },
-  //         ) => {
-  //           const isNew = addedRows.length > 0;
-  //           let editedRow;
-  //           let rowId;
-  //           let Error;
-  //           if (isNew) {
-  //             rowId = 0;
-  //             editedRow = addedRows[rowId];
-  //           } else {
-  //             [rowId] = editingRowIds;
-  //             const targetRow = rows.filter(row => getRowId(row) === rowId)[0];
-  //             editedRow = { ...targetRow, ...rowChanges[rowId] };
-  //           }
-
-  //           const processValueChange = ({ target: { name, value } }) => {
-  //             const changeArgs = {
-  //               rowId,
-  //               change: createRowChange(editedRow, value, name),
-  //             };
-  //             if (isNew) {
-  //               changeAddedRow(changeArgs);
-  //             } else {
-  //               changeRow(changeArgs);
-  //             }
-  //             console.log(144)
-  //             console.log(editedRow)
-  //           };
-  //           const rowIds = isNew ? [0] : editingRowIds;
-
-  // const  applyChanges = async(actionType) => {
-  //   if (isNew)  {
-  //   const res = await APIHandling(postAction.routeAdderss,postAction.dashboardFormActionMethodType,editedRow);
-  //   setResult(res)
-  //   console.log(123456789000000000000,state.rows);
-  //   console.log(res.data);
-  //   console.log(editedRow)
-
-  //   {/* console.log(typeof res.data.dashboardCategoryId) */}
-  //   if(res.success===true
-  //   ){
-  //   const New={...res.data,...editedRow}
-  //   console.log(New)
-  //   {/* const newRow={dashboardCategoryId:`${res.data.dashboardCategoryId}`,dashboardMenuCategoryName:editedRow.dashboardMenuCategoryName} */}
-  //     state.rows=[...state.rows,New]
-  //     cancelAddedRows({ rowIds });
-  //   }
-  //   }
-  //     else {
-  //     stopEditRows({ rowIds });
-  //     commitChangedRows({ rowIds });
-  //    }
-  //    console.log(rowIds)
-  //    {/* window.location.reload();  */}
-  // };
-  // const cancelChanges = () => {
-  //   if (isNew) {
-  //     cancelAddedRows({ rowIds });
-  //   } else {
-  //     stopEditRows({ rowIds });
-  //     cancelChangedRows({ rowIds });
-  //   }
-  // };
-
-  //           const open = editingRowIds.length > 0 || isNew;
-  //           return (
-  //             <Popup
-  //               open={open}
-  //               row={editedRow}
-  //               onChange={processValueChange}
-  //               onApplyChanges={applyChanges}
-  //               onCancelChanges={cancelChanges}
-  //               tableSchema={schema}
-  //               result={result}
-  //               rows={state.rows}
-  //             />
-  //           );
-  //         }}
-  //       </TemplateConnector>
-  //     </Template>
-  //     <Template name="root">
-  //       <TemplatePlaceholder />
-  //       <TemplatePlaceholder name="popupEditing" />
-  //     </Template>
-  //   </Plugin>
-  // ));
 
   const commitChanges = ({ added, changed }) => {
     console.log("t", "done");
@@ -398,21 +232,49 @@ const DynamicTable = ({
     // row=null;
   };
   const ImageFormatter = ({ value }) => (
-    <img
-      // src={`${baseURLWithoutApi}${value}`}
-      alt="image"
-      style={{ width: "50px", height: "50px" }}
-    />
+    <img src={value} alt="image" style={{ width: "50px", height: "50px" }} />
   );
   const ImageTypeProvider = (props) => (
     <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
   );
 
-  const rowDoubleClick = (row) => {
-    if (setSelectedRow) {
-      setSelectedRow(row); // Update selectedRow state with the clicked row
-      setPanelOpen(false);
+  const [selectedRow, setSelectedRow] = useState(null); // State to track the selected row
+
+  socket.addEventListener("message", function (event) {
+    const data = JSON.parse(event.data);
+    if (data) {
+      switch (data.operation) {
+        case "Insert": {
+          state.rows = [...state.rows, ...data[getAction.returnPropertyName]];
+          break;
+        }
+        case "Update": {
+          let updata = state.rows.find(
+            (row) => row[schema.idField] === data[getAction.returnPropertyName]
+          );
+          updata = data;
+          break;
+        }
+        case "Delete": {
+          let Delete = state.rows.find(
+            (row) => row[schema.idField] === data[getAction.returnPropertyName]
+          );
+          Delete = null;
+          break;
+        }
+        case "Fill": {
+          state.rows = data[getAction.returnPropertyName];
+
+          break;
+        }
+        default: {
+          return null;
+        }
+      }
     }
+  });
+  const rowDoubleClick = (row) => {
+    setSelectedRow(row); // Update selectedRow state with the clicked row
     console.log("row", row);
   };
   return (
@@ -422,12 +284,7 @@ const DynamicTable = ({
         columns={columns}
         getRowId={getRowId}
         i18nIsDynamicList={true}
-        className="flex"
-        style={{ position: "relative" }}
       >
-        {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
-        {paging ? <IntegratedPaging /> : null}
-
         <ImageTypeProvider for={["countryFlag"]} />
         <EditingState onCommitChanges={commitChanges} />
         <Table
@@ -454,7 +311,6 @@ const DynamicTable = ({
           result={result}
           schema={schema}
         />
-        {paging ? <PagingPanel /> : null}
       </Grid>
     </div>
   );

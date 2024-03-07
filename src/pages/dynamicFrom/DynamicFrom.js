@@ -3,6 +3,7 @@ import useFetch from "../../components/hooks/APIsFunctions/useFetch";
 import Loading from "../../components/loading/Loading";
 import { useParams } from "react-router-dom";
 import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
+import SelectForm from "../../components/hooks/FormsFunctions/SelecetForm";
 function DynamicFrom() {
   const { dashboardItemID } = useParams();
   const { data, error, isLoading } = useFetch(
@@ -18,14 +19,6 @@ function DynamicFrom() {
   if (isLoading) {
     // Display a loading indicator while data is being fetched
     return <Loading />;
-  }
-  function SelectForm(schema) {
-    return (
-      <PartionFrom
-        Header={schema.dashboardFormSchemaInfoDTOView.schemaHeader}
-        key={schema.idField}
-      />
-    );
   }
 
   return <div>{data && data.map((schema) => SelectForm(schema))}</div>;

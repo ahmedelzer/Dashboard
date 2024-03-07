@@ -1,13 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { DropDownBox } from "devextreme-react/drop-down-box";
+import { List } from "devextreme-react/list";
+import { FormGroup } from "reactstrap";
 const CustomDropdown = ({
   buttonText,
   panelContent,
-  onClose,
+  onChange,
   displayField,
-  getField,
+  selectedRow,
+  setPanelOpen,
+  isPanelOpen,
 }) => {
-  const [isPanelOpen, setPanelOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleTogglePanel = () => {
@@ -29,15 +32,55 @@ const CustomDropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+  const fruits = ["Apples", "Oranges", "Lemons", "Pears", "Pineapples"];
+  const [selectedFruit, setSelectedFruit] = useState("");
+  const dropDownBoxRef = useRef(null);
+  const [dataSource, setDataSource] = useState(fruits);
+  const listRef = useRef(null);
+  const changeDropDownBoxValue = useCallback((arg) => {
+    setSelectedFruit(arg.addedItems[0]);
+    dropDownBoxRef.current.instance.close();
+  }, []);
+  const onValueChanged = useCallback((e) => {
+    setSelectedFruit(e.value);
+  }, []);
+  const addItem = useCallback(() => {
+    setDataSource([...dataSource, selectedFruit]);
+    setSelectedFruit("");
+    listRef.current.instance.reload();
+  }, [dataSource, selectedFruit]);
+  const onItemDeleting = useCallback(
+    (e) => {
+      if (dataSource.length === 1) {
+        e.cancel = true;
+      }
+    },
+    [dataSource]
+  );
+  console.log("====================================");
+  console.log(buttonText);
+  console.log(displayField);
+  console.log(selectedRow.dashboardCategoryName);
+  console.log("====================================");
+  // "dashboardCategoryName"
+  // "dashboardCategoryName"
+  // "dashboardMenuCategoryID"
+  // "dashboardCategoryID"
   return (
-    <div ref={dropdownRef} style={{ position: "relative" }}>
+    <FormGroup className=" flex justify-between form-control">
+      <input
+        // {...props}
+        value={buttonText}
+        // onInput={handleChange}
+        onChange={onChange}
+        placeholder={displayField}
+        className={` form-control w-[96%]`}
+      />
       <div
-        className=" flex justify-between form-control bg-[#e9ecef]"
-        style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+        className=" cursor-pointer  flex justify-center items-center"
         onClick={handleTogglePanel}
       >
-        <span>{buttonText}</span>
+        {/* <span>{buttonText}</span> */}
         <span style={{ marginLeft: "5px" }}>{isPanelOpen ? "▲" : "▼"}</span>
       </div>
 
@@ -57,7 +100,31 @@ const CustomDropdown = ({
           {panelContent}
         </div>
       )}
-    </div>
+      {/* <div ref={dropdownRef} style={{ position: "relative" }}>
+        <label>{displayField}</label>
+
+      </div> */}
+    </FormGroup>
+    // <DropDownBox
+    //   dataSource={dataSource}
+    //   value={selectedFruit}
+    //   ref={dropDownBoxRef}
+    //   onValueChanged={onValueChanged}
+    //   acceptCustomValue={true}
+    //   openOnFieldClick={false}
+    //   onEnterKey={addItem}
+    //   label="Fruits"
+    //   labelMode="floating"
+    // >
+    //   <List
+    //     ref={listRef}
+    //     dataSource={dataSource}
+    //     allowItemDeleting={true}
+    //     selectionMode="single"
+    //     onSelectionChanged={changeDropDownBoxValue}
+    //     onItemDeleting={onItemDeleting}
+    //   />
+    // </DropDownBox>
   );
 };
 

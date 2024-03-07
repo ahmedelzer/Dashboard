@@ -11,9 +11,10 @@ import {
 } from "reactstrap";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
-
+import { Sm } from "./Sm";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
+import FormContainer from "./FormContainer";
 
 const Popup = ({
   row,
@@ -23,11 +24,14 @@ const Popup = ({
   open,
   tableSchema,
   errorResult,
+  img,
   returnRowData,
   isNewRow,
 }) => {
   const handleSubmit = (event) => {};
+  console.log(tableSchema);
 
+  console.log("dataError", errorResult);
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
       <Modal
@@ -41,33 +45,19 @@ const Popup = ({
             : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
         </ModalHeader>
         <ModalBody>
-          <Container>
-            <Row>
-              {tableSchema?.dashboardFormSchemaParameters?.map(
-                (param, index) => (
-                  <Col
-                    sm={param.lookupID === null ? 6 : 12}
-                    className="px-2"
-                    key={index}
-                  >
-                    <DataCellRender
-                      data={param}
-                      editedRow={row}
-                      value={row[param.parameterField]}
-                      onChange={onChange}
-                      dataError={errorResult} // Ensure datapost is defined
-                    />
-                  </Col>
-                )
-              )}
-            </Row>
-          </Container>
+          <FormContainer
+            tableSchema={tableSchema}
+            row={row}
+            onChange={onChange}
+            errorResult={errorResult}
+            img={img}
+          />
         </ModalBody>
         <ModalFooter>
           <Button onClick={onCancelChanges} className="pop">
             Cancel
           </Button>{" "}
-          <Button onClick={onApplyChanges} className="pop">
+          <Button type="submit" onClick={onApplyChanges} className="pop">
             Done
           </Button>
         </ModalFooter>

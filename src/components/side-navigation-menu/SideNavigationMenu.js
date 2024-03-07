@@ -12,13 +12,27 @@ import { useNavigation } from "../../contexts/navigation";
 import { useScreenSize } from "../../utils/media-query";
 import "./SideNavigationMenu.scss";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import { LanguageContext } from "../../contexts/Language";
+import { centralizationURL } from "../../request";
 
 let [id, setId] = "";
 function SideNavigationMenu(props) {
   let { data } = useFetch(
-    "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1"
+    "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
+    centralizationURL
   );
+  let test = useFetch(
+    "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
+    centralizationURL
+  );
+  console.log("====================================");
+  console.log(test);
+  console.log("====================================");
+  fetch(
+    "http://ihs.ddnsking.com:8000/Centralization/api/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1"
+  )
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error("Error fetching data:", error));
   //   const data=
   //   [
   //     {

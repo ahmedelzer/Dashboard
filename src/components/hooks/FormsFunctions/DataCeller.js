@@ -4,35 +4,6 @@ import { FormGroup, Label } from "reactstrap";
 import { SearchingCellRender } from "../FormsFunctions/SearchingCellRender";
 import DisplayErorr from "./DisplayError";
 import FieldGroup from "./FieldGroup";
-
-const s = {
-  dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
-  schemaType: "Table",
-  dashboardFormSchemaParameters: [
-    {
-      dashboardFormSchemaParameterID: "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
-      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
-      isEnable: false,
-      parameterType: "text",
-      parameterField: "dashboardMenuCategoryId",
-      parameterTitel: "dashboard Menu Category Id",
-      lookupID: null,
-      lookupReturnField: null,
-      lookupDisplayField: null,
-    },
-    {
-      dashboardFormSchemaParameterID: "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
-      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
-      isEnable: true,
-      parameterType: "text",
-      parameterField: "dashboardMenuCategoryName",
-      parameterTitel: "dashboard Menu Category Name",
-      lookupID: null,
-      lookupReturnField: null,
-      lookupDisplayField: null,
-    },
-  ],
-};
 const TextParameter = ({
   data,
   value,
@@ -40,6 +11,7 @@ const TextParameter = ({
   Enable,
   dataError,
   editedRow,
+  img,
 }) => {
   const [Title, settital] = useState(`${data.parameterTitel}`);
   const [focus, setFocus] = useState(false);
@@ -49,6 +21,7 @@ const TextParameter = ({
       onChange(name, files[0]); // Pass the file object to the onChange handler
     }
   };
+  console.log("data", data);
   return (
     <div>
       <DisplayErorr dataError={dataError} setTital={settital} data={data} />
@@ -57,8 +30,9 @@ const TextParameter = ({
         // accept="image/*"
         editedRow={editedRow}
         required={Enable}
+        img={img}
         placeholder={data.parameterTitel}
-        value={value ? value : ""}
+        value={value ? value : null}
         title={Title}
         setTital={settital}
         Title={Title}
@@ -97,6 +71,7 @@ export default function DataCellRender({
   value,
   onChange,
   dataError,
+  img,
   editedRow,
 }) {
   const Enable = data.isEnable;
@@ -109,6 +84,7 @@ export default function DataCellRender({
             dataError={dataError}
             data={data}
             value={value}
+            img={img}
             onChange={onChange}
             Enable={Enable}
           />
@@ -125,8 +101,9 @@ export default function DataCellRender({
         return (
           <TextParameter
             dataError={dataError}
-            editedRow={editedRow}
+            img={img}
             data={data}
+            editedRow={editedRow}
             value={value}
             onChange={onChange}
             Enable={Enable}
@@ -139,10 +116,10 @@ export default function DataCellRender({
   } else {
     return (
       <SearchingCellRender
-        data={data}
+        dataform={data}
         value={value}
         onChange={onChange}
-        popupTableData={s}
+        lookupID={data.lookupID}
       />
     );
   }

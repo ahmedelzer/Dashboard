@@ -47,16 +47,15 @@ const PopupEditing = React.memo(
           ) => {
             const isNew = addedRows.length > 0;
             let editedRow;
+            let base64;
+            let img = null;
             let rowId;
             let row = null;
             let rowIds = [0];
 
             if (isNew) {
               rowId = 0;
-              editedRow = addedRows[rowId];
-              {
-                /* { ...addedRows[rowId], ...editedRow }; */
-              }
+              editedRow = { ...addedRows[rowId], ...editedRow };
             } else {
               [rowId] = editingRowIds;
               const targetRow = rows.filter(
@@ -64,18 +63,129 @@ const PopupEditing = React.memo(
               )[0];
               editedRow = { ...targetRow, ...rowChanges[rowId] };
             }
+            const handleCombinedChange = async (
+              event,
+              selectedOption,
+              base64,
+              setimg,
+              setbase64,
+              imageUrl,
+              seterror,
+              webcamRef,
+              setCapturedImage
+            ) => {
+              const { name, value, files } = event.target;
 
-            const processValueChange = ({ target: { name, value } }) => {
-              const changeArgs = {
-                rowId,
-                change: createRowChange(editedRow, value, name),
-              };
-              if (isNew) {
-                changeAddedRow(changeArgs);
-              } else {
-                changeRow(changeArgs);
+              // Handle file input change
+
+              if (files && selectedOption === "file") {
+                const file = files[0];
+                setimg(file);
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                  let base64Data = reader.result;
+                  const [, base64String] = base64Data.split(";base64,"); // Split after "data:image/jpeg;base64,"
+                  setbase64(base64String);
+                  const changeArgs = {
+                    rowId,
+                    change: createRowChange(editedRow, base64String, name),
+                  };
+                  if (isNew) {
+                    changeAddedRow(changeArgs);
+                    console.log("added row", editedRow);
+                  } else {
+                    changeRow(changeArgs);
+                  }
+                };
               }
+              // Handle regular input change
+              else if (value.startsWith("http") || selectedOption === "url") {
+                try {
+                  const response = await fetch(imageUrl);
+                  if (response.ok) {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.startsWith("image")) {
+                      const blob = await response.blob();
+                      const reader = new FileReader();
+                      setimg(blob);
+                      reader.readAsDataURL(blob);
+                      reader.onload = () => {
+                        const base64Data = reader.result; // Extract base64 string from result
+                        const [, base64String] = base64Data.split(";base64,");
+                        setbase64(base64String);
+                        const changeArgs = {
+                          rowId,
+                          change: createRowChange(
+                            editedRow,
+                            base64String,
+                            name
+                          ),
+                        };
+                        if (isNew) {
+                          changeAddedRow(changeArgs);
+                          console.log("added row", editedRow);
+                        } else {
+                          changeRow(changeArgs);
+                        }
+                      };
+                    } else {
+                      seterror("URL does not point to an image");
+                      console.error("URL does not point to an image");
+                      // Handle error: URL does not point to an image
+                    }
+                  } else {
+                    console.error("Failed to fetch image:", response.status);
+                    // Handle error: Failed to fetch image
+                  }
+                } catch (error) {
+                  console.error("Error fetching image:", error);
+                  seterror(error);
+                }
+              } else if (value.startsWith("data:image") || webcamRef) {
+                const imageSrc = webcamRef.current.getScreenshot();
+                setCapturedImage(imageSrc);
+                //setimg(imageSrc);
+                // Convert the captured image to base64
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                const image = new Image();
+                image.src = imageSrc;
+                image.onload = () => {
+                  canvas.width = image.width;
+                  canvas.height = image.height;
+                  ctx.drawImage(image, 0, 0);
+                  const base64Data = canvas.toDataURL("image/jpeg");
+                  const [, base64String] = base64Data.split(";base64,");
+                  setbase64(base64String);
+                  // console.log("Base64 Image:", base64Data);
+
+                  const changeArgs = {
+                    rowId,
+                    change: createRowChange(editedRow, base64String, name),
+                  };
+                  if (isNew) {
+                    changeAddedRow(changeArgs);
+                    console.log("added row", editedRow);
+                  } else {
+                    changeRow(changeArgs);
+                  }
+                };
+              } else {
+                const changeArgs = {
+                  rowId,
+                  change: createRowChange(editedRow, value, name),
+                };
+                if (isNew) {
+                  changeAddedRow(changeArgs);
+                  console.log("added row", editedRow);
+                } else {
+                  changeRow(changeArgs);
+                }
+              }
+              console.log(editedRow);
             };
+
             const iDField = schema.idField;
             const onApplyChanges = async () => {
               const action = isNew ? postAction : putAction;
@@ -138,7 +248,8 @@ const PopupEditing = React.memo(
               <Popup
                 open={open}
                 row={editedRow}
-                onChange={processValueChange}
+                img={img}
+                onChange={handleCombinedChange}
                 onApplyChanges={onApplyChanges}
                 onCancelChanges={cancelChanges}
                 tableSchema={schema}

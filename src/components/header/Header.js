@@ -48,7 +48,7 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
         </Item>
         <Item location={Right ? "before" : "after"} locateInMenu="auto">
           <Button
-            width={open ? 70 : 30}
+            width={open ? 100 : 30}
             onClick={() => setopen(true)}
             height={"100%"}
             stylingMode={"text"}

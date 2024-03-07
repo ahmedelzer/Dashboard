@@ -41,6 +41,11 @@
       margin-bottom: 20px;
     }
   }
+  .drop-list {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 400px;
+  }
 
   .container {
     height: 100%;
