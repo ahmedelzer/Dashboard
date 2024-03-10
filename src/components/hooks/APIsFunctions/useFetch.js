@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { baseURL } from "../../../request";
+import { centralizationURL } from "../../../request";
 import { request } from "../../../request";
 
 const useFetch = (url, base_URL) => {
-  const realurl = `${base_URL ?? baseURL}${url}`;
+  const realurl = `${base_URL ? base_URL : centralizationURL}${url}`;
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

@@ -16,7 +16,6 @@ import {
   TableEditRow,
   TableEditColumn,
 } from "@devexpress/dx-react-grid-bootstrap4";
-import { baseURLWithoutApi } from "../../../request";
 import TestApi from "../../hooks/APIsFunctions/TestApi";
 import {
   Button,
@@ -46,6 +45,7 @@ import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import Popup from "../DynamicPopup/Popup";
+import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -397,16 +397,6 @@ const DynamicTable = ({
   const cancelChanges = () => {
     // row=null;
   };
-  const ImageFormatter = ({ value }) => (
-    <img
-      // src={`${baseURLWithoutApi}${value}`}
-      alt="image"
-      style={{ width: "50px", height: "50px" }}
-    />
-  );
-  const ImageTypeProvider = (props) => (
-    <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
-  );
 
   const rowDoubleClick = (row) => {
     if (setSelectedRow) {
@@ -415,6 +405,10 @@ const DynamicTable = ({
     }
     console.log("row", row);
   };
+  console.log("====================================");
+  console.log(schema);
+  console.log("====================================");
+
   return (
     <div className="card">
       <Grid
@@ -428,7 +422,7 @@ const DynamicTable = ({
         {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
         {paging ? <IntegratedPaging /> : null}
 
-        <ImageTypeProvider for={["countryFlag"]} />
+        <TypeProvider for={["countryFlag"]} />
         <EditingState onCommitChanges={commitChanges} />
         <Table
           rowComponent={({ ...props }) => (
