@@ -1,4 +1,4 @@
-import { baseURL } from "../../../request";
+import { GetProjectUrl } from "../../../request";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -13,7 +13,7 @@ export default async function APIHandling(url, methodType, sendBody) {
   };
 
   try {
-    const response = await fetch(baseURL + "/" + url, requestOptions);
+    const response = await fetch(GetProjectUrl() + "/" + url, requestOptions);
     const result = await response.json();
 
     // Check if the API call was successful based on the HTTP status code

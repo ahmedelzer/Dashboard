@@ -44,7 +44,7 @@ import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import Popup from "../DynamicPopup/Popup";
 
-const socket = new WebSocket("ws://localhost:8080/test");
+import { socket } from "../../hooks/APIsFunctions/WebsocketClient";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -240,7 +240,7 @@ const DynamicTable = ({
 
   const [selectedRow, setSelectedRow] = useState(null); // State to track the selected row
 
-  socket.addEventListener("message", function (event) {
+  socket("/test").addEventListener("message", function (event) {
     const data = JSON.parse(event.data);
     if (data) {
       switch (data.operation) {

@@ -12,13 +12,12 @@ import { useNavigation } from "../../contexts/navigation";
 import { useScreenSize } from "../../utils/media-query";
 import "./SideNavigationMenu.scss";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import { centralizationURL } from "../../request";
-
+import { defaultProjectProxyRoute, SetReoute } from "../../request";
 let [id, setId] = "";
 function SideNavigationMenu(props) {
   let { data } = useFetch(
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
-    centralizationURL
+    defaultProjectProxyRoute
   );
   //   const data=
   //   [
@@ -56,6 +55,7 @@ function SideNavigationMenu(props) {
       items: cat?.dashboardMenuItems?.map((i) => {
         return {
           id: i.dashboardItemID,
+          projectProxyRoute: i.projectProxyRoute,
           text: i.dashboardMenuItemName,
           path: `/${i?.routePath}/${i?.dashboardItemID}`,
         };
@@ -115,15 +115,10 @@ function SideNavigationMenu(props) {
   }, [currentPath, props.compactMode]);
 
   const handleItemClick = (e) => {
-    const selectedItem = e.itemData;
-    if (selectedItem && selectedItem.id) {
-      // console.log(selectedItem.id);
-      setId(selectedItem.id);
-      // You can perform any additional logic here before rendering DynmicTable
-      // For example, you can navigate to the DynmicTable page using react-router-dom
-      // history.push(/DynmicTable/${selectedItem.id});
-    }
+    SetReoute(e.itemData.projectProxyRoute);
+    selectedItemChanged(e);
   };
+
   // console.log(id)
   // const Categories=
   return (
@@ -141,7 +136,7 @@ function SideNavigationMenu(props) {
           selectionMode={"single"}
           focusStateEnabled={false}
           expandEvent={"click"}
-          onItemClick={selectedItemChanged}
+          onItemClick={handleItemClick}
           onContentReady={onMenuReady}
           width={"100%"}
           selectByClick={selectedItemChanged}

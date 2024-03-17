@@ -1,3 +1,5 @@
+import { GetProjectUrl } from "../../../request";
+import { projectProxyRoute } from "../../../request";
 import { baseURL } from "../../../request";
 export function buildApiUrl(apiRequest, constants) {
   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
@@ -12,8 +14,7 @@ export function buildApiUrl(apiRequest, constants) {
     )
     .join("&");
 
-  const apiUrl = `${baseURL}/${apiRequest.routeAdderss}?${queryParam}`;
-  console.log(255);
-  console.log(apiUrl);
+  const apiUrl = `${GetProjectUrl()}/${apiRequest.routeAdderss}?${queryParam}`;
+  console.log("apiRequest", apiRequest);
   return apiUrl;
 }

@@ -1,10 +1,31 @@
 import React from "react";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+// import { ModalBody, ModalHeader, ModalTitle } from "react-bootstrap";
+// import Modal from "react-bootstrap/Modal";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
 function Searching({ open, SearchForm }) {
   return (
-    <Modal isOpen={open} aria-labelledby="form-dialog-title">
-      <ModalBody>{SearchForm}</ModalBody>
-    </Modal>
+    <div className=" w-full h-full">
+      <Modal
+        size="xl"
+        isOpen={open}
+        fullscreen="xl"
+        aria-labelledby="example-modal-sizes-title-lg"
+        // aria-labelledby="form-dialog-title"
+        className="w-full h-full"
+        style={{ width: "111%", height: "100%" }}
+      >
+        <ModalBody>{SearchForm}</ModalBody>
+      </Modal>
+    </div>
   );
 }
 

@@ -16,10 +16,13 @@ const LanguageSelector = () => {
     const selectedLanguageObject = data.dataSource.find(
       (language) => language.shortName === selectedLanguage
     );
-
     if (selectedLanguageObject) {
       setLan(selectedLanguage);
       setRight(selectedLanguageObject.rightDirectionEnable);
+      window.localStorage.setItem(
+        "languageID",
+        selectedLanguageObject.languageId
+      );
       window.localStorage.setItem("language", selectedLanguage);
     }
   };

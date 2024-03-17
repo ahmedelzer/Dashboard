@@ -1,8 +1,10 @@
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
 import { baseURLWithoutApi } from "../../../request";
 
-const filedFormat = ({ value }) => {
-  switch (value) {
+const filedFormat = ({ value, column }) => {
+  switch (
+    column.type // Use 'fieldType' here
+  ) {
     case "image":
       return (
         <img
@@ -12,15 +14,15 @@ const filedFormat = ({ value }) => {
         />
       );
     default:
-      return (
-        <img
-          src={`${baseURLWithoutApi}/${value}`}
-          alt="image"
-          style={{ width: "50px", height: "50px" }}
-        />
-      );
+      return <span>{value}</span>;
   }
 };
-export const TypeProvider = (props) => (
-  <DataTypeProvider formatterComponent={filedFormat} {...props} />
-);
+
+export const TypeProvider = ({ ...props }) => {
+  return (
+    <DataTypeProvider
+      formatterComponent={filedFormat} // Pass 'fieldType' here
+      {...props}
+    />
+  );
+};
