@@ -1,40 +1,53 @@
-import React, { useState } from "react";
-import { DataTypeProvider } from "@devexpress/dx-react-grid";
-import {
-  Grid,
-  Table,
-  TableHeaderRow,
-} from "@devexpress/dx-react-grid-bootstrap4";
-import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import i from "../../1.png";
-const ImageFormatter = ({ value }) => (
-  <img src={value} alt="image" style={{ width: "50px", height: "50px" }} />
-);
+import React, { useEffect } from "react";
 
-const ImageTypeProvider = (props) => (
-  <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
-);
+const WebSocketComponent = () => {
+  useEffect(() => {
+    const uri =
+      "ws://ihs.ddnsking.com:8002/Chanels/Ftr:PurchaseInvoice:d8d7bae7-951a-4d17-8dd9-db563513e0f7:e2b6bd4f-a30b-4d70-ae80-f510479a45eb";
+    const socket = new WebSocket(uri);
 
-export default () => {
-  const [columns] = useState([{ name: "image", title: "Image" }]);
+    socket.onopen = () => {
+      console.log("Connected to the WebSocket server.");
+    };
 
-  const rows = [
-    {
-      image:
-        "https://ahmedelzer.github.io/HTML_And_CSS_Template_two/images/shuffle-02.jpg",
-    },
-    // Add more rows if needed
-  ];
+    socket.onmessage = async (event) => {
+      const blob = event.data;
+      const reader = new FileReader();
 
-  const [tableColumnExtensions] = useState([]);
+      reader.onload = () => {
+        try {
+          const jsonData = JSON.stringify(reader.result);
+          // const jsonData = reader.result;
+          console.log("Received JSON data from server:", jsonData);
+          // Handle the received JSON data here
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
+      };
 
-  return (
-    <div className="card">
-      <Grid rows={rows} columns={columns}>
-        <ImageTypeProvider for={["image"]} />
-        <Table columnExtensions={tableColumnExtensions} />
-        <TableHeaderRow />
-      </Grid>
-    </div>
-  );
+      reader.onerror = (error) => {
+        console.error("FileReader error:", error);
+      };
+
+      reader.readAsText(blob);
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = (event) => {
+      console.log("Connection closed:", event);
+    };
+
+    // Clean up the WebSocket connection
+    return () => {
+      socket.close();
+      console.log("Connection closed.");
+    };
+  }, []); // Run only once on component mount
+
+  return <div>WebSocket Component</div>;
 };
+
+export default WebSocketComponent;

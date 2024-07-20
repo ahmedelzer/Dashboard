@@ -4,11 +4,13 @@ import { useTranslation } from "react-i18next";
 import useFetch from "../hooks/APIsFunctions/useFetch";
 import { BiSolidCircleHalf } from "react-icons/bi";
 import { LanguageContext } from "../../contexts/Language";
+import { defaultProjectProxyRoute } from "../../request";
 const LanguageSelector = () => {
   const { setRight, setLan } = useContext(LanguageContext);
   const { i18n } = useTranslation();
   const { data } = useFetch(
-    "/Language/GetLanguages?ActiveStatus=1&PageSize=100&PageNumber=1"
+    "/Language/GetLanguages?ActiveStatus=1&PageSize=100&PageNumber=1",
+    defaultProjectProxyRoute
   );
 
   const changeLanguage = (e) => {

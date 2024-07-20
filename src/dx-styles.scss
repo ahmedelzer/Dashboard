@@ -75,6 +75,12 @@
 .bg {
   background: $base-accent;
 }
+.border-color {
+  border-color: $base-accent;
+}
+.border {
+  border-color: $base-accent;
+}
 .dx-scrollbar-hoverable
   .dx-scrollable-scroll.dx-state-invisible
   .dx-scrollable-scroll-content {

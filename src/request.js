@@ -1,8 +1,8 @@
 import axios from "axios";
-export const baseURL = "http://ihs.ddnsking.com:8002";
+export const baseURL = "http://maingatewayapi.ihs-solutions.com:8000";
 export const websoketBaseURI = "ws://ihs.ddnsking.com:8002/Chanels";
 export const defaultProjectProxyRoute =
-  "http://ihs.ddnsking.com:8002/Centralization/Api";
+  "http://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
 
 // Get projectProxyRoute
 export const projectProxyRoute =
@@ -13,7 +13,6 @@ export function SetReoute(Route) {
   window.sessionStorage.setItem("projectProxyRoute", Route);
 }
 
-console.log(11111111111111111111111111, projectProxyRoute);
 // Add other methods as needed
 
 export const baseURLWithoutApi = `${baseURL}/${window.sessionStorage.getItem(

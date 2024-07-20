@@ -1,12 +1,192 @@
-import React, { useState } from "react";
-import { HiChevronDown } from "react-icons/hi";
-import { HiChevronUp } from "react-icons/hi";
-function PartionFrom({ Header, Popup, Table }) {
-  const [open, setopen] = useState(false);
-  const [Edit, setEdit] = useState(false);
+import React, { useEffect, useState } from "react";
+
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import { defaultProjectProxyRoute, websoketBaseURI } from "../../../request";
+import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import PanelActions from "./PanelActions";
+import BaseTable from "../DynamicTable/BaseTable";
+import { WSclass } from "../../hooks/FormsFunctions/WSclass";
+import { BuildWSURL } from "../../hooks/APIsFunctions/BuildWSURL";
+import APIHandling from "../../hooks/APIsFunctions/APIHandling";
+import LiveFormPartions from "./LiveFormPartions";
+import LiveTable from "../DynamicTable/LiveTable";
+import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
+
+function PartionFrom({ Schemas }) {
+  const mainSchema = Schemas
+    ? Schemas.find((item) => item?.isMainSchema === true)
+    : null;
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [searchAction, setSearchAction] = useState(null);
+  const [getAction, setGetAction] = useState(null);
+  const [postAction, setPostAction] = useState(null);
+  const [putAction, setPutAction] = useState(null);
+  // const [data, setData] = useState([{ invoice: {}, invoiceItems: [] }]);
+  const [data, setData] = useState(null);
+  const [mainID, setMainID] = useState("");
+  const [panelOpen, setPanelOpen] = useState(false);
+  var WSClient;
+  const { data: actionsData } = useFetch(
+    GetSchemaActionsUrl(mainSchema?.dashboardFormSchemaID),
+    defaultProjectProxyRoute
+  );
+
+  useEffect(() => {
+    const FetchData = async () => {
+      if (actionsData) {
+        const search = actionsData.find(
+          (action) => action?.dashboardFormActionMethodType === "Search"
+        );
+        const get = actionsData.find(
+          (action) => action?.dashboardFormActionMethodType === "Get"
+        );
+        const post = actionsData.find(
+          (action) => action?.dashboardFormActionMethodType === "Post"
+        );
+        const put = actionsData.find(
+          (action) => action?.dashboardFormActionMethodType === "Put"
+        );
+        setGetAction(get);
+        setSearchAction(search);
+        setPostAction(post);
+        setPutAction(put);
+      }
+    };
+    FetchData();
+
+    // Cleanup function to close WebSocket connection
+  }, [actionsData, Schemas]);
+  const CreateActionBody = (isNew, isMainSchema, schema, editedRow) => {
+    if (isNew && isMainSchema) {
+      return {
+        [mainSchema.propertyName]: {},
+        [schema.propertyName]: {},
+      };
+    } else if (isMainSchema) {
+      return {
+        entityID: `${mainID}`,
+        patchJSON: editedRow,
+      };
+    } else if (isNew) {
+      return {
+        [schema.propertyName]: {},
+      };
+    } else {
+      return {
+        entityID: `${editedRow[schema.iDField]}`,
+        patchJSON: editedRow,
+      };
+    }
+  };
+  console.log("====================================");
+  console.log(Schemas);
+  console.log("====================================");
+  // const onApplyChangesForMainSchema = async () => {
+  //   const action = mainID ? postAction : putAction;
+  //   const isNew = mainID;
+  //   const body = mainID
+  //     ? //editedRow
+  //       {}
+  //     : {
+  //         entityID: `${editedRow[iDField]}`,
+  //         ...{ patchJSON: editedRow },
+  //       };
+
+  //   const res = await APIHandling(
+  //     action.routeAdderss,
+  //     action.dashboardFormActionMethodType,
+  //     body
+  //   );
+  //   setResult(res);
+
+  //   if (res.success) {
+  //     const newRow = { ...res.data, ...editedRow };
+  //     if (isNew) {
+  //       state.rows = [...state.rows, newRow];
+  //       cancelAddedRows({ rowIds });
+  //     } else {
+  //       const updatedRows = state.rows.map((row) => {
+  //         if (row[iDField] === editedRow[iDField]) {
+  //           return newRow; // Replace the existing row with the updated newRow
+  //         }
+  //         return row;
+  //       });
+
+  //       // Update the state with the updated rows
+  //       state.rows = updatedRows;
+
+  //       rowIds = [rowId];
+  //       stopEditRows({ rowIds });
+  //       cancelChangedRows({ rowIds });
+  //     }
+
+  //     // Assuming cancelAddedRows is a function to cancel added rows
+  //   }
+  // };
+  useEffect(() => {
+    const GetDataSources = () => {
+      console.log("_mainID", mainID);
+      if (mainID) {
+        WSClient = new WSclass(`${BuildWSURL(getAction, mainID)}`);
+        // WSClient.connect();
+        WSClient.ReciveMessages((datasources) => {
+          let schemaDataSource = Schemas?.map(
+            (data) => datasources[0][data?.dataSourceName]
+          );
+
+          setData(schemaDataSource);
+        });
+      }
+    };
+
+    if (selectedRow) {
+      setMainID(selectedRow[mainSchema.idField]);
+      GetDataSources();
+    }
+  }, [panelOpen]);
   return (
-    <div className="my-4">
-      <div
+    <div>
+      {Schemas &&
+        Schemas.map((Schema) => (
+          <div key={Schema?.dashboardFormSchemaID}>
+            <DrawPartionFrom
+              postAction={postAction}
+              putAction={putAction}
+              mainSchema={mainSchema}
+              mainID={mainID}
+              Schema={Schema}
+              updatedData={data}
+            />
+            {/* <LiveFormPartions
+              Schema={mainSchema}
+              updatedData={data[0][mainSchema?.dataSourceName] || {}}
+            /> */}
+            {/* <LiveTable dataSource={Schema} updateRow={data[index]} /> */}
+          </div>
+        ))}
+      <PanelActions
+        panelOpen={panelOpen}
+        setPanelOpen={setPanelOpen}
+        SearchComponent={
+          <BaseTable
+            setPanelOpen={setPanelOpen}
+            setSelectedRow={setSelectedRow}
+            schema={mainSchema}
+            getAction={searchAction}
+            isSearchingTable={true}
+          />
+        }
+      />
+      {/* {Schemas.map((Schema) => WSselecet(Schema))} */}
+      {/* <LiveFormPartions Schema={Schemas} data={data} /> */}
+    </div>
+  );
+
+  // const [open, setopen] = useState(false);
+  // const [Edit, setEdit] = useState(false);
+}
+{
+  /* <div
         className="my-1 p-1 border-2 border-[#d5e0d5] roun
         ded-lg transition-all duration-300"
       >
@@ -39,12 +219,10 @@ function PartionFrom({ Header, Popup, Table }) {
             </p>
           </div>
           <div className={Edit ? "cursor-auto" : "pointer-events-none"}>
-            {Popup}
+            {Schema}
           </div>
         </form>
-      </div>
-    </div>
-  );
+      </div> */
 }
 
 export default PartionFrom;

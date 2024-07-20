@@ -51,6 +51,7 @@ const Popup = ({
             onChange={onChange}
             errorResult={errorResult}
             img={img}
+            onApplyChanges={onApplyChanges}
           />
         </ModalBody>
         <ModalFooter>

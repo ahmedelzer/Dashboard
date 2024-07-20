@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { baseURL } from "../../../request";
 import { GetProjectUrl } from "../../../request";
-import { request } from "../../../request";
+import { request, defaultProjectProxyRoute } from "../../../request";
 
 const useFetch = (url, base_URL) => {
-  const realurl = `${base_URL ? base_URL : GetProjectUrl()}${url}`;
+  const realurl = `${
+    base_URL !== GetProjectUrl() ? defaultProjectProxyRoute : base_URL
+  }${url}`;
   //base_URL = "";
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

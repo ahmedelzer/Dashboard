@@ -18,7 +18,7 @@ import Popup from "../DynamicPopup/Popup";
 import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
 import { PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { EditingState } from "@devexpress/dx-react-grid";
-import { MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import Loading from "../../loading/Loading";
@@ -75,6 +75,9 @@ function reducer(state, { type, payload }) {
 function BaseTable({
   schema,
   isSearchingTable,
+  addMessage,
+  editMessage,
+  deleteMessage,
   setSelectedRow,
   paging,
   setPanelOpen,
@@ -171,7 +174,7 @@ function BaseTable({
   const { rows, skip, totalCount, loading } = state;
 
   // end e
-  const commitChanges = ({ added, changed }) => {
+  const commitChanges = ({ added, changed, deleted }) => {
     console.log("t", "done");
     let changedRows;
     if (added) {
@@ -190,6 +193,10 @@ function BaseTable({
         changed[row.id] ? { ...row, ...changed[row.id] } : row
       );
     }
+    if (deleted) {
+      const deletedSet = new Set(deleted);
+      changedRows = rows.filter((row) => !deletedSet.has(row.id));
+    }
     // setRows(changedRows);
   };
 
@@ -207,6 +214,7 @@ function BaseTable({
   const columnsFormat = columns
     .filter((column) => column.type !== "text")
     .map((column) => column.name);
+
   return (
     <Grid
       rows={rows}
@@ -231,13 +239,17 @@ function BaseTable({
         messages={{
           addCommand: "+",
           editCommand: <MdEdit />,
+          deleteCommand: <MdDelete />,
         }}
-        showAddCommand={!isSearchingTable}
-        showEditCommand={!isSearchingTable}
+        // showAddCommand={!isSearchingTable}
+        // showEditCommand={!isSearchingTable}
+        showAddCommand={addMessage}
+        showEditCommand={editMessage}
+        showDeleteCommand={deleteMessage}
       />
       <TableHeaderRow />
 
-      {/* {popupComponent({ state })} */}
+      {!isSearchingTable ? popupComponent({ state }) : <></>}
       {paging ? <PagingPanel /> : null}
     </Grid>
   );

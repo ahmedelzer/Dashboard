@@ -55,7 +55,6 @@ function SideNavigationMenu(props) {
       items: cat?.dashboardMenuItems?.map((i) => {
         return {
           id: i.dashboardItemID,
-          projectProxyRoute: i.projectProxyRoute,
           text: i.dashboardMenuItemName,
           path: `/${i?.routePath}/${i?.dashboardItemID}`,
         };
@@ -115,7 +114,6 @@ function SideNavigationMenu(props) {
   }, [currentPath, props.compactMode]);
 
   const handleItemClick = (e) => {
-    SetReoute(e.itemData.projectProxyRoute);
     selectedItemChanged(e);
   };
 

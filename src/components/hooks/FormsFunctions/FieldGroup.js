@@ -3,17 +3,16 @@ import { Modal, FormCheck } from "react-bootstrap";
 import Webcam from "react-webcam";
 import { FormGroup, Button, Label } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import TextBox from "devextreme-react/text-box";
 export default function FieldGroup({
   label,
   Title,
   data,
-  focus,
   value,
   editedRow,
   onChange,
   setTital,
-  setfocus,
+  dataError,
   ...props
 }) {
   const [base64, setbase64] = useState({});
@@ -21,14 +20,11 @@ export default function FieldGroup({
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("file");
   const [img, setimg] = useState(null);
-  const handleChange = (event) => {
-    setfocus(true);
-  };
   console.log("editedRow finsh", editedRow);
-
+  const errorMessages = dataError?.error?.errors?.DashboardCategoryName;
   const style = () => {
-    if (Title !== data.parameterTitel && focus === false) {
-      return " focus:shadow-[0_0_0_0.2rem_red] focus:border-red-900";
+    if (errorMessages) {
+      return "is-invalid";
     } else {
       return "";
     }
@@ -173,7 +169,7 @@ export default function FieldGroup({
                   onClick={openImageModal}
                 />
               ) : null}
-              <div onChange={handleChange}>
+              <div>
                 <input
                   {...props}
                   type="file"
@@ -302,14 +298,16 @@ export default function FieldGroup({
           )}
         </div>
       ) : (
-        <input
-          {...props}
-          value={value}
-          onInput={handleChange}
-          onChange={onChange}
-          className={`${style()} form-control`}
-        />
+        <>
+          <input
+            {...props}
+            value={value}
+            onChange={onChange}
+            className={`${style()} form-control`}
+          />
+        </>
       )}
+      {/* {error && } */}
     </FormGroup>
   );
 }

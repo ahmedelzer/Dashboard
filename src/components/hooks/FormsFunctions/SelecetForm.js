@@ -19,12 +19,14 @@ function SelectForm(schema) {
           />
         }
         Table={
-          <Table
-            key={schema.idField}
-            schema={schema}
-            paging={true}
-            isSearchingTable={false}
-          />
+          schema.schemaType === "Table" ? (
+            <Table
+              key={schema.idField}
+              schema={schema}
+              paging={true}
+              isSearchingTable={false}
+            />
+          ) : null
         }
       />
       <PanelActions

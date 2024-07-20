@@ -48,20 +48,28 @@ import Popup from "../DynamicPopup/Popup";
 import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
 import BaseTable from "./BaseTable";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import { SetReoute, defaultProjectProxyRoute } from "../../../request";
 const DynamicTable = ({
   schema,
   isSearchingTable,
   setSelectedRow,
   paging,
   setPanelOpen,
+  addMessage = true,
+  editMessage = true,
+  deleteMessage = false,
 }) => {
   const [result, setResult] = useState({});
-  const { data, error, isLoading } = useFetch(
-    GetSchemaActionsUrl(schema.dashboardFormSchemaID)
+  const {
+    data: schemaActions,
+    error,
+    isLoading,
+  } = useFetch(
+    GetSchemaActionsUrl(schema.dashboardFormSchemaID),
+    defaultProjectProxyRoute
   );
-  const schemaActions = data;
 
-  console.log("data", data);
+  SetReoute(schema.projectProxyRoute);
 
   const getAction =
     schemaActions &&
@@ -97,11 +105,14 @@ const DynamicTable = ({
       <BaseTable
         key={schema.idField}
         schema={schema}
+        addMessage={addMessage}
+        editMessage={editMessage}
+        deleteMessage={deleteMessage}
         isSearchingTable={isSearchingTable}
         setSelectedRow={setSelectedRow}
         paging={paging}
         setPanelOpen={setPanelOpen}
-        // popupComponent={null}
+        popupComponent={PopupComponent}
         getAction={getAction}
       />
     </div>

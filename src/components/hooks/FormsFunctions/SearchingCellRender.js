@@ -26,7 +26,9 @@ export function SearchingCellRender({ dataform, value, onChange, lookupID }) {
           schema={data.data}
           className=" "
           setPanelOpen={setPanelOpen}
-          isSearchingTable={true}
+          addMessage={false}
+          editMessage={false}
+          deleteMessage={false}
           key={lookupID}
           setSelectedRow={setSelectedRow}
         />

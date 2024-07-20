@@ -2,7 +2,7 @@ import { GetProjectUrl } from "../../../request";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("languageName", "ARABIC");
+  // myHeaders.append("languageName", "ARABIC");
   var raw = JSON.stringify(sendBody);
 
   var requestOptions = {

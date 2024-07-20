@@ -210,7 +210,16 @@ const PopupEditing = React.memo(
                   state.rows = [...state.rows, newRow];
                   cancelAddedRows({ rowIds });
                 } else {
-                  state.rows.find((row) => row === newRow);
+                  const updatedRows = state.rows.map((row) => {
+                    if (row[iDField] === editedRow[iDField]) {
+                      return newRow; // Replace the existing row with the updated newRow
+                    }
+                    return row;
+                  });
+
+                  // Update the state with the updated rows
+                  state.rows = updatedRows;
+
                   rowIds = [rowId];
                   stopEditRows({ rowIds });
                   cancelChangedRows({ rowIds });

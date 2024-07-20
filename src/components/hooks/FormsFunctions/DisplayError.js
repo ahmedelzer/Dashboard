@@ -7,7 +7,8 @@ function DisplayError({ dataError, data, setTital }) {
     dataError !== undefined &&
     dataError.success === false
   ) {
-    const errorMessages = dataError?.error?.errors?.[data.parameterField];
+    // const errorMessages = dataError?.error?.errors?.[data.parameterField];
+    const errorMessages = dataError?.error?.errors?.DashboardCategoryName;
     console.log("====================================");
     console.log(data.parameterField);
     console.log(dataError);
