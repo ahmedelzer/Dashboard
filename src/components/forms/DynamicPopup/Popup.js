@@ -25,8 +25,8 @@ const Popup = ({
   tableSchema,
   errorResult,
   img,
-  returnRowData,
   isNewRow,
+  isSelectionRow,
 }) => {
   const handleSubmit = (event) => {};
   console.log(tableSchema);
@@ -47,6 +47,7 @@ const Popup = ({
         <ModalBody>
           <FormContainer
             tableSchema={tableSchema}
+            isSelectionRow={isSelectionRow}
             row={row}
             onChange={onChange}
             errorResult={errorResult}

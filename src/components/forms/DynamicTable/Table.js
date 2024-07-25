@@ -52,12 +52,17 @@ import { SetReoute, defaultProjectProxyRoute } from "../../../request";
 const DynamicTable = ({
   schema,
   isSearchingTable,
-  setSelectedRow,
+  setSelectedRow = false,
   paging,
   setPanelOpen,
+  selectionRow,
   addMessage = true,
   editMessage = true,
   deleteMessage = false,
+  selection,
+  setSelection,
+  addSelectedList = false,
+  PopupComponent = false,
 }) => {
   const [result, setResult] = useState({});
   const {
@@ -86,7 +91,7 @@ const DynamicTable = ({
     schemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Put"
     );
-  const PopupComponent = ({ state }) => {
+  const PopupComponentTable = ({ state }) => {
     return (
       <PopupEditing
         popupComponent={Popup}
@@ -96,6 +101,7 @@ const DynamicTable = ({
         setResult={setResult}
         result={result}
         schema={schema}
+        addSelectedList={addSelectedList}
       />
     );
   };
@@ -105,6 +111,7 @@ const DynamicTable = ({
       <BaseTable
         key={schema.idField}
         schema={schema}
+        selectionRow={selectionRow}
         addMessage={addMessage}
         editMessage={editMessage}
         deleteMessage={deleteMessage}
@@ -112,8 +119,11 @@ const DynamicTable = ({
         setSelectedRow={setSelectedRow}
         paging={paging}
         setPanelOpen={setPanelOpen}
-        popupComponent={PopupComponent}
+        popupComponent={PopupComponent ? PopupComponent : PopupComponentTable}
         getAction={getAction}
+        selection={selection}
+        setSelection={setSelection}
+        addSelectedList={addSelectedList}
       />
     </div>
   );

@@ -2,15 +2,22 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import { Sm } from "./Sm";
-function FormContainer({ tableSchema, row, onChange, errorResult, img }) {
+function FormContainer({
+  tableSchema,
+  row,
+  onChange,
+  errorResult,
+  img,
+  isSelectionRow,
+}) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
-    (e) => e.isEnable && e.indexNumber
+    (e) => e.isEnable
   ).parameterField;
   console.log(tableSchema, 12);
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
   //todo).parameterField;
-  console.log("actionField", actionField);
+  console.log("tableSchema", tableSchema);
   return (
     <div>
       {" "}
@@ -28,6 +35,7 @@ function FormContainer({ tableSchema, row, onChange, errorResult, img }) {
                 value={row[param.parameterField]}
                 onChange={onChange}
                 dataError={errorResult} // Ensure datapost is defined
+                isSelectionRow={isSelectionRow}
               />
             </Col>
           ))}

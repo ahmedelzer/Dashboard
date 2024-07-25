@@ -7,21 +7,24 @@ import {
   VirtualTable,
   TableEditRow,
   TableEditColumn,
+  TableSelection,
 } from "@devexpress/dx-react-grid-bootstrap4";
-import {
-  DataTypeProvider,
-  VirtualTableState,
-  createRowCache,
-} from "@devexpress/dx-react-grid";
+import { createRowCache } from "@devexpress/dx-react-grid";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import Popup from "../DynamicPopup/Popup";
 import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
-import { PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
-import { EditingState } from "@devexpress/dx-react-grid";
+import {
+  EditingState,
+  IntegratedPaging,
+  IntegratedSelection,
+  PagingState,
+  SelectionState,
+} from "@devexpress/dx-react-grid";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import Loading from "../../loading/Loading";
+import WaringPop from "../PartingFrom/WaringPop";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -83,10 +86,15 @@ function BaseTable({
   setPanelOpen,
   popupComponent,
   getAction,
+  selectionRow,
+  selection,
+  setSelection,
+  addSelectedList,
 }) {
   console.log("schemaBasetable", schema);
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
   const getRowId = (row) => row[schema.idField];
   const dataSourceAPI = (query, skip, take) =>
     buildApiUrl(query, {
@@ -101,13 +109,44 @@ function BaseTable({
     }
     console.log("row", row);
   };
-  const CustomRow = ({ row, ...restProps }) => (
-    <Table.Row
-      {...restProps}
-      onDoubleClick={() => rowDoubleClick(row)}
-      style={{ cursor: "pointer" }}
-    />
-  );
+  const CustomRow = ({ row, onRowClick, ...restProps }) => {
+    if (selection) {
+      return (
+        <Table.Row
+          {...restProps}
+          onClick={() => onRowClick(row)}
+          className="!hover:bg-red bg"
+          style={{
+            cursor: "pointer",
+            backgroundColor: restProps.selected
+              ? "var(--main-color2)"
+              : "white",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          {React.Children.map(restProps.children, (child) =>
+            React.cloneElement(child, {
+              style: {
+                ...child.props.style,
+                backgroundColor: `${
+                  restProps.selected ? "var(--main-color2)" : "white"
+                }`,
+              },
+            })
+          )}
+        </Table.Row>
+      );
+    } else {
+      return (
+        <Table.Row
+          {...restProps}
+          onDoubleClick={() => rowDoubleClick(row)}
+          style={{ cursor: "pointer" }}
+        />
+      );
+    }
+  };
 
   const [columns, setColumns] = useState([]);
 
@@ -174,32 +213,42 @@ function BaseTable({
   const { rows, skip, totalCount, loading } = state;
 
   // end e
-  const commitChanges = ({ added, changed, deleted }) => {
-    console.log("t", "done");
-    let changedRows;
-    if (added) {
-      const startingAddedId =
-        rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
-      changedRows = [
-        ...rows,
-        ...added.map((row, index) => ({
-          id: startingAddedId + index,
-          ...row,
-        })),
-      ];
+  const commitChanges = ({ deleted }) => {
+    if (deleted && deleted.length > 0) {
+      const rowDelete = rows?.find((row) => row[schema.idField] === deleted[0]);
+      handleDelete(rowDelete);
     }
-    if (changed) {
-      changedRows = rows.map((row) =>
-        changed[row.id] ? { ...row, ...changed[row.id] } : row
+  };
+  const handleDelete = (row) => {
+    setRowToDelete(row);
+    setModalIsOpen(true);
+  };
+  const confirmDelete = () => {
+    state.rows = rows.filter(
+      (row) => row[schema.idField] !== rowToDelete[schema.idField]
+    );
+    setModalIsOpen(false);
+    setRowToDelete(null);
+  };
+  const DetailsButton = ({ row }) => (
+    <button
+      className="bg text-white px-2 py-1 rounded"
+      onClick={() => alert(`Details of ${row.name}`)}
+    >
+      Details
+    </button>
+  );
+
+  const DetailsCell = (props) => {
+    if (props.column.name === "details") {
+      return (
+        <Table.Cell {...props}>
+          <DetailsButton row={props.row} />
+        </Table.Cell>
       );
     }
-    if (deleted) {
-      const deletedSet = new Set(deleted);
-      changedRows = rows.filter((row) => !deletedSet.has(row.id));
-    }
-    // setRows(changedRows);
+    return <Table.Cell {...props} />;
   };
-
   // e
   useEffect(() => {
     if (!rows) {
@@ -207,16 +256,25 @@ function BaseTable({
     }
   }, [rows]);
 
-  const cancelChanges = () => {
-    // row=null;
-  };
-  //e
   const columnsFormat = columns
     .filter((column) => column.type !== "text")
     .map((column) => column.name);
-
+  const handleRowClick = (row) => {
+    const isSelected = selection.some(
+      (selectedRow) => selectedRow[schema.idField] === row[schema.idField]
+    );
+    setSelection((prevSelection) =>
+      isSelected
+        ? prevSelection.filter(
+            (selectedRow) => selectedRow[schema.idField] !== row[schema.idField]
+          )
+        : [...prevSelection, row]
+    );
+  };
   return (
     <Grid
+      // rows={initialRows}
+      // columns={initialColumns}
       rows={rows}
       columns={columns}
       getRowId={getRowId}
@@ -229,11 +287,41 @@ function BaseTable({
 
       <TypeProvider for={columnsFormat} />
       <EditingState onCommitChanges={commitChanges} />
+      {/* {selectionRow && (
+        <SelectionState
+          selection={selection}
+          onSelectionChange={setSelection}
+          
+        />
+      )} */}
+      {selectionRow && (
+        <SelectionState
+          selection={selection.map((row) => row[schema.idField])}
+          onSelectionChange={(newSelection) => {
+            setSelection(
+              rows.filter((row) => newSelection.includes(row[schema.idField]))
+            );
+          }}
+        />
+      )}
+      {selectionRow && <IntegratedSelection />}
       <Table
-        rowComponent={({ ...props }) => (
-          <CustomRow {...props} onRowDoubleClick={rowDoubleClick} />
+        rowComponent={({ row, ...props }) => (
+          <CustomRow
+            {...props}
+            onRowDoubleClick={rowDoubleClick}
+            row={row}
+            onRowClick={handleRowClick}
+            // selected={selection?.includes(row[schema.idField])}
+            selected={selection?.some(
+              (selectedRow) =>
+                selectedRow[schema.idField] === row[schema.idField]
+            )}
+          />
         )}
+        cellComponent={DetailsCell}
       />
+      {/* {selectionRow && <TableSelection showSelectAll />} */}
 
       <TableEditColumn
         messages={{
@@ -241,8 +329,6 @@ function BaseTable({
           editCommand: <MdEdit />,
           deleteCommand: <MdDelete />,
         }}
-        // showAddCommand={!isSearchingTable}
-        // showEditCommand={!isSearchingTable}
         showAddCommand={addMessage}
         showEditCommand={editMessage}
         showDeleteCommand={deleteMessage}
@@ -251,8 +337,12 @@ function BaseTable({
 
       {!isSearchingTable ? popupComponent({ state }) : <></>}
       {paging ? <PagingPanel /> : null}
+      <WaringPop
+        confirmDelete={confirmDelete}
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+      />
     </Grid>
   );
 }
-
 export default BaseTable;

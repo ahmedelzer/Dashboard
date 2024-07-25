@@ -15,7 +15,7 @@ export default function DynamicTable() {
     defaultProjectProxyRoute
   );
   // const lookup= useFetch('/Dashboard/GetDashboardFormLookups');
-  // console.log(lookup)
+  console.log("lookup", data);
   if (error) {
     // Handle error, e.g., display an error message
     return <div>Error: {error.message}</div>;

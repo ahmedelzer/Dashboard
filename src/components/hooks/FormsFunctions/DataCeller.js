@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, Component, useRef, useState } from "react";
 import { DateBox, DropDownBox, RadioGroup } from "devextreme-react";
 import { FormGroup, Label } from "reactstrap";
 import { SearchingCellRender } from "../FormsFunctions/SearchingCellRender";
@@ -29,6 +29,7 @@ const TextParameter = ({
   editedRow,
   img,
   onKeyPress,
+  ...props
 }) => {
   const [Title, settital] = useState(`${data.parameterTitel}`);
   const handleChange = (event) => {
@@ -78,12 +79,15 @@ const TextParameter = ({
         name={data.parameterField}
         onChange={onChange}
         readOnly={!Enable}
+        {...props}
         step={SetParameterTypeStep(data?.parameterType)}
         onKeyPress={onKeyPress}
       />
     </div>
   );
 };
+// const BaseInput=({ value, onChange, Enable, onKeyPress })
+
 const DateTimeParameter = ({ value, Enable }) => (
   <DateBox
     value={new Date(value ? value : Date.now())}
@@ -126,7 +130,15 @@ export default function DataCellRender({
   img,
   editedRow,
   isActionField,
+  isSelectionRow,
 }) {
+  function handleSelectionRow() {
+    if (isSelectionRow[data.parameterField]) {
+      return false;
+    } else {
+      return data.isEnable;
+    }
+  }
   if (data?.lookupID === null) {
     switch (data.parameterType) {
       case "text":
@@ -137,7 +149,8 @@ export default function DataCellRender({
             value={value}
             img={img}
             onChange={onChange}
-            Enable={data.isEnable}
+            Enable={handleSelectionRow()}
+            // Enable={data.isEnable}
             onKeyPress={SetkeyPressEvent(isActionField)}
           />
         );
