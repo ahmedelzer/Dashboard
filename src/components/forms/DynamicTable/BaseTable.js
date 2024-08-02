@@ -8,6 +8,7 @@ import {
   TableEditRow,
   TableEditColumn,
   TableSelection,
+  TableFixedColumns,
 } from "@devexpress/dx-react-grid-bootstrap4";
 import { createRowCache } from "@devexpress/dx-react-grid";
 import PopupEditing from "../DynamicPopup/PopupEditing";
@@ -305,6 +306,7 @@ function BaseTable({
         />
       )}
       {selectionRow && <IntegratedSelection />}
+
       <Table
         rowComponent={({ row, ...props }) => (
           <CustomRow

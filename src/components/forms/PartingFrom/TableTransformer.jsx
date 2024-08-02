@@ -1,16 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
 import {
   Grid,
   TableHeaderRow,
@@ -33,292 +23,332 @@ import {
 import WaringPop from "./WaringPop";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import { LanguageContext } from "../../../contexts/Language";
-import PopupEditing from "../DynamicPopup/PopupEditing";
-import Popup from "../DynamicPopup/Popup";
-import APIHandling from "../../hooks/APIsFunctions/APIHandling";
-const initialColumns = [
-  { name: "id", title: "ID" },
-  { name: "name", title: "Name" },
-  // { name: "age", title: "Age" },
-  { name: "details", title: "DetailsAction" },
-];
-
-const initialRows = [
-  { id: 0, name: "John Doe", age: 30 },
-  { id: 1, name: "Jane Smith", age: 25, details: "aa" },
-];
-
-const InTable = ({ rows, setRows, selection, setSelection }) => {
-  const [columns] = useState(initialColumns);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
-  const getRowId = (row) => row.id;
-
-  const commitChanges = ({ added, changed, deleted }) => {
-    let changedRows = [...rows];
-
-    if (added) {
-      const startingAddedId =
-        rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
-      changedRows = [
-        ...rows,
-        ...added.map((row, index) => ({
-          id: startingAddedId + index,
-          ...row,
-        })),
-      ];
-    }
-    if (changed) {
-      changedRows = rows.map((row) =>
-        changed[row.id] ? { ...row, ...changed[row.id] } : row
-      );
-    }
-    if (deleted) {
-      const deletedSet = new Set(deleted);
-      console.log("====================================");
-      console.log("deleted", deletedSet, deleted);
-      console.log("====================================");
-      if (deletedSet.size > 0) {
-        const rowToDelete = rows.find((row) => deletedSet.has(row.id));
-        handleDelete(rowToDelete);
-      } else {
-        changedRows = rows.filter((row) => !deletedSet.has(row.id));
-        setRows(changedRows);
-      }
-    }
-    setRows(changedRows);
-  };
-  const handleDelete = (row) => {
-    setRowToDelete(row);
-    setModalIsOpen(true);
-  };
-
-  const confirmDelete = () => {
-    setRows(rows.filter((row) => row.id !== rowToDelete.id));
-    setModalIsOpen(false);
-    setRowToDelete(null);
-  };
-  const DetailsButton = ({ row }) => (
-    <button
-      className="bg text-white px-2 py-1 rounded"
-      onClick={() => alert(`Details of ${row.name}`)}
-    >
-      Details
-    </button>
+import DuringTransactionContainer from "./DuringTransactionContainer";
+import BaseTable from "../DynamicTable/BaseTable";
+import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import { defaultProjectProxyRoute } from "../../../request";
+import FormContainerEditing from "./FormContainerEditing";
+import { IsSecondListSubsetOfFirstList } from "./IsSecondListSubsetOfFirstList";
+// const TransFormSchema = [
+//   {
+//     dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//     schemaType: "AvailableTableList",
+//     idField: "postID",
+//     dashboardFormSchemaInfoDTOView: {
+//       dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//       schemaHeader: "Available Posts",
+//       addingHeader: "New Post",
+//       editingHeader: "Edit Post",
+//     },
+//     dashboardFormSchemaParameters: [
+//       {
+//         dashboardFormSchemaParameterID: "d6a2ae3c-7fc8-4239-b605-b0a075bf4fbb",
+//         dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//         isEnable: false,
+//         parameterType: "text",
+//         parameterField: "postID",
+//         parameterTitel: "Post ID",
+//         isIDField: true,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 0,
+//       },
+//       {
+//         dashboardFormSchemaParameterID: "34f1fd25-ab3f-451c-93ad-89ac0a641508",
+//         dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//         isEnable: true,
+//         parameterType: "text",
+//         parameterField: "postTitle",
+//         parameterTitel: "Post Title",
+//         isIDField: false,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 1,
+//       },
+//       {
+//         dashboardFormSchemaParameterID: "754d40c2-28ac-445e-8e62-c9e9a28776cc",
+//         dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//         isEnable: true,
+//         parameterType: "text",
+//         parameterField: "postDescription",
+//         parameterTitel: "Post Description",
+//         isIDField: false,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 2,
+//       },
+//     ],
+//     isMainSchema: false,
+//     dataSourceName: "",
+//     projectProxyRoute: "BrandingMart",
+//     propertyName: null,
+//     indexNumber: 0,
+//   },
+//   {
+//     dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//     schemaType: "TransformTable",
+//     idField: "homePostID",
+//     dashboardFormSchemaInfoDTOView: {
+//       dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//       schemaHeader: "Home Posts",
+//       addingHeader: "Home Posts Creator",
+//       editingHeader: "Home Posts Editing",
+//     },
+//     dashboardFormSchemaParameters: [
+//       {
+//         dashboardFormSchemaParameterID: "ce99f99f-e998-47eb-8ae0-d49416b62521",
+//         dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//         isEnable: false,
+//         parameterType: "text",
+//         parameterField: "homePostID",
+//         parameterTitel: "Home Post ID",
+//         isIDField: true,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 0,
+//       },
+//       {
+//         dashboardFormSchemaParameterID: "e17193c9-26ef-4578-823a-790a5051a94a",
+//         dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//         isEnable: true,
+//         parameterType: "datetime",
+//         parameterField: "showTime",
+//         parameterTitel: "Show Time",
+//         isIDField: false,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 1,
+//       },
+//       {
+//         dashboardFormSchemaParameterID: "da30da53-331d-4698-b189-5a09362946ff",
+//         dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//         isEnable: true,
+//         parameterType: "numeric",
+//         parameterField: "duration",
+//         parameterTitel: "Duration By Minute",
+//         isIDField: false,
+//         lookupID: null,
+//         lookupReturnField: null,
+//         lookupDisplayField: null,
+//         indexNumber: 2,
+//       },
+//       {
+//         dashboardFormSchemaParameterID: "511d30a3-7171-411d-9fb8-de717add1ca6",
+//         dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
+//         isEnable: true,
+//         parameterType: "text",
+//         parameterField: "postID",
+//         parameterTitel: "Post ID",
+//         isIDField: false,
+//         lookupID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
+//         lookupReturnField: "postID",
+//         lookupDisplayField: "postTitle",
+//         indexNumber: 3,
+//       },
+//     ],
+//     isMainSchema: true,
+//     dataSourceName: "",
+//     projectProxyRoute: "BrandingMart",
+//     propertyName: null,
+//     indexNumber: 0,
+//   },
+// ];
+// const schemaActions = [
+//   {
+//     dashboardFormSchemaActionID: "ae92a6cc-1715-47cc-a2a2-3a6a98913d1b",
+//     dashboardFormActionMethodType: "Put",
+//     routeAdderss: "Home/UpdateHomePost",
+//     body: "",
+//     returnPropertyName: "",
+//     dashboardFormSchemaActionQueryParams: [],
+//   },
+//   {
+//     dashboardFormSchemaActionID: "584e543d-d012-42c2-8ff9-7d433dd3b3cb",
+//     dashboardFormActionMethodType: "Get",
+//     routeAdderss: "Home/GetHomePosts",
+//     body: "",
+//     returnPropertyName: "",
+//     dashboardFormSchemaActionQueryParams: [
+//       {
+//         dashboardFormSchemaActionQueryParameterID:
+//           "e238c605-3877-4083-b474-2addcb0a61a5",
+//         dashboardFormSchemaActionID: "584e543d-d012-42c2-8ff9-7d433dd3b3cb",
+//         parameterName: "PageSize",
+//         dashboardFormParameterField: "pageSize",
+//       },
+//       {
+//         dashboardFormSchemaActionQueryParameterID:
+//           "489800a0-5948-4323-9077-bb3d5802dbaa",
+//         dashboardFormSchemaActionID: "584e543d-d012-42c2-8ff9-7d433dd3b3cb",
+//         parameterName: "PageNumber",
+//         dashboardFormParameterField: "pageIndex",
+//       },
+//     ],
+//   },
+//   {
+//     dashboardFormSchemaActionID: "47805a12-451e-48d1-abc0-fec414f66dfd",
+//     dashboardFormActionMethodType: "Post",
+//     routeAdderss: "Home/AddHomePost",
+//     body: "",
+//     returnPropertyName: "",
+//     dashboardFormSchemaActionQueryParams: [],
+//   },
+// ];
+const TableTransformer = ({ TransFormSchema }) => {
+  const [schema, setSchema] = useState([]);
+  const [result, setResult] = useState([]);
+  const [leftSelectionContext, setLeftSelectionContext] = useState([]);
+  const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
+  const leftSchema = TransFormSchema.find((schema) => !schema.isMainSchema); //Table
+  const {
+    data: schemaActions,
+    error,
+    isLoading,
+  } = useFetch(
+    GetSchemaActionsUrl(rightSchema.dashboardFormSchemaID),
+    defaultProjectProxyRoute
   );
-
-  const DetailsCell = (props) => {
-    if (props.column.name === "details") {
-      return (
-        <Table.Cell {...props}>
-          <DetailsButton row={props.row} />
-        </Table.Cell>
-      );
-    }
-    return <Table.Cell {...props} />;
-  };
-  return (
-    <div>
-      <Grid rows={rows} columns={columns} getRowId={getRowId}>
-        <PagingState defaultCurrentPage={0} pageSize={5} />
-        <IntegratedPaging />
-        <EditingState onCommitChanges={commitChanges} />
-        <SelectionState selection={[]} onSelectionChange={[]} />
-        <IntegratedSelection />
-        <Table cellComponent={DetailsCell} />
-        <TableHeaderRow />
-        <TableSelection showSelectAll />
-        <TableEditRow />
-        <TableEditColumn
-          showAddCommand
-          showDeleteCommand
-          messages={{
-            addCommand: <MdAdd />,
-            editCommand: <MdEdit />,
-            deleteCommand: <MdDelete />,
-          }}
-        />
-        <PagingPanel />
-      </Grid>
-
-      <WaringPop
-        confirmDelete={confirmDelete}
-        modalIsOpen={modalIsOpen}
-        setModalIsOpen={setModalIsOpen}
-      />
-    </div>
-  );
-};
-
-const TableTransformer = () => {
-  const [state, setState] = useState([]);
-  const { data: leftSchema } = useFetch(
-    "/Dashboard/GetDashboardForm?DashboardMenuItemID=69a840d3-1170-4297-a6f0-baffae16a94f"
-  );
-  const { data: rightSchema } = useFetch(
-    "/Dashboard/GetDashboardForm?DashboardMenuItemID=8d89b8d0-1eed-42d4-a50f-ac504962e4bc"
-  );
-  const handleCombinedChange = async (event) => {};
-  const onApplyChanges = async () => {
-    const action = postAction;
-    //const dataEditerow = ;
-    const body = editedRow;
-    console.log("body", body);
-    const res = await APIHandling(
-      action.routeAdderss,
-      action.dashboardFormActionMethodType,
-      body
+  const getAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Get"
     );
-    handleSelection();
-    setResult(res);
-
-    if (res.success) {
-      const newRow = { ...res.data, ...editedRow };
-      if (isNew) {
-        state.rows = [...state.rows, newRow];
-        cancelAddedRows({ rowIds });
-      } else {
-        const updatedRows = state.rows.map((row) => {
-          if (row[iDField] === editedRow[iDField]) {
-            return newRow; // Replace the existing row with the updated newRow
-          }
-          return row;
-        });
-
-        // Update the state with the updated rows
-        state.rows = updatedRows;
-
-        rowIds = [rowId];
-        stopEditRows({ rowIds });
-        cancelChangedRows({ rowIds });
-      }
-    }
-  };
-  const cancelChanges = () => {
-    if (isNew) {
-      cancelAddedRows({ rowIds });
-    } else {
-      rowIds = [rowId];
-
-      stopEditRows({ rowIds });
-      cancelChangedRows({ rowIds });
-    }
-  };
-  const PopupComponent = ({ open, editedRow }) => {
-    return (
-      <Popup
-        open={open}
-        row={editedRow}
-        img={null}
-        onChange={handleCombinedChange}
-        onApplyChanges={onApplyChanges}
-        onCancelChanges={cancelChanges}
-        tableSchema={schema}
-        errorResult={result}
-        rows={state.rows}
-        isNewRow={true}
-        returnRowData={row}
-        isSelectionRow={true}
-      />
+  const postAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Post"
     );
-  };
-  const { setLeftSelectionContext, leftSelectionContext } =
-    useContext(LanguageContext);
-  // const table = data[0];
+  const deleteAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Delete"
+    );
   console.log("====================================");
-  console.log("leftSelectionContext", leftSelectionContext);
+  console.log(rightSchema);
   console.log("====================================");
-  const [leftRows, setLeftRows] = useState(initialRows);
-  const [rightRows, setRightRows] = useState([]);
   const [leftSelection, setLeftSelection] = useState([]);
   const [rightSelection, setRightSelection] = useState([]);
 
-  const moveRows = (selection, setSelectionContext, setSelection) => {
-    setSelectionContext(selection);
-    setSelection([]);
+  const isSubset = IsSecondListSubsetOfFirstList(
+    rightSchema.dashboardFormSchemaParameters,
+    leftSchema.dashboardFormSchemaParameters,
+    ["parameterField"]
+  );
+
+  const TransformData = (
+    selection,
+    setSelectionContext,
+    setSelection,
+    addedSchema,
+    removedSchema
+  ) => {
+    if (!isSubset) {
+    }
+    setSelectionContext(leftSelection);
+    // console.log('====================================leftSelection');
+    // console.log(leftSelection);
+    // console.log('====================================');
+    // display
+
+    selection.map((transformRow) => {});
+    // setPopupOpen(true);
   };
-
+  const DuringTransaction = () => {
+    return (
+      <DuringTransactionContainer
+        tableSchema={leftSchema}
+        leftSelectionContext={leftSelectionContext}
+      />
+    );
+  };
   return (
-    <div className="flex justify-around p-4 space-x-4 items-start">
-      <div className="w-[calc(50%-50px)] p-4 border rounded">
-        {/* <InTable
-          rows={leftRows}
-          setRows={setLeftRows}
-          selection={leftSelection}
-          setSelection={setLeftSelection}
-        /> */}
+    <div>
+      <div className="flex justify-around p-4 space-x-4 items-start flex-col lg:flex-row">
+        <div className="lg:w-[calc(50%-50px)] p-4 border rounded">
+          {/* {rightSchema &&
+            rightSchema.map((schema) => ( */}
+          <Table
+            key={leftSchema?.idField}
+            schema={leftSchema}
+            selectionRow={true}
+            isSearchingTable={false}
+            deleteMessage={false}
+            addMessage={true}
+            editMessage={false}
+            selection={leftSelection}
+            setSelection={setLeftSelection}
+            addSelectedList={true}
+          />
+          {/* ))} */}
+        </div>
+        <div className="flex flex-col lg:flex-col justify-center items-center space-y-4 w-[100px]">
+          <button
+            name="addButton"
+            onClick={() =>
+              TransformData(
+                leftSelection,
+                setLeftSelectionContext,
+                setLeftSelection,
+                rightSchema,
+                leftSchema
+              )
+            }
+            className="px-4 py-2 bg text-white rounded-full"
+          >
+            <FaArrowAltCircleRight size={22} />
+          </button>
+          <button
+            name="removeButton"
+            onClick={() =>
+              TransformData(
+                rightSelection,
+                setLeftSelectionContext,
+                setRightSelection,
+                leftSchema
+              )
+            }
+            className="px-4 py-2 bg text-white rounded-full"
+          >
+            <FaArrowAltCircleLeft size={22} />
+          </button>
+        </div>
+        <div className="lg:w-[calc(50%-50px)] p-4 border rounded">
+          {/* {rightSchema &&
+            rightSchema.map((schema) => ( */}
+          <Table
+            key={rightSchema?.idField}
+            schema={rightSchema}
+            isSearchingTable={false}
+            deleteMessage={false}
+            addMessage={false}
+            editMessage={false}
+            selectionRow={true}
+            selection={rightSelection}
+            setSelection={setRightSelection}
+            schemaActions={schemaActions}
+          />
+          {/* ))} */}
+        </div>
+      </div>
+      {/* <FormContainerEditing
+        formContainerComponent={DuringTransaction}
+        postAction={postAction}
+        putAction={{}}
+        state={{}}
+        setResult={setResult}
+        result={result}
+        // schema={leftSchema}
+      /> */}
 
-        {rightSchema &&
-          rightSchema.map((schema) => (
-            <Table
-              key={schema?.idField}
-              schema={schema}
-              selectionRow={true}
-              isSearchingTable={false}
-              deleteMessage={false}
-              addMessage={true}
-              editMessage={false}
-              selection={leftSelection}
-              setSelection={setLeftSelection}
-            />
-          ))}
-        {/* <BaseTable
-          // key={schema?.idField}
-          // schema={schema}
-          selectionRow={true}
-          isSearchingTable={false}
-          deleteMessage={false}
-          addMessage={false}
-          editMessage={false}
-          selection={leftSelection}
-          setSelection={setLeftSelection}
-        /> */}
-      </div>
-      <div className="flex flex-col justify-center items-center space-y-4 w-[100px]">
-        <button
-          onClick={() =>
-            moveRows(leftSelection, setLeftSelectionContext, setLeftSelection)
-          }
-          className="px-4 py-2 bg text-white rounded-full"
-        >
-          <FaArrowAltCircleRight size={22} />
-        </button>
-        <button
-          onClick={() =>
-            moveRows(
-              rightRows,
-              setRightRows,
-              leftRows,
-              setLeftRows,
-              rightSelection
-            )
-          }
-          className="px-4 py-2 bg text-white rounded-full"
-        >
-          <FaArrowAltCircleLeft size={22} />
-        </button>
-      </div>
-      <div className="w-[calc(50%-50px)] p-4 border rounded">
-        {/* <h3 className="text-center mb-4">Table 2</h3> */}
-        {/* <BaseTable2
-          rows={rightRows}
-          setRows={setRightRows}
-          selection={rightSelection}
-          setSelection={setRightSelection}
-        /> */}
-        {rightSchema &&
-          rightSchema.map((schema) => (
-            <Table
-              key={schema?.idField}
-              schema={schema}
-              isSearchingTable={false}
-              deleteMessage={false}
-              addMessage={true}
-              editMessage={false}
-              addSelectedList={true}
-            />
-          ))}
-      </div>
+      <DuringTransactionContainer
+        tableSchema={rightSchema}
+        leftSelectionContext={leftSelectionContext}
+      />
     </div>
   );
 };

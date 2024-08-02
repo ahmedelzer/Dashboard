@@ -4,6 +4,16 @@ import { FormGroup, Label } from "reactstrap";
 import { SearchingCellRender } from "../FormsFunctions/SearchingCellRender";
 import DisplayErorr from "./DisplayError";
 import FieldGroup from "./FieldGroup";
+import {
+  BooleanParameter,
+  DateParameter,
+  DateTimeParameter,
+  TextParameter,
+} from "../../inputs";
+import InputDisplay from "../../forms/PartingFrom/InputDisplay";
+import BaseInput from "../../inputs/BaseInput";
+import LookupInput from "../../inputs/LookupInput";
+//import { TextOnChangeHandling } from "./InputOnChange";
 
 const handleKeyPressToApplyChanges = (event) => {
   // Check if the key pressed is Enter (key code 13)
@@ -20,104 +30,6 @@ const handleKeyPressToTabNew = (event) => {
     console.log(11233432, "Enter key TAb ");
   }
 };
-const TextParameter = ({
-  data,
-  value,
-  onChange,
-  Enable,
-  dataError,
-  editedRow,
-  img,
-  onKeyPress,
-  ...props
-}) => {
-  const [Title, settital] = useState(`${data.parameterTitel}`);
-  const handleChange = (event) => {
-    const { name, files } = event.target;
-    if (onChange) {
-      onChange(name, files[0]); // Pass the file object to the onChange handler
-    }
-  };
-  function SetParameterType(parameterType) {
-    switch (parameterType) {
-      case "image":
-        return "file";
-      case "float":
-        return "number";
-      case "numeric":
-        return "number";
-      default:
-        return parameterType;
-    }
-  }
-  function SetParameterTypeStep(parameterType) {
-    switch (parameterType) {
-      case "float":
-        return "0.001";
-      case "numeric":
-        return "1";
-      default:
-        return "any";
-    }
-  }
-  return (
-    <div>
-      <DisplayErorr dataError={dataError} setTital={settital} data={data} />
-      <FieldGroup
-        type={SetParameterType(data?.parameterType)}
-        // accept="image/*"
-        editedRow={editedRow}
-        required={Enable}
-        img={img}
-        dataError={dataError}
-        placeholder={data?.parameterTitel}
-        value={value}
-        title={Title}
-        setTital={settital}
-        Title={Title}
-        data={data}
-        name={data.parameterField}
-        onChange={onChange}
-        readOnly={!Enable}
-        {...props}
-        step={SetParameterTypeStep(data?.parameterType)}
-        onKeyPress={onKeyPress}
-      />
-    </div>
-  );
-};
-// const BaseInput=({ value, onChange, Enable, onKeyPress })
-
-const DateTimeParameter = ({ value, Enable }) => (
-  <DateBox
-    value={new Date(value ? value : Date.now())}
-    readOnly={!Enable}
-    type="datetime"
-    // onEnterKey={handleKeyPress}
-    // onKeyPress={handleKeyPress}
-  />
-);
-
-const DateParameter = ({ value, Enable }) => (
-  <DateBox
-    value={new Date(value ? value : Date.now())}
-    readOnly={!Enable}
-    type="date"
-  />
-);
-
-const BooleanParameter = ({ value, onChange, Enable, onKeyPress }) => (
-  <RadioGroup
-    items={[
-      { text: "Yes", value: true },
-      { text: "No", value: false },
-    ]}
-    value={value}
-    onValueChanged={onChange}
-    onKeyPress={onKeyPress}
-    readOnly={!Enable}
-  />
-);
 const SetkeyPressEvent = (isActionField) => {
   console.log("isActionField", isActionField);
   return isActionField ? handleKeyPressToApplyChanges : handleKeyPressToTabNew;
@@ -127,8 +39,6 @@ export default function DataCellRender({
   value,
   onChange,
   dataError,
-  img,
-  editedRow,
   isActionField,
   isSelectionRow,
 }) {
@@ -147,7 +57,6 @@ export default function DataCellRender({
             dataError={dataError}
             data={data}
             value={value}
-            img={img}
             onChange={onChange}
             Enable={handleSelectionRow()}
             // Enable={data.isEnable}
@@ -156,36 +65,43 @@ export default function DataCellRender({
         );
       case "datetime":
         return (
-          <DateTimeParameter
+          <InputDisplay
+            title="test"
+            fieldName="test1"
             value={value}
-            Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
+            BaseInput={DateTimeParameter}
+            errorMessage={{}}
           />
         );
       case "date":
         return (
-          <DateParameter
+          <InputDisplay
+            title="test"
+            fieldName="test1"
             value={value}
-            Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
+            BaseInput={DateParameter}
+            errorMessage={{}}
+            // Enable={data.isEnable}
+            // onKeyPress={SetkeyPressEvent(isActionField)}
           />
         );
       case "boolean":
         return (
-          <BooleanParameter
+          <InputDisplay
+            title="test"
+            fieldName="test1"
             value={value}
-            onChange={onChange}
-            Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
+            BaseInput={BooleanParameter}
+            errorMessage={{}}
+            // Enable={data.isEnable}
+            // onKeyPress={SetkeyPressEvent(isActionField)}
           />
         );
       case "image":
         return (
           <TextParameter
             dataError={dataError}
-            img={img}
             data={data}
-            editedRow={editedRow}
             value={value}
             onChange={onChange}
             Enable={data.isEnable}
@@ -198,8 +114,7 @@ export default function DataCellRender({
             dataError={dataError}
             data={data}
             value={value}
-            img={img}
-            onChange={onChange}
+            //onChange={new TextOnChangeHandling()}
             Enable={data.isEnable}
             onKeyPress={SetkeyPressEvent(isActionField)}
           />
@@ -210,7 +125,6 @@ export default function DataCellRender({
             dataError={dataError}
             data={data}
             value={value}
-            img={img}
             onChange={onChange}
             onKeyPress={SetkeyPressEvent(isActionField)}
             Enable={data.isEnable}
@@ -222,11 +136,16 @@ export default function DataCellRender({
     }
   } else {
     return (
-      <SearchingCellRender
-        dataform={data}
+      // <SearchingCellRender dataForm={data} fieldName="test1" value={value} />
+      <InputDisplay
+        title="test"
+        fieldName="test1"
         value={value}
-        onChange={onChange}
-        lookupID={data.lookupID}
+        dataForm={data}
+        BaseInput={LookupInput}
+        errorMessage={{}}
+        // Enable={data.isEnable}
+        // onKeyPress={SetkeyPressEvent(isActionField)}
       />
     );
   }

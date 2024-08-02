@@ -4,6 +4,7 @@ import {
   Form,
   Test,
   DynamicLiveForm,
+  DynamicTransform,
 } from "./pages/index";
 import { withNavigationWatcher } from "./contexts/navigation";
 
@@ -23,6 +24,10 @@ const routes = [
   {
     path: "/dynamicForm/:dashboardItemID",
     element: Form,
+  },
+  {
+    path: "/dynamicTransformForm/:dashboardItemID",
+    element: DynamicTransform,
   },
   {
     path: "/dynamicTable/:dashboardItemID",

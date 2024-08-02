@@ -5,26 +5,19 @@ import { DropDownBox } from "devextreme-react";
 import NativeDropdown from "./CustomDropdown"; // Adjust the import path based on your file structure
 import CustomDropdown from "./CustomDropdown";
 import useFetch from "../APIsFunctions/useFetch";
-export function SearchingCellRender({ dataform, value, onChange, lookupID }) {
-  const Enable = dataform.isEnable;
-  console.log("lookupId", lookupID);
+export function SearchingCellRender({ dataForm }) {
+  const Enable = dataForm.isEnable;
+  const lookupID = dataForm.lookupID;
   const data = useFetch(
     `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${lookupID}`
   );
-  console.log("datasearching", data);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [isPanelOpen, setPanelOpen] = useState(false);
-  const handleSelect = (selectedValue) => {
-    setSelectedOption(selectedValue);
-  };
   const panelContent = (
     <div className="drop-list text-center">
       {
         <Table
           schema={data.data}
-          className=" "
           setPanelOpen={setPanelOpen}
           addMessage={false}
           editMessage={false}
@@ -33,26 +26,8 @@ export function SearchingCellRender({ dataform, value, onChange, lookupID }) {
           setSelectedRow={setSelectedRow}
         />
       }
-      <p>Panel Content Here</p>
     </div>
   );
-
-  // const handleRowDoubleClick = (row) => {
-  //   setSelectedRow(row);
-  //   setPopupOpen(false);
-  // };
-
-  const handleButtonClick = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
-  const handlePanelClose = () => {
-    // Handle the panel close event
-    console.log("Panel closed");
-  };
-  console.log("====================================");
-  console.log(data.data);
-  console.log(dataform);
-  console.log("====================================");
   return (
     <div className=" ">
       {/* Other components or content */}
@@ -60,13 +35,9 @@ export function SearchingCellRender({ dataform, value, onChange, lookupID }) {
       {/* Use the CustomDropdown component */}
 
       <CustomDropdown
-        buttonText={selectedRow[dataform.lookupReturnField]}
-        displayField={selectedRow[dataform.lookupDisplayField]}
-        selectedRow={selectedRow}
-        setSelectedRow={setSelectedRow}
-        dataSource={data.data}
+        buttonText={selectedRow[dataForm.lookupReturnField]}
+        displayField={selectedRow[dataForm.lookupDisplayField]}
         panelContent={panelContent}
-        onClose={handlePanelClose}
         isPanelOpen={isPanelOpen}
         setPanelOpen={setPanelOpen}
       />

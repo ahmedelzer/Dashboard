@@ -29,5 +29,24 @@ const useFetch = (url, base_URL) => {
 
   return { data, isLoading, error };
 };
+export const fetchData = async (url, base_URL, options = {}) => {
+  options = {
+    method: "GET", // or 'POST', 'PUT', etc.
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer your-token", // Add any other headers you need
+    },
+  };
+  const realurl = `${
+    base_URL !== GetProjectUrl() ? defaultProjectProxyRoute : base_URL
+  }${url}`;
+  try {
+    const response = await fetch(realurl, options);
+    const result = await response.json();
+    return { data: result, error: null, isLoading: false };
+  } catch (error) {
+    return { data: null, error: error, isLoading: false };
+  }
+};
 
 export default useFetch;

@@ -7,7 +7,6 @@ const CustomDropdown = ({
   panelContent,
   onChange,
   displayField,
-  selectedRow,
   setPanelOpen,
   isPanelOpen,
 }) => {
@@ -32,45 +31,15 @@ const CustomDropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const fruits = ["Apples", "Oranges", "Lemons", "Pears", "Pineapples"];
-  const [selectedFruit, setSelectedFruit] = useState("");
-  const dropDownBoxRef = useRef(null);
-  const [dataSource, setDataSource] = useState(fruits);
-  const listRef = useRef(null);
-  const changeDropDownBoxValue = useCallback((arg) => {
-    setSelectedFruit(arg.addedItems[0]);
-    dropDownBoxRef.current.instance.close();
-  }, []);
-  const onValueChanged = useCallback((e) => {
-    setSelectedFruit(e.value);
-  }, []);
-  const addItem = useCallback(() => {
-    setDataSource([...dataSource, selectedFruit]);
-    setSelectedFruit("");
-    listRef.current.instance.reload();
-  }, [dataSource, selectedFruit]);
-  const onItemDeleting = useCallback(
-    (e) => {
-      if (dataSource.length === 1) {
-        e.cancel = true;
-      }
-    },
-    [dataSource]
-  );
-  console.log("====================================");
-  console.log(buttonText);
-  console.log(displayField);
-  console.log(selectedRow.dashboardCategoryName);
-  console.log("====================================");
-  // "dashboardCategoryName"
-  // "dashboardCategoryName"
-  // "dashboardMenuCategoryID"
-  // "dashboardCategoryID"
+
   return (
     <FormGroup className=" flex justify-between form-control">
       <input
         // {...props}
-        value={buttonText}
+        readOnly="true"
+        value={displayField}
+        key={buttonText}
+        name={buttonText}
         // onInput={handleChange}
         onChange={onChange}
         placeholder={displayField}

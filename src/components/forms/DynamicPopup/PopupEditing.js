@@ -66,7 +66,8 @@ const PopupEditing = React.memo(
               let row = null;
               let rowIds = [0];
               if (leftSelectionContext && addSelectedList) {
-                editedRow = { ...initialRow, ...editedRow };
+                {
+                  /* editedRow = { ...initialRow, ...editedRow };
                 setLeftSelectionContext(false);
                 console.log("====================================");
                 console.log(leftSelectionContext);
@@ -75,7 +76,8 @@ const PopupEditing = React.memo(
                 leftSelectionContext?.map((i) => {
                   state.rows = [...state.rows, ...[i]];
                   return null;
-                });
+                }); */
+                }
               } else if (isNew) {
                 rowId = 0;
                 editedRow = { ...addedRows[rowId], ...editedRow };

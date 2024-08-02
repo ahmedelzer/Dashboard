@@ -7,11 +7,12 @@ import { useParams } from "react-router-dom";
 import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
 import { LanguageContext } from "../../contexts/Language";
 import { defaultProjectProxyRoute, SetReoute } from "../../request";
+import GetFormSchema from "../../components/hooks/DashboardAPIs/GetFormSchema";
 export default function DynamicTable() {
   const { dashboardItemID } = useParams();
   const { Right } = useContext(LanguageContext);
   const { data, error, isLoading } = useFetch(
-    `/Dashboard/GetDashboardForm?DashboardMenuItemID=${dashboardItemID}`,
+    GetFormSchema(dashboardItemID),
     defaultProjectProxyRoute
   );
   // const lookup= useFetch('/Dashboard/GetDashboardFormLookups');
