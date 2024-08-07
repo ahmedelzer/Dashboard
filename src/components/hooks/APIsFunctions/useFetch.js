@@ -37,9 +37,11 @@ export const fetchData = async (url, base_URL, options = {}) => {
       Authorization: "Bearer your-token", // Add any other headers you need
     },
   };
+
   const realurl = `${
     base_URL !== GetProjectUrl() ? defaultProjectProxyRoute : base_URL
   }${url}`;
+  console.log(11111111111, "url", realurl);
   try {
     const response = await fetch(realurl, options);
     const result = await response.json();

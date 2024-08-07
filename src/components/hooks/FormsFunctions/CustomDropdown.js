@@ -3,15 +3,17 @@ import { DropDownBox } from "devextreme-react/drop-down-box";
 import { List } from "devextreme-react/list";
 import { FormGroup } from "reactstrap";
 const CustomDropdown = ({
-  buttonText,
+  returnField,
   panelContent,
   onChange,
   displayField,
   setPanelOpen,
   isPanelOpen,
+  ...props
 }) => {
+  const inputRef = useRef(null);
   const dropdownRef = useRef(null);
-
+  //make it work for onchange in two cases
   const handleTogglePanel = () => {
     setPanelOpen(!isPanelOpen);
   };
@@ -31,20 +33,25 @@ const CustomDropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+  useEffect(() => {
+    if (inputRef.current) {
+      onChange({ target: { name: inputRef.current.name, value: returnField } });
+    }
+  }, [returnField, onChange]);
+  console.log("====================================");
+  console.log(props.value);
+  console.log("====================================");
   return (
     <FormGroup className=" flex justify-between form-control">
       <input
-        // {...props}
-        readOnly="true"
-        value={displayField}
-        key={buttonText}
-        name={buttonText}
-        // onInput={handleChange}
-        onChange={onChange}
+        name={props.fieldName}
+        readOnly
+        ref={inputRef}
+        value={displayField || props.value}
         placeholder={displayField}
-        className={` form-control w-[96%]`}
+        className="form-control w-[96%]"
       />
+
       <div
         className=" cursor-pointer  flex justify-center items-center"
         onClick={handleTogglePanel}

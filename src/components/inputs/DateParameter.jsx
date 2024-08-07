@@ -11,6 +11,8 @@ class DateParameter extends BaseInput {
         value={new Date(value ? value : Date.now())}
         readOnly={!Enable}
         type="date"
+        name={fieldName}
+        {...this.props}
       />
     );
   }

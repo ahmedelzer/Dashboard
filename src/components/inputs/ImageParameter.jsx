@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import inputs from "../../locals/EN/inputs.json";
+import { Image } from "react-bootstrap";
 
 class ImageParameter extends Component {
   constructor(props) {
@@ -8,8 +10,65 @@ class ImageParameter extends Component {
     this.state = {
       isHovered: false,
     };
+    this.imageRef = createRef();
+    this.onChange = this.props.onChange({
+      target: {
+        name: this.props.fieldName,
+        value: this.imageRef.current?.src,
+        type: "file",
+        // ...this.props,
+      },
+    });
+
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+  }
+  componentDidMount() {
+    if (this.imageRef.current) {
+      this.imageRef.current.addEventListener(
+        "load",
+        this.props.onChange({
+          target: {
+            name: this.props.fieldName,
+            value: this.imageRef.current?.src,
+            type: "file",
+            // ...this.props,
+          },
+        })
+      );
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value && this.imageRef.current) {
+      this.imageRef.current.addEventListener(
+        "load",
+        this.props.onChange({
+          target: {
+            name: this.props.fieldName,
+            value: this.imageRef.current?.src,
+            type: "file",
+            // ...this.props,
+          },
+        })
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.imageRef.current) {
+      this.imageRef.current.removeEventListener(
+        "load",
+        this.props.onChange({
+          target: {
+            name: this.props.fieldName,
+            value: this.imageRef.current?.src,
+            type: "file",
+            // ...this.props,
+          },
+        })
+      );
+    }
   }
 
   handleMouseEnter() {
@@ -23,19 +82,22 @@ class ImageParameter extends Component {
   render() {
     const { fieldName, value } = this.props;
     const { isHovered } = this.state;
-    const imageAltValue = "uploaded";
+    const imageAltValue = inputs.image.imageAltValue;
+    // console.log(this.imageRef?.current?.src);
 
     return (
       <div
         className="relative cursor-pointer"
+        title={this.props.title}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
       >
         <img
+          ref={this.imageRef}
           src={value}
-          key={fieldName}
           alt={imageAltValue}
-          className="w-full object-cover rounded-md"
+          key={fieldName}
+          className={`w-full object-cover rounded-md form-control ${this.props.className}`}
         />
         {isHovered && (
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">

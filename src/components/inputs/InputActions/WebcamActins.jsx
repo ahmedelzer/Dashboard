@@ -8,8 +8,6 @@ class WebcamActions extends BaseAction {
   constructor(props) {
     super(props);
     this.state = {
-      capturedImage: "",
-      base64: "",
       modalOpen: false,
     };
     this.webcamRef = createRef();
@@ -17,24 +15,24 @@ class WebcamActions extends BaseAction {
     this.toggleModal = this.toggleModal.bind(this);
   }
 
-  handleCapture() {
+  handleCapture(e) {
+    const { onChange } = this.props;
     const imageSrc = this.webcamRef.current.getScreenshot();
-    this.setState({ capturedImage: imageSrc });
     this.props.onImageUpload(imageSrc);
     // Convert the captured image to base64
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
-    image.src = imageSrc;
-    image.onload = () => {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0);
-      const base64Data = canvas.toDataURL("image/jpeg");
-      const [, base64String] = base64Data.split(";base64,");
-      this.setState({ base64: base64String });
-    };
-    this.toggleModal();
+    // const canvas = document.createElement("canvas");
+    // const ctx = canvas.getContext("2d");
+    // const image = new Image();
+    // image.src = imageSrc;
+    // image.onload = () => {
+    //   canvas.width = image.width;
+    //   canvas.height = image.height;
+    //   ctx.drawImage(image, 0, 0);
+    //   const base64Data = canvas.toDataURL("image/jpeg");
+    //   const [, base64String] = base64Data.split(";base64,");
+    //   onChange(e, base64String);
+    //   this.toggleModal();
+    // };
   }
 
   toggleModal() {
@@ -42,7 +40,7 @@ class WebcamActions extends BaseAction {
   }
 
   render() {
-    const { capturedImage, modalOpen } = this.state;
+    const { modalOpen } = this.state;
 
     return (
       <div>
@@ -58,7 +56,11 @@ class WebcamActions extends BaseAction {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="pop" onClick={this.handleCapture}>
+            <Button
+              color="pop"
+              onClick={this.handleCapture}
+              name={this.props.fieldName}
+            >
               Capture Image
             </Button>
             <Button color="pop" onClick={this.toggleModal}>

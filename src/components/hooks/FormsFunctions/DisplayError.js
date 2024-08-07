@@ -1,32 +1,18 @@
-import React from "react";
-
-function DisplayError({ dataError, data, setTital }) {
-  console.log(data.parameterField);
-  if (
-    dataError !== null &&
-    dataError !== undefined &&
-    dataError.success === false
-  ) {
-    // const errorMessages = dataError?.error?.errors?.[data.parameterField];
-    const errorMessages = dataError?.error?.errors?.DashboardCategoryName;
-    console.log("====================================");
-    console.log(data.parameterField);
-    console.log(dataError);
-    console.log("====================================");
-    // const errorMessages = dataError?.error?.errors?.dashboardMenuCategoryName;
-    // Use filteredErrors as needed
-    console.log(errorMessages);
+function DisplayError({ dataError, parameterField, setTital, setStyle }) {
+  const fieldLowercase = parameterField?.toLowerCase();
+  let errors = dataError?.error?.errors;
+  const lowercaseError = {};
+  for (const [k, v] of Object.entries(errors ? errors : {})) {
+    lowercaseError[k.toLowerCase()] = v;
+  }
+  if (dataError && dataError.success === false) {
+    const errorMessages = lowercaseError[fieldLowercase];
     setTital(`${errorMessages}`);
     if (errorMessages && errorMessages.length > 0) {
-      return (
-        // errorMessages.map((err, index) => (
-        //   <p key={index} className='text-[12px] font-bold text-[red] p-0 mb-[-10px]'>{err}</p>
-        // ))
-        null
-      );
+      setStyle("is-invalid");
+      return null;
     }
   }
-
   return null;
 }
 

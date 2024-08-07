@@ -5,7 +5,7 @@ import BrowserUrlAction from "./BrowserUrlAction";
 import WebcamActions from "./WebcamActins";
 import DisplayFile from "../../forms/PartingFrom/DisplayFile";
 
-class ParentComponent extends Component {
+class ImageParameterWithPanelActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,15 +23,18 @@ class ParentComponent extends Component {
     let actions = [
       <UploadAction onImageUpload={this.handleImageUpload} />,
       <WebcamActions onImageUpload={this.handleImageUpload} />,
-      <BrowserUrlAction onImageUpload={this.handleImageUpload} />,
+      <BrowserUrlAction
+        {...this.props}
+        onImageUpload={this.handleImageUpload}
+      />,
     ];
 
     return (
       <div>
-        <ImageParameter value={FileData} actions={actions} />
+        <ImageParameter {...this.props} value={FileData} actions={actions} />
       </div>
     );
   }
 }
 
-export default ParentComponent;
+export default ImageParameterWithPanelActions;

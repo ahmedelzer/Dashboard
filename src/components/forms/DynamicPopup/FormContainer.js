@@ -1,15 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import { Sm } from "./Sm";
-function FormContainer({
-  tableSchema,
-  row,
-  onChange,
-  errorResult,
-  img,
-  isSelectionRow,
-}) {
+import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
+
+function FormContainer({ tableSchema, row, errorResult }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
   ).parameterField;
@@ -17,7 +12,19 @@ function FormContainer({
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
   //todo).parameterField;
+  const onChange = new Onchange(row).UpdateRow;
   console.log("tableSchema", tableSchema);
+
+  const [rowData, setRowData] = useState(row);
+
+  const updateRowData = (e) => {
+    const { key, value, type } = e?.target;
+    setRowData((prevRowData) => ({
+      ...prevRowData,
+      [key]: value,
+    }));
+  };
+
   return (
     <div>
       {" "}
@@ -29,13 +36,11 @@ function FormContainer({
                 isActionField={
                   actionField === param.parameterField ? true : false
                 }
-                data={param}
-                editedRow={row}
-                img={img}
-                value={row[param.parameterField]}
                 onChange={onChange}
-                dataError={errorResult} // Ensure datapost is defined
-                isSelectionRow={isSelectionRow}
+                data={param}
+                value={row[param.parameterField]}
+                // row={row}
+                errorResult={errorResult}
               />
             </Col>
           ))}

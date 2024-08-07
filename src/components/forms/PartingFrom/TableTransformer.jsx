@@ -202,7 +202,8 @@ import { IsSecondListSubsetOfFirstList } from "./IsSecondListSubsetOfFirstList";
 const TableTransformer = ({ TransFormSchema }) => {
   const [schema, setSchema] = useState([]);
   const [result, setResult] = useState([]);
-  const [leftSelectionContext, setLeftSelectionContext] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [leftSelectionContext, setLeftSelectionContext] = useState([{}]);
   const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
   const leftSchema = TransFormSchema.find((schema) => !schema.isMainSchema); //Table
   const {
@@ -229,7 +230,8 @@ const TableTransformer = ({ TransFormSchema }) => {
       (action) => action.dashboardFormActionMethodType === "Delete"
     );
   console.log("====================================");
-  console.log(rightSchema);
+  console.log(rightSchema.dashboardFormSchemaParameters);
+  console.log(leftSchema.dashboardFormSchemaParameters);
   console.log("====================================");
   const [leftSelection, setLeftSelection] = useState([]);
   const [rightSelection, setRightSelection] = useState([]);
@@ -247,24 +249,13 @@ const TableTransformer = ({ TransFormSchema }) => {
     addedSchema,
     removedSchema
   ) => {
+    console.log(isSubset, "isSubset");
+
     if (!isSubset) {
+      setOpen(true);
+      setSelection([]);
     }
     setSelectionContext(leftSelection);
-    // console.log('====================================leftSelection');
-    // console.log(leftSelection);
-    // console.log('====================================');
-    // display
-
-    selection.map((transformRow) => {});
-    // setPopupOpen(true);
-  };
-  const DuringTransaction = () => {
-    return (
-      <DuringTransactionContainer
-        tableSchema={leftSchema}
-        leftSelectionContext={leftSelectionContext}
-      />
-    );
   };
   return (
     <div>
@@ -348,6 +339,9 @@ const TableTransformer = ({ TransFormSchema }) => {
       <DuringTransactionContainer
         tableSchema={rightSchema}
         leftSelectionContext={leftSelectionContext}
+        isSubset={isSubset}
+        open={open}
+        setOpen={setOpen}
       />
     </div>
   );

@@ -1,30 +1,28 @@
-import React, { useState } from "react";
-import BaseInput from "./BaseInput";
+import React, { Component } from "react";
+import { FormGroup, Label, Input } from "reactstrap";
 import FieldGroup from "../hooks/FormsFunctions/FieldGroup";
-import DisplayError from "../hooks/FormsFunctions/DisplayError";
+import BaseInput from "./BaseInput";
+// import "./styles.css"; // Assuming you have a CSS file for custom styles
 
 class TextParameter extends BaseInput {
   constructor(props) {
     super(props);
     this.state = {
-      Title: props.data.parameterTitel,
+      title: props.title,
     };
   }
+  handleChange = (e) => {
+    console.log("BaseInput handleChange triggered");
 
-  handleChange = (event) => {
-    const { name, files } = event.target;
-    const { onChange, editedRow } = this.props;
-    console.log("target", editedRow);
+    const { onChange } = this.props;
     if (onChange) {
-      onChange(name, files ? files[0] : event.target.value); // Pass the file object to the onChange handler if present
+      onChange(e);
     }
   };
 
   setParameterType = (parameterType) => {
     switch (parameterType) {
-      case "image":
-        return "file";
-      case "float":
+      case "float" || "numeric":
         return "number";
       case "numeric":
         return "number";
@@ -45,101 +43,22 @@ class TextParameter extends BaseInput {
   };
 
   render() {
-    const { data, value, Enable, dataError, onKeyPress, ...props } = this.props;
+    const { value, enable, title, fieldName, type, ...props } = this.props;
 
     return (
-      <div>
-        <DisplayError
-          dataError={dataError}
-          setTital={this.setTitle}
-          data={data}
-        />
-        <FieldGroup
-          type={this.setParameterType(data?.parameterType)}
-          required={Enable}
-          dataError={dataError}
-          placeholder={data?.parameterTitel}
-          value={value}
-          title={this.state.Title}
-          name={data.parameterField}
-          onChange={this.handleChange}
-          readOnly={!Enable}
-          {...props}
-          step={this.setParameterTypeStep(data?.parameterType)}
-          onKeyPress={onKeyPress}
-        />
-      </div>
+      <FieldGroup
+        type={this.setParameterType(type)}
+        required={enable}
+        value={value}
+        name={fieldName}
+        id={fieldName}
+        title={title}
+        readOnly={!enable}
+        {...props}
+        step={this.setParameterTypeStep(type)}
+      />
     );
   }
 }
 
 export default TextParameter;
-
-// import { useState } from "react";
-// import FieldGroup from "../hooks/FormsFunctions/FieldGroup";
-// import DisplayError from "../hooks/FormsFunctions/DisplayError";
-// const TextParameter = ({
-//   data,
-//   value,
-//   onChange,
-//   Enable,
-//   dataError,
-//   editedRow,
-//   onKeyPress,
-//   ...props
-// }) => {
-//   //const onChange = new TextOnChangeHandling(data.parameterField, value);
-//   const [Title, settital] = useState(`${data.parameterTitel}`);
-//   const handleChange = (event) => {
-//     //const { name, files } = event.target;
-//     console.log("target", editedRow);
-//     // if (onChange) {
-//     //   onChange(name, files[0]); // Pass the file object to the onChange handler
-//     // }
-//   };
-//   function SetParameterType(parameterType) {
-//     switch (parameterType) {
-//       case "image":
-//         return "file";
-//       case "float":
-//         return "number";
-//       case "numeric":
-//         return "number";
-//       default:
-//         return parameterType;
-//     }
-//   }
-//   function SetParameterTypeStep(parameterType) {
-//     switch (parameterType) {
-//       case "float":
-//         return "0.001";
-//       case "numeric":
-//         return "1";
-//       default:
-//         return "any";
-//     }
-//   }
-//   return (
-//     <div>
-//       <DisplayError dataError={dataError} setTital={settital} data={data} />
-//       <FieldGroup
-//         type={SetParameterType(data?.parameterType)}
-//         // accept="image/*"
-//         required={Enable}
-//         // img={img}
-//         dataError={dataError}
-//         placeholder={data?.parameterTitel}
-//         value={value}
-//         title={Title}
-//         data={data}
-//         name={data.parameterField}
-//         onChange={handleChange}
-//         readOnly={!Enable}
-//         {...props}
-//         step={SetParameterTypeStep(data?.parameterType)}
-//         onKeyPress={onKeyPress}
-//       />
-//     </div>
-//   );
-// };
-// export default TextParameter;

@@ -25,6 +25,12 @@
   .pop {
     @apply bg-transparent text-[--main-color] hover:bg-[--main-color] hover:text-black;
   }
+  .peer-input {
+    @apply bg-transparent placeholder-transparent;
+  }
+  .peer-label {
+    @apply absolute cursor-text left-0 -top-3 text-sm bg-inherit mx-1 px-1 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3 peer-focus:text-sky-600 peer-focus:text-sm transition-all;
+  }
 }
 .app {
   background-color: darken($base-bg, 5);

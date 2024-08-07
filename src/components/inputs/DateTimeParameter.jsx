@@ -8,22 +8,22 @@ class DateTimeParameter extends BaseInput {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    // Handle the change event
-    console.log("Date changed", event.target.value);
-  }
-
   render() {
-    const { fieldName, value, errorMessage, enable } = this.props;
-    console.log("fieldName", fieldName);
+    const { fieldName, value, onChange, enable } = this.props;
+    function handleChange(e) {
+      const value = e.value;
+      onChange({ target: { name: fieldName, value: value } });
+    }
+
     return (
-      <div>
+      <div className="mb-3">
         <DateBox
           value={new Date(value ? value : Date.now())}
           readOnly={!enable}
           type="datetime"
           name={fieldName}
-          onValueChanged={this.handleChange}
+          key={fieldName}
+          onValueChanged={handleChange}
         />
       </div>
     );

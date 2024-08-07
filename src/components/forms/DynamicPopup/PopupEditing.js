@@ -12,6 +12,7 @@ import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 import { LanguageContext } from "../../../contexts/Language";
+import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 
 const PopupEditing = React.memo(
   ({
@@ -65,6 +66,7 @@ const PopupEditing = React.memo(
               let rowId;
               let row = null;
               let rowIds = [0];
+
               if (leftSelectionContext && addSelectedList) {
                 {
                   /* editedRow = { ...initialRow, ...editedRow };
@@ -91,22 +93,17 @@ const PopupEditing = React.memo(
                 setIsSelectionRow(false);
               }
 
-              const handleCombinedChange = async (
-                event,
-                selectedOption,
-                base64,
-                setimg,
-                setbase64,
-                imageUrl,
-                seterror,
-                webcamRef,
-                setCapturedImage
-              ) => {
+              const handleCombinedChange = async (event, base64) => {
                 const { name, value, files } = event.target;
+                const onChange = new Onchange(editedRow).UpdateRow(
+                  event,
+                  base64
+                );
 
                 // Handle file input change
 
-                if (files && selectedOption === "file") {
+                {
+                  /* if (files && selectedOption === "file") {
                   const file = files[0];
                   setimg(file);
                   const reader = new FileReader();
@@ -199,20 +196,23 @@ const PopupEditing = React.memo(
                       changeRow(changeArgs);
                     }
                   };
-                } else {
-                  const changeArgs = {
-                    rowId,
-                    change: createRowChange(editedRow, value, name),
-                  };
-                  if (isNew) {
-                    changeAddedRow(changeArgs);
-                    console.log("added row", editedRow);
-                  } else {
-                    changeRow(changeArgs);
-                  }
+                } else { */
                 }
-                console.log(editedRow);
+                const changeArgs = {
+                  rowId,
+                  change: onChange,
+                };
+                if (isNew) {
+                  changeAddedRow(changeArgs);
+                  console.log("added row", editedRow);
+                } else {
+                  changeRow(changeArgs);
+                }
+                console.log("editedRow", editedRow, "changeArgs", changeArgs);
               };
+              {
+                /* }; */
+              }
 
               const iDField = schema.idField;
               const onApplyChanges = async () => {
@@ -251,6 +251,7 @@ const PopupEditing = React.memo(
 
                     rowIds = [rowId];
                     stopEditRows({ rowIds });
+                    setResult({});
                     cancelChangedRows({ rowIds });
                   }
                 }
@@ -264,6 +265,7 @@ const PopupEditing = React.memo(
                   stopEditRows({ rowIds });
                   cancelChangedRows({ rowIds });
                 }
+                setResult({});
               };
 
               {
@@ -274,7 +276,6 @@ const PopupEditing = React.memo(
                 <Popup
                   open={open}
                   row={editedRow}
-                  img={img}
                   onChange={handleCombinedChange}
                   onApplyChanges={onApplyChanges}
                   onCancelChanges={cancelChanges}

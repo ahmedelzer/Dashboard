@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import BaseAction from "./BaseAction";
 import { FaLink } from "react-icons/fa";
-
+import inputs from "../../../locals/EN/inputs.json";
 class BrowserUrlAction extends BaseAction {
   constructor(props) {
     super(props);
@@ -10,6 +10,7 @@ class BrowserUrlAction extends BaseAction {
       img: null,
       base64: "",
       error: false,
+      imageUrl: "",
       modalOpen: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -18,11 +19,13 @@ class BrowserUrlAction extends BaseAction {
   }
 
   handleChange(event) {
-    this.setState({ imageUrl: event.target.value });
-    console.log(this.state.imageUrl);
+    this.setState({ imageUrl: event.target.value }, () => {
+      console.log("Updated imageUrl:", this.state.imageUrl);
+    });
   }
 
-  async fetchImage() {
+  async fetchImage(e) {
+    const { onChange, fieldName, enable } = this.props;
     const { imageUrl } = this.state;
     try {
       const response = await fetch(imageUrl);
@@ -36,6 +39,7 @@ class BrowserUrlAction extends BaseAction {
           reader.onload = () => {
             const base64Data = reader.result;
             const [, base64String] = base64Data.split(";base64,");
+            onChange(e, base64String);
             this.setState({ img: blob, base64: base64String, error: false });
             console.log(this.state);
             this.toggleModal();
@@ -59,7 +63,7 @@ class BrowserUrlAction extends BaseAction {
   }
 
   render() {
-    const { modalOpen, error } = this.state;
+    const { modalOpen, imageUrl, error } = this.state;
 
     return (
       <div>
@@ -71,13 +75,19 @@ class BrowserUrlAction extends BaseAction {
           <ModalBody>
             <input
               type="text"
-              placeholder="Enter image URL"
+              placeholder={inputs.image.UrlPlaceholder}
+              // value={imageUrl}
+              // onChange={() => console.log(133)}
               onChange={this.handleChange}
               className="form-control"
             />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={this.fetchImage} className="pop mt-2 text-center">
+            <Button
+              onClick={this.fetchImage}
+              className="pop mt-2 text-center"
+              name={this.props.fieldName}
+            >
               Fetch Image
             </Button>
             <Button color="pop" onClick={this.toggleModal}>

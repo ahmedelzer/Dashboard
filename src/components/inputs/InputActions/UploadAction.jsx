@@ -12,29 +12,22 @@ class UploadAction extends BaseAction {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    // Handle the change event
-    console.log("Date changed", event.target.value);
-  }
-
   render() {
-    let { value } = this.props;
-    let base64 = "",
-      File = "",
-      errorFile = false;
+    const { onChange, fieldName, enable } = this.props;
     const fetchImage = async (e) => {
       const file = e.target.files[0];
+
       this.props.onImageUpload(URL.createObjectURL(file));
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        let base64Data = reader.result;
-        const [, base64String] = base64Data.split(";base64,");
-      };
-      console.log(file);
+      // const reader = new FileReader();
+      // reader.readAsDataURL(file);
+      // reader.onload = () => {
+      //   let base64Data = reader.result;
+      //   const [, base64String] = base64Data.split(";base64,");
+      //   onChange(e, base64String);
+      // };
+      // console.log(file);
     };
-    //return button
-    //take from this button the value of file and make for it
+    //todo set htmlFor Logo
     return (
       <div>
         {/* <div>
@@ -56,14 +49,15 @@ class UploadAction extends BaseAction {
             />
           </div>
         </div> */}
-        <label htmlFor="Logo" className="cursor-pointer">
+        <label htmlFor={fieldName} className="cursor-pointer">
           {/* <Button className="pop"> */}
           <LuUpload className="color" size={24} />
 
           <input
             onChange={fetchImage}
-            id="Logo"
-            name="Logo"
+            id={fieldName}
+            enable={enable}
+            name={fieldName}
             type="file"
             className="hidden"
           />

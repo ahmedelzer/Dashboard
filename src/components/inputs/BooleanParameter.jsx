@@ -1,7 +1,7 @@
 import React from "react";
 import { RadioGroup } from "devextreme-react";
 import BaseInput from "./BaseInput";
-
+import inputs from "../../locals/EN/inputs.json";
 class BooleanParameter extends BaseInput {
   handleChange = (e) => {
     const { onChange } = this.props;
@@ -16,14 +16,13 @@ class BooleanParameter extends BaseInput {
     return (
       <div>
         <RadioGroup
-          items={[
-            { text: "Yes", value: true },
-            { text: "No", value: false },
-          ]}
+          items={inputs.boolean}
           value={value}
           onValueChanged={this.handleChange}
           onKeyPress={onKeyPress}
           readOnly={!Enable}
+          {...this.props}
+          name={fieldName}
         />
       </div>
     );

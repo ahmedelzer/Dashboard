@@ -2,14 +2,28 @@ import React, { Component } from "react";
 
 class BaseInput extends Component {
   handleChange = (e) => {
-    const { onChange } = this.props;
-    if (onChange) {
-      onChange(e.target.value);
+    let value = this.props.value;
+    let rowParam = this.props.row[this.props.fieldName];
+    let row = this.props.row;
+    if (rowParam) {
+      rowParam = value;
+    } else {
+      const newParam = {
+        [rowParam]: value,
+      };
+      row = { ...row, ...newParam };
     }
   };
 
   render() {
-    const { fieldName, value, errorMessage, enable } = this.props;
+    const {
+      fieldName,
+      value,
+      errorMessage,
+      row,
+      enable,
+      changed = true,
+    } = this.props;
     return (
       <div>
         <input

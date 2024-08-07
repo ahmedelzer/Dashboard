@@ -13,7 +13,12 @@ import {
 import InputDisplay from "../../forms/PartingFrom/InputDisplay";
 import BaseInput from "../../inputs/BaseInput";
 import LookupInput from "../../inputs/LookupInput";
+import ImageParameterWithPanelActions from "../../inputs/InputActions/ImageParameterWithPanelActions";
+import { CreateInputProps } from "./CreateInputProps";
+import { GetInputComponent } from "./GetInputComponent";
 //import { TextOnChangeHandling } from "./InputOnChange";
+import "./formStyles.css";
+import { Onchange } from "./OnchangeClass";
 
 const handleKeyPressToApplyChanges = (event) => {
   // Check if the key pressed is Enter (key code 13)
@@ -34,119 +39,20 @@ const SetkeyPressEvent = (isActionField) => {
   console.log("isActionField", isActionField);
   return isActionField ? handleKeyPressToApplyChanges : handleKeyPressToTabNew;
 };
-export default function DataCellRender({
-  data,
-  value,
-  onChange,
-  dataError,
-  isActionField,
-  isSelectionRow,
-}) {
-  function handleSelectionRow() {
-    if (isSelectionRow[data.parameterField]) {
-      return false;
-    } else {
-      return data.isEnable;
-    }
-  }
-  if (data?.lookupID === null) {
-    switch (data.parameterType) {
-      case "text":
-        return (
-          <TextParameter
-            dataError={dataError}
-            data={data}
-            value={value}
-            onChange={onChange}
-            Enable={handleSelectionRow()}
-            // Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
-          />
-        );
-      case "datetime":
-        return (
-          <InputDisplay
-            title="test"
-            fieldName="test1"
-            value={value}
-            BaseInput={DateTimeParameter}
-            errorMessage={{}}
-          />
-        );
-      case "date":
-        return (
-          <InputDisplay
-            title="test"
-            fieldName="test1"
-            value={value}
-            BaseInput={DateParameter}
-            errorMessage={{}}
-            // Enable={data.isEnable}
-            // onKeyPress={SetkeyPressEvent(isActionField)}
-          />
-        );
-      case "boolean":
-        return (
-          <InputDisplay
-            title="test"
-            fieldName="test1"
-            value={value}
-            BaseInput={BooleanParameter}
-            errorMessage={{}}
-            // Enable={data.isEnable}
-            // onKeyPress={SetkeyPressEvent(isActionField)}
-          />
-        );
-      case "image":
-        return (
-          <TextParameter
-            dataError={dataError}
-            data={data}
-            value={value}
-            onChange={onChange}
-            Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
-          />
-        );
-      case "float":
-        return (
-          <TextParameter
-            dataError={dataError}
-            data={data}
-            value={value}
-            //onChange={new TextOnChangeHandling()}
-            Enable={data.isEnable}
-            onKeyPress={SetkeyPressEvent(isActionField)}
-          />
-        );
-      case "numeric":
-        return (
-          <TextParameter
-            dataError={dataError}
-            data={data}
-            value={value}
-            onChange={onChange}
-            onKeyPress={SetkeyPressEvent(isActionField)}
-            Enable={data.isEnable}
-          />
-        );
-      // Add cases for other property types
-      default:
-        return value;
-    }
-  } else {
-    return (
-      // <SearchingCellRender dataForm={data} fieldName="test1" value={value} />
-      <InputDisplay
-        title="test"
-        fieldName="test1"
-        value={value}
-        dataForm={data}
-        BaseInput={LookupInput}
-        errorMessage={{}}
-        // Enable={data.isEnable}
-        // onKeyPress={SetkeyPressEvent(isActionField)}
-      />
-    );
-  }
+export default function DataCellRender({ data, value, onChange, errorResult }) {
+  return (
+    <InputDisplay
+      props={{
+        ...CreateInputProps(data, value),
+        onChange: onChange,
+      }}
+      errorResult={errorResult}
+      BaseInput={GetInputComponent(
+        data.lookupID ? "lookup" : data.parameterType
+      )}
+      errorMessage={{}}
+      // Enable={data.isEnable}
+      // onKeyPress={SetkeyPressEvent(isActionField)}
+    />
+  );
 }

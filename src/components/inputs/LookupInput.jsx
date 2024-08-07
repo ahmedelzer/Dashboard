@@ -6,13 +6,12 @@ import Table from "../forms/DynamicTable/Table";
 import GetFormSchema from "../hooks/DashboardAPIs/GetFormSchema";
 import useFetch, { fetchData } from "../hooks/APIsFunctions/useFetch";
 import { defaultProjectProxyRoute } from "../../request";
-import APIHandling from "../hooks/APIsFunctions/APIHandling";
 class LookupInput extends BaseInput {
   constructor(props) {
     super(props);
     this.state = {
       data: null,
-      selectedRow: {},
+      selectedRow: this.props.value || {},
       isPanelOpen: false,
     };
     this.setSelectedRow = this.setSelectedRow.bind(this);
@@ -27,12 +26,17 @@ class LookupInput extends BaseInput {
         Authorization: "Bearer your-token", // Add any other headers you need
       },
     };
+    const { data, error, isLoading } = await fetchData(
+      `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${this.props.lookupID}`,
+      defaultProjectProxyRoute,
+      options
+    );
 
-    // this.setState({
-    //   data,
-    //   error,
-    //   isLoading,
-    // });
+    this.setState({
+      data,
+      error,
+      isLoading,
+    });
   }
 
   setSelectedRow(row) {
@@ -44,24 +48,8 @@ class LookupInput extends BaseInput {
   }
 
   render() {
-    const {
-      lookupReturnField,
-      fieldName,
-      value,
-      lookupDisplayField,
-      lookupID,
-      data, //take more time
-    } = this.props;
-    // this.componentDidMount();
-    // fetch(
-    //   `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${lookupID}`
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) => l)
-    //   .catch((error) => console.error("Error fetching data:", error));
-    const { selectedRow, isPanelOpen } = this.state;
-
-    // exstract sytel
+    const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
+    const { data, selectedRow, isPanelOpen } = this.state;
     const panelContent = (
       <div className="drop-list text-center">
         {data && (
@@ -82,11 +70,12 @@ class LookupInput extends BaseInput {
     return (
       <div className=" ">
         <CustomDropdown
-          buttonText={selectedRow[lookupReturnField]}
+          returnField={selectedRow[lookupReturnField]}
           displayField={selectedRow[lookupDisplayField]}
           panelContent={panelContent}
           isPanelOpen={isPanelOpen}
           setPanelOpen={this.setPanelOpen}
+          {...this.props}
         />
       </div>
     );
