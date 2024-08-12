@@ -17,7 +17,7 @@ export default function DynamicTable() {
   );
   // const lookup= useFetch('/Dashboard/GetDashboardFormLookups');
   console.log("lookup", data);
-  if (error) {
+  if (error && !data) {
     // Handle error, e.g., display an error message
     return <div>Error: {error.message}</div>;
   }

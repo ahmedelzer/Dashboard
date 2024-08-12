@@ -5,32 +5,39 @@ import GetFormSchema from "../../hooks/DashboardAPIs/GetFormSchema";
 import { defaultProjectProxyRoute } from "../../../request";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 import inputs from "../../../locals/EN/inputs.json";
-//todo
-//1: Error handling for inputs
-//2: Enter placeholder
 function InputDisplay({ props, BaseInput, errorResult }) {
-  const [title, setTital] = useState(props.title);
+  const [title, setTitle] = useState(props.title);
   const [style, setStyle] = useState("");
-  const [oldValue, setOldValue] = useState(props.value);
-  // const handleFocus = () => {
-  //   setStyle((prevClassName) => prevClassName.replace("is-valid", "").trim());
-  // };
-
+  const [changed, setChanged] = useState(false);
+  const handleChange = (e) => {
+    if (title !== props.title) {
+      // setChanged(true);
+    }
+    if (props.onChange) {
+      props.onChange(e); // Call the onChange prop if it exists
+    }
+    setStyle(" ");
+  };
   useEffect(() => {
-    setStyle(style);
-  }, [style]);
+    if (title !== props.title && !changed) {
+      setStyle("is-invalid");
+    } else {
+      setStyle(" ");
+    }
+  }, [title, props.title, changed]);
   return (
     <FormGroup>
       <DisplayErorr
         dataError={errorResult}
         parameterField={props.fieldName}
-        setTital={setTital}
+        setTitle={setTitle}
         setStyle={setStyle}
       />
       <Label for={props.fieldName}>{props.title}</Label>
       <BaseInput
         {...props}
         title={title}
+        onChange={handleChange}
         placeholder={inputs.base.placeholder + props.title}
         className={style}
       />

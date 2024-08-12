@@ -3,29 +3,35 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import BaseAction from "./BaseAction";
 import { FaLink } from "react-icons/fa";
 import inputs from "../../../locals/EN/inputs.json";
+
 class BrowserUrlAction extends BaseAction {
   constructor(props) {
     super(props);
     this.state = {
-      img: null,
-      base64: "",
       error: false,
       imageUrl: "",
       modalOpen: false,
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.Change = this.Change.bind(this);
     this.fetchImage = this.fetchImage.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({ imageUrl: event.target.value }, () => {
-      console.log("Updated imageUrl:", this.state.imageUrl);
-    });
+  Change(event) {
+    const imageUrl = event.target.value;
+    let error = false;
+
+    // Basic URL validation
+    try {
+      new URL(imageUrl);
+    } catch (_) {
+      error = "Invalid URL format";
+    }
+
+    this.setState({ imageUrl, error });
   }
 
   async fetchImage(e) {
-    const { onChange, fieldName, enable } = this.props;
     const { imageUrl } = this.state;
     try {
       const response = await fetch(imageUrl);
@@ -34,26 +40,14 @@ class BrowserUrlAction extends BaseAction {
         if (contentType && contentType.startsWith("image")) {
           const blob = await response.blob();
           this.props.onImageUpload(URL.createObjectURL(blob));
-          const reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onload = () => {
-            const base64Data = reader.result;
-            const [, base64String] = base64Data.split(";base64,");
-            onChange(e, base64String);
-            this.setState({ img: blob, base64: base64String, error: false });
-            console.log(this.state);
-            this.toggleModal();
-          };
+          this.toggleModal();
         } else {
           this.setState({ error: "URL does not point to an image" });
-          console.error("URL does not point to an image");
         }
       } else {
-        console.error("Failed to fetch image:", response.status);
         this.setState({ error: `Failed to fetch image: ${response.status}` });
       }
     } catch (error) {
-      console.error("Error fetching image:", error);
       this.setState({ error: "Error fetching image" });
     }
   }
@@ -76,17 +70,24 @@ class BrowserUrlAction extends BaseAction {
             <input
               type="text"
               placeholder={inputs.image.UrlPlaceholder}
+              onChange={this.Change}
+              className={`form-control ${error ? "is-invalid" : ""}`}
               // value={imageUrl}
-              // onChange={() => console.log(133)}
-              onChange={this.handleChange}
-              className="form-control"
             />
+            {error && (
+              <div className="invalid-feedback">
+                {typeof error === "string"
+                  ? error
+                  : "URL is invalid or not pointing to an image."}
+              </div>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button
               onClick={this.fetchImage}
               className="pop mt-2 text-center"
               name={this.props.fieldName}
+              disabled={!!error || !imageUrl}
             >
               Fetch Image
             </Button>

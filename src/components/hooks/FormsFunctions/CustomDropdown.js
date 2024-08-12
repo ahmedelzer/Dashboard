@@ -38,16 +38,13 @@ const CustomDropdown = ({
       onChange({ target: { name: inputRef.current.name, value: returnField } });
     }
   }, [returnField, onChange]);
-  console.log("====================================");
-  console.log(props.value);
-  console.log("====================================");
   return (
     <FormGroup className=" flex justify-between form-control">
       <input
         name={props.fieldName}
         readOnly
         ref={inputRef}
-        value={displayField || props.value}
+        value={displayField}
         placeholder={displayField}
         className="form-control w-[96%]"
       />

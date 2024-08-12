@@ -15,7 +15,7 @@ class ImageParameter extends Component {
       target: {
         name: this.props.fieldName,
         value: this.imageRef.current?.src,
-        type: "file",
+        type: this.props.type,
         // ...this.props,
       },
     });
@@ -31,7 +31,7 @@ class ImageParameter extends Component {
           target: {
             name: this.props.fieldName,
             value: this.imageRef.current?.src,
-            type: "file",
+            type: this.props.type,
             // ...this.props,
           },
         })
@@ -47,7 +47,7 @@ class ImageParameter extends Component {
           target: {
             name: this.props.fieldName,
             value: this.imageRef.current?.src,
-            type: "file",
+            type: this.props.type,
             // ...this.props,
           },
         })
@@ -63,7 +63,7 @@ class ImageParameter extends Component {
           target: {
             name: this.props.fieldName,
             value: this.imageRef.current?.src,
-            type: "file",
+            type: this.props.type,
             // ...this.props,
           },
         })

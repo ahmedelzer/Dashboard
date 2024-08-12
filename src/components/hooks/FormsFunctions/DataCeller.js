@@ -39,20 +39,24 @@ const SetkeyPressEvent = (isActionField) => {
   console.log("isActionField", isActionField);
   return isActionField ? handleKeyPressToApplyChanges : handleKeyPressToTabNew;
 };
-export default function DataCellRender({ data, value, onChange, errorResult }) {
+export default function DataCellRender({
+  data,
+  value,
+  onChange,
+  errorResult,
+  ...props
+}) {
   return (
     <InputDisplay
       props={{
         ...CreateInputProps(data, value),
         onChange: onChange,
+        ...props,
       }}
       errorResult={errorResult}
       BaseInput={GetInputComponent(
         data.lookupID ? "lookup" : data.parameterType
       )}
-      errorMessage={{}}
-      // Enable={data.isEnable}
-      // onKeyPress={SetkeyPressEvent(isActionField)}
     />
   );
 }

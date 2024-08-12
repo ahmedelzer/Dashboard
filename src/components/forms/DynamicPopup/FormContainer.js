@@ -3,8 +3,8 @@ import { Container, Row, Col } from "reactstrap";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import { Sm } from "./Sm";
 import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
-
-function FormContainer({ tableSchema, row, errorResult }) {
+import { PrepareInputValue } from "../../inputs/InputActions/PrepareInputValue";
+function FormContainer({ tableSchema, row, errorResult, callback }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
   ).parameterField;
@@ -12,19 +12,17 @@ function FormContainer({ tableSchema, row, errorResult }) {
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
   //todo).parameterField;
-  const onChange = new Onchange(row).UpdateRow;
-  console.log("tableSchema", tableSchema);
+  //
+  // Instantiate Onchange
+  function SetValue(param) {
+    if (param.lookupID) {
+      return row;
+    } else {
+      return row[param.parameterField];
+    }
+  }
 
-  const [rowData, setRowData] = useState(row);
-
-  const updateRowData = (e) => {
-    const { key, value, type } = e?.target;
-    setRowData((prevRowData) => ({
-      ...prevRowData,
-      [key]: value,
-    }));
-  };
-
+  const onChange = new Onchange(row);
   return (
     <div>
       {" "}
@@ -36,9 +34,11 @@ function FormContainer({ tableSchema, row, errorResult }) {
                 isActionField={
                   actionField === param.parameterField ? true : false
                 }
-                onChange={onChange}
+                //onChange={onChange.UpdateRow}
+                //onBlur={onChange.UpdateRow}
                 data={param}
-                value={row[param.parameterField]}
+                //value={{}}
+                //value={SetValue(param)}
                 // row={row}
                 errorResult={errorResult}
               />
@@ -49,5 +49,4 @@ function FormContainer({ tableSchema, row, errorResult }) {
     </div>
   );
 }
-
 export default FormContainer;

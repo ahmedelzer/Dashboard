@@ -1,130 +1,155 @@
-function generatePermutations(number) {
-  // Helper function to generate permutations
-  function permute(arr, l, r, result) {
-    if (l === r) {
-      result.add(parseInt(arr.join(""), 10));
-    } else {
-      let seen = new Set();
-      for (let i = l; i <= r; i++) {
-        if (!seen.has(arr[i])) {
-          seen.add(arr[i]);
-          [arr[l], arr[i]] = [arr[i], arr[l]]; // Swap
-          permute(arr, l + 1, r, result);
-          [arr[l], arr[i]] = [arr[i], arr[l]]; // Swap back
-        }
-      }
-    }
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.size = 0;
   }
 
-  // Convert the number to a string and then to an array of digits
-  let numStr = number.toString();
-  let numArr = numStr.split("");
-  let result = new Set();
+  // Add a node at the end of the list
+  append(data) {
+    const newNode = new Node(data);
 
-  // Generate all permutations
-  permute(numArr, 0, numArr.length - 1, result);
-
-  // Convert the set to an array and return
-  return Array.from(result).sort();
-}
-function nextSmaller(n) {
-  let numbers = generatePermutations(n);
-  let index = numbers.indexOf(n);
-  console.log(numbers, index);
-
-  if (numbers[index - 1]) {
-    if (numbers[index - 1].toString().length === n.toString().length) {
-      return numbers[index - 1];
+    if (this.head === null) {
+      this.head = newNode;
+    } else {
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = newNode;
     }
-  } else {
+
+    this.size++;
+  }
+
+  // Add a node at a specific index
+  insertAt(data, index) {
+    if (index < 0 || index > this.size) {
+      return console.log("Index out of bounds");
+    }
+
+    const newNode = new Node(data);
+
+    if (index === 0) {
+      newNode.next = this.head;
+      this.head = newNode;
+    } else {
+      let current = this.head;
+      let previous = null;
+      let currentIndex = 0;
+
+      while (currentIndex < index) {
+        previous = current;
+        current = current.next;
+        currentIndex++;
+      }
+
+      newNode.next = current;
+      previous.next = newNode;
+    }
+
+    this.size++;
+  }
+
+  // Remove a node from a specific index
+  removeFrom(index) {
+    if (index < 0 || index >= this.size) {
+      return console.log("Index out of bounds");
+    }
+
+    let current = this.head;
+    let previous = null;
+    let currentIndex = 0;
+
+    if (index === 0) {
+      this.head = current.next;
+    } else {
+      while (currentIndex < index) {
+        previous = current;
+        current = current.next;
+        currentIndex++;
+      }
+
+      previous.next = current.next;
+    }
+
+    this.size--;
+    return current.data;
+  }
+
+  // Find the index of a node with specific data
+  indexOf(data) {
+    let current = this.head;
+    let index = 0;
+
+    while (current) {
+      if (current.data === data) {
+        return index;
+      }
+      current = current.next;
+      index++;
+    }
+
     return -1;
   }
-  return -1;
-}
-// Example usage
-// let number = 123;
-// let result = generatePermutations(number);
-// console.log(result);
-const SharedLists = (obj, list, part) => {
-  const matchingKeys = new Set(list.map((item) => item[part]));
-  const result = {};
 
-  for (const key in obj) {
-    if (matchingKeys.has(key)) {
-      result[key] = obj[key];
+  // Print the list
+  printList() {
+    let current = this.head;
+    let list = "";
+
+    while (current) {
+      list += current.data + " -> ";
+      current = current.next;
     }
+
+    list += "null";
+    console.log(list);
   }
 
-  return result;
+  // Get the size of the list
+  getSize() {
+    return this.size;
+  }
+}
+function Count(list) {
+  let temp = list;
+  let count = 0;
+  while (temp !== null) {
+    count++;
+    temp = temp.next;
+  }
+  return count;
+}
+var removeNthFromEnd = function (head, n) {
+  let temp = head;
+  let count = Count(head) - n;
+  while (temp !== null) {
+    if (Count(head) > 1) {
+      if (count === 1) {
+        temp.next = temp.next.next;
+      }
+    } else {
+      if (count < 1) {
+        temp.data = temp.next;
+      }
+    }
+    count--;
+    temp = temp.next;
+  }
+  return head;
 };
 
 // Example usage:
-const list1 = {
-  postID: "4fa7ddef-404a-4bb7-a3f8-66a80978f8cd",
-  creationDate: "2024-05-01T14:51:10.147",
-  postTitle: "string",
-  postDescription: "string",
-};
-
-const list2 = [
-  {
-    dashboardFormSchemaParameterID: "ce99f99f-e998-47eb-8ae0-d49416b62521",
-    dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
-    isEnable: false,
-    parameterType: "text",
-    parameterField: "homePostID",
-    parameterTitel: "Home Post ID",
-    isIDField: true,
-    lookupID: null,
-    lookupReturnField: null,
-    lookupDisplayField: null,
-    indexNumber: 0,
-  },
-  {
-    dashboardFormSchemaParameterID: "e17193c9-26ef-4578-823a-790a5051a94a",
-    dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
-    isEnable: true,
-    parameterType: "datetime",
-    parameterField: "showTime",
-    parameterTitel: "Show Time",
-    isIDField: false,
-    lookupID: null,
-    lookupReturnField: null,
-    lookupDisplayField: null,
-    indexNumber: 1,
-  },
-  {
-    dashboardFormSchemaParameterID: "da30da53-331d-4698-b189-5a09362946ff",
-    dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
-    isEnable: true,
-    parameterType: "numeric",
-    parameterField: "duration",
-    parameterTitel: "Duration By Minute",
-    isIDField: false,
-    lookupID: null,
-    lookupReturnField: null,
-    lookupDisplayField: null,
-    indexNumber: 2,
-  },
-  {
-    dashboardFormSchemaParameterID: "511d30a3-7171-411d-9fb8-de717add1ca6",
-    dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
-    isEnable: true,
-    parameterType: "text",
-    parameterField: "postID",
-    parameterTitel: "Post ID",
-    isIDField: false,
-    lookupID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
-    lookupReturnField: "postID",
-    lookupDisplayField: "postTitle",
-    indexNumber: 3,
-  },
-];
-
-const part = "parameterField";
-
-console.log(SharedLists(list1, list2, part));
-
-// console.log(nextSmaller(21));
-// console.log(helper.pageCount());
-// console.log(Math.ceil(2.1));
+const list = new LinkedList();
+list.append(10);
+// list.append(20);
+// list.append(30);
+list.printList(); // Output: 10 -> 20 -> 30 -> null
+console.log(removeNthFromEnd(list.head, 1));

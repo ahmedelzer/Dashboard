@@ -55,7 +55,7 @@ function LiveForm() {
   // }, [actionsData]);
   // const lookup= useFetch('/Dashboard/GetDashboardFormLookups');
   // console.log(lookup)
-  if (error) {
+  if (error && !data) {
     // Handle error, e.g., display an error message
     return <div>Error: {error.message}</div>;
   }

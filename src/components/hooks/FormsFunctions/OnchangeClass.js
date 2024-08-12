@@ -1,23 +1,26 @@
 import { PrepareInputValue } from "../../inputs/InputActions/PrepareInputValue";
 
 export class Onchange {
-  constructor(row, type) {
+  constructor(row) {
     this.row = row;
-    this.type = type;
   }
 
-  UpdateRow = (e) => {
+  ReturnRow = () => {
+    // Use an arrow function to ensure correct `this` binding
+    return this.row;
+  };
+  UpdateRow = async (e) => {
     const { name, value, type } = e?.target;
-    const valueAfterPrepareing = PrepareInputValue(type, value);
+
+    // Assuming PrepareInputValue is an asynchronous function you have defined elsewhere
+    const valueAfterPreparing = await PrepareInputValue(type, value);
+
     if (this.row[name]) {
-      this.row[name] = valueAfterPrepareing;
+      this.row[name] = valueAfterPreparing;
     } else {
-      const newParam = {
-        [name]: valueAfterPrepareing,
-      };
+      const newParam = { [name]: valueAfterPreparing };
       this.row = { ...this.row, ...newParam };
     }
-    console.log(this.row);
 
     return this.row;
   };

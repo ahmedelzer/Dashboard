@@ -4,6 +4,7 @@ import { LanguageContext } from "../../../contexts/Language";
 import { Button } from "reactstrap";
 import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 import { SharedLists } from "./SharedLists";
+import { onApply } from "../DynamicPopup/OnApplay";
 
 function DuringTransactionContainer({
   tableSchema,
@@ -15,24 +16,21 @@ function DuringTransactionContainer({
   isSubset,
   open,
   setOpen,
+  postAction,
 }) {
   const parameterFieldValue = "parameterField";
   const textButtonNextValue = "Next";
+  const iDField = tableSchema.idField;
   const textButtonFinishValue = "Finish";
   const textButtonSkipValue = "Skip";
   const [popupOpen, setPopupOpen] = useState(false);
+  const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
   const [textButton, setTextButton] = useState(textButtonNextValue);
   const [index, setIndex] = useState(0);
   useEffect(() => {
     if (leftSelectionContext.length > 0) {
-      setInitialRow(
-        SharedLists(
-          leftSelectionContext[0],
-          tableSchema.dashboardFormSchemaParameters,
-          parameterFieldValue
-        )
-      );
+      setInitialRow(leftSelectionContext[0]);
     }
   }, [leftSelectionContext, tableSchema.dashboardFormSchemaParameters]);
   const handleButtonClick = () => {
@@ -44,28 +42,48 @@ function DuringTransactionContainer({
       setTextButton(textButtonFinishValue);
       setPopupOpen(false);
     }
+    onApply(
+      initialRow,
+      // state,
+      iDField,
+      true,
+      setResult,
+      postAction
+    );
   };
-  console.log("====================================leftSelection");
-  console.log("initialRow", initialRow);
-  console.log("====================================");
+  const callback = (updatedRow) => {
+    setInitialRow(updatedRow());
+    console.log("editedRow call", initialRow);
+  };
   const onChange = new Onchange(initialRow).UpdateRow;
+  function handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+    // Or you can work with it as a plain object:
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(12, formJson);
+  }
+
   return (
     <>
       {open && (
-        <div>
+        <form onSubmit={handleSubmit}>
           <FormContainer
             tableSchema={tableSchema}
             row={initialRow}
-            onChange={onChange}
-            errorResult={null}
-            // onApplyChanges={onApplyChanges}
+            errorResult={result}
+            callback={callback}
           />
           <div className="flex justify-end">
-            <Button type="submit" onClick={handleButtonClick} className="pop">
+            <Button type="submit" className="pop">
               {textButton}
             </Button>
           </div>
-        </div>
+        </form>
       )}
     </>
   );

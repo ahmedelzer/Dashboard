@@ -20,7 +20,7 @@ function LiveForm() {
     defaultProjectProxyRoute
   );
 
-  if (error) {
+  if (error && !data) {
     // Handle error, e.g., display an error message
     return <div>Error: {error.message}</div>;
   }

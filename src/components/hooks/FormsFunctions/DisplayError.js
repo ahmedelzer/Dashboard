@@ -1,4 +1,4 @@
-function DisplayError({ dataError, parameterField, setTital, setStyle }) {
+function DisplayError({ dataError, parameterField, setTitle, setStyle }) {
   const fieldLowercase = parameterField?.toLowerCase();
   let errors = dataError?.error?.errors;
   const lowercaseError = {};
@@ -7,10 +7,9 @@ function DisplayError({ dataError, parameterField, setTital, setStyle }) {
   }
   if (dataError && dataError.success === false) {
     const errorMessages = lowercaseError[fieldLowercase];
-    setTital(`${errorMessages}`);
     if (errorMessages && errorMessages.length > 0) {
-      setStyle("is-invalid");
-      return null;
+      setTitle(`${errorMessages}`);
+      // setStyle("is-invalid");
     }
   }
   return null;

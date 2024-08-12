@@ -18,6 +18,8 @@ class UploadAction extends BaseAction {
       const file = e.target.files[0];
 
       this.props.onImageUpload(URL.createObjectURL(file));
+
+      // this.props.onImageUpload(URL.createObjectURL(file));
       // const reader = new FileReader();
       // reader.readAsDataURL(file);
       // reader.onload = () => {

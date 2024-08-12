@@ -24,20 +24,16 @@ const Popup = ({
   open,
   tableSchema,
   errorResult,
-  img,
   isNewRow,
-  isSelectionRow,
-  setEditedRow,
+  callback,
 }) => {
   const handleSubmit = (event) => {};
-  console.log(tableSchema);
 
-  console.log("dataError", errorResult);
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
       <Modal
         isOpen={open}
-        onClose={(e) => onCancelChanges}
+        onClose={() => (open = false)}
         aria-labelledby="form-dialog-title"
       >
         <ModalHeader id="form-dialog-title">
@@ -49,12 +45,13 @@ const Popup = ({
           <FormContainer
             tableSchema={tableSchema}
             row={row}
+            callback={callback}
             onChange={onChange}
             errorResult={errorResult}
           />
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onCancelChanges} className="pop">
+          <Button onClick={() => (open = false)} className="pop">
             Cancel
           </Button>{" "}
           <Button type="submit" onClick={onApplyChanges} className="pop">
