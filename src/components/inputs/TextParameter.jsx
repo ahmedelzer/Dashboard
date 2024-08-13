@@ -43,13 +43,13 @@ class TextParameter extends BaseInput {
   };
 
   render() {
-    const { value, enable, title, fieldName, type, ...props } = this.props;
+    let { value, enable, title, fieldName, type, ...props } = this.props;
 
     return (
       <FieldGroup
         type={this.setParameterType(type)}
         required={enable}
-        value={value}
+        defaultValue={value}
         name={fieldName}
         id={fieldName}
         title={title}

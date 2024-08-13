@@ -8,82 +8,103 @@ import { onApply } from "../DynamicPopup/OnApplay";
 
 function DuringTransactionContainer({
   tableSchema,
-  leftedlist,
-  setLeftSelectionContext,
-  rightlist,
-  setrightlist,
-  leftSelectionContext,
-  isSubset,
+  transformedList,
+  selectionContext,
   open,
   setOpen,
-  postAction,
+  action,
 }) {
   const parameterFieldValue = "parameterField";
   const textButtonNextValue = "Next";
   const iDField = tableSchema.idField;
   const textButtonFinishValue = "Finish";
   const textButtonSkipValue = "Skip";
-  const [popupOpen, setPopupOpen] = useState(false);
   const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
   const [textButton, setTextButton] = useState(textButtonNextValue);
   const [index, setIndex] = useState(0);
+  let editedRow = {};
   useEffect(() => {
-    if (leftSelectionContext.length > 0) {
-      setInitialRow(leftSelectionContext[0]);
+    console.log("====================================");
+    console.log("change");
+    console.log("====================================");
+  }, [initialRow, editedRow]);
+  editedRow = { ...initialRow, ...editedRow };
+  if (initialRow) {
+  }
+  const apply = async () =>
+    await onApply(
+      editedRow,
+      iDField,
+      true,
+      action,
+      tableSchema.dashboardFormSchemaParameters
+    );
+  useEffect(() => {
+    if (selectionContext.length > 0) {
+      setInitialRow(selectionContext[0]);
     }
-  }, [leftSelectionContext, tableSchema.dashboardFormSchemaParameters]);
-  const handleButtonClick = () => {
-    if (index < leftSelectionContext.length - 1) {
-      setIndex((prevIndex) => prevIndex + 1);
-      setInitialRow(leftSelectionContext[index + 1]);
+  }, [selectionContext]);
+
+  function MoveOn() {
+    setIndex((prevIndex) => prevIndex + 1);
+    setInitialRow(selectionContext[index + 1]);
+  }
+  function MoveNext() {
+    if (index < selectionContext.length - 1) {
+      MoveOn();
       setTextButton(textButtonNextValue);
     } else {
       setTextButton(textButtonFinishValue);
-      setPopupOpen(false);
+      setOpen(false);
     }
+  }
+  function TransformDone(result) {
+    //
+    // selectionContext.remove()
+    // transformedList.add(result)
+  }
+  const handleButtonClick = () => {
+    // console.log(apply());
+    console.log("editedRow", editedRow);
+
+    // if (result) {
+    //   MoveOn();
+    //   TransformDone(result);
+    // }
+  };
+  const AutomatedTransform = () => {
     onApply(
       initialRow,
       // state,
       iDField,
       true,
       setResult,
-      postAction
+      action
     );
+    MoveOn();
+    TransformDone(result);
   };
-  const callback = (updatedRow) => {
-    setInitialRow(updatedRow());
-    console.log("editedRow call", initialRow);
-  };
-  const onChange = new Onchange(initialRow).UpdateRow;
-  function handleSubmit(e) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
-
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form);
-    // Or you can work with it as a plain object:
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(12, formJson);
-  }
-
   return (
     <>
-      {open && (
-        <form onSubmit={handleSubmit}>
+      {open ? (
+        <div>
           <FormContainer
             tableSchema={tableSchema}
-            row={initialRow}
+            row={editedRow}
             errorResult={result}
-            callback={callback}
           />
           <div className="flex justify-end">
-            <Button type="submit" className="pop">
+            <Button onClick={handleButtonClick} className="pop">
+              {textButtonSkipValue}
+            </Button>
+            <Button onClick={handleButtonClick} className="pop">
               {textButton}
             </Button>
           </div>
-        </form>
+        </div>
+      ) : (
+        <></>
       )}
     </>
   );

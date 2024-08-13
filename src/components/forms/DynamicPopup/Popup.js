@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Modal,
@@ -18,19 +18,15 @@ import FormContainer from "./FormContainer";
 
 const Popup = ({
   row,
-  onChange,
   onApplyChanges,
   onCancelChanges,
   open,
   tableSchema,
   errorResult,
   isNewRow,
-  callback,
 }) => {
-  const handleSubmit = (event) => {};
-
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form>
       <Modal
         isOpen={open}
         onClose={() => (open = false)}
@@ -45,13 +41,11 @@ const Popup = ({
           <FormContainer
             tableSchema={tableSchema}
             row={row}
-            callback={callback}
-            onChange={onChange}
             errorResult={errorResult}
           />
         </ModalBody>
         <ModalFooter>
-          <Button onClick={() => (open = false)} className="pop">
+          <Button onClick={onCancelChanges} className="pop">
             Cancel
           </Button>{" "}
           <Button type="submit" onClick={onApplyChanges} className="pop">

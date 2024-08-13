@@ -36,11 +36,12 @@ function InputDisplay({ props, BaseInput, errorResult }) {
       <Label for={props.fieldName}>{props.title}</Label>
       <BaseInput
         {...props}
-        title={title}
         onChange={handleChange}
+        title={title}
         placeholder={inputs.base.placeholder + props.title}
         className={style}
       />
+      {/* {BaseInput.render()} */}
     </FormGroup>
   );
 }

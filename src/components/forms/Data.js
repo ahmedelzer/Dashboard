@@ -1,13 +1,6 @@
-import React from "react";
-import ImageParameterWithPanelActions from "../inputs/InputActions/ImageParameterWithPanelActions";
-import { Onchange } from "../hooks/FormsFunctions/OnchangeClass";
-import TableTransformer from "./PartingFrom/TableTransformer";
-// import DisplayFile from "./PartingFrom/DisplayFile";
-// import FileInput from "./PartingFrom/FileInput";
-// import UploadAction from "../inputs/InputActins/UploadAction";
-// import BrowserUrlAction from "../inputs/InputActins/BrowserUrlAction";
-// import WebcamActions from "../inputs/InputActins/WebcamActins";
+import React, { useEffect, useState } from "react";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
+
 let schema = {
   dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
   schemaType: "TransformTable",
@@ -80,66 +73,19 @@ let schema = {
 };
 
 function Data() {
-  // const onChange = new Onchange({}).UpdateRow;
-  // let props = {
-  //   fieldName: "image",
-  //   title: "",
-  //   value: "",
-  //   enable: true,
-  //   type: "file",
-  //   onChange: onChange,
-  // };
+  // Initialize state for row
+  const [row, setRow] = useState({});
+
+  // Use useEffect to log the current row whenever it updates
+  useEffect(() => {
+    console.log(row, "row");
+  }, [row]);
+
   return (
     <>
-      <TableTransformer />
+      <FormContainer tableSchema={schema} row={row} setRow={setRow} />
     </>
   );
-  // function handleSubmit(e) {
-  //   // Prevent the browser from reloading the page
-  //   e.preventDefault();
-
-  //   // Read the form data
-  //   const form = e.target;
-  //   const formData = new FormData(form);
-  //   // Or you can work with it as a plain object:
-  //   const formJson = Object.fromEntries(formData.entries());
-  //   console.log(12, formJson);
-  // }
-
-  // return (
-  //   <form method="post" onSubmit={handleSubmit}>
-  //     <label>
-  //       Text input: <input name="myInput" defaultValue="Some initial value" />
-  //     </label>
-  //     <hr />
-  //     <label>
-  //       Checkbox:{" "}
-  //       <input type="checkbox" name="myCheckbox" defaultChecked={true} />
-  //     </label>
-  //     <hr />
-  //     <p>
-  //       Radio buttons:
-  //       <label>
-  //         <input type="radio" name="myRadio" value="option1" /> Option 1
-  //       </label>
-  //       <label>
-  //         <input
-  //           type="radio"
-  //           name="myRadio"
-  //           value="option2"
-  //           defaultChecked={true}
-  //         />{" "}
-  //         Option 2
-  //       </label>
-  //       <label>
-  //         <input type="radio" name="myRadio" value="option3" /> Option 3
-  //       </label>
-  //     </p>
-  //     <hr />
-  //     <button type="reset">Reset form</button>
-  //     <button type="submit">Submit form</button>
-  //   </form>
-  // );
 }
 
 export default Data;

@@ -3,47 +3,28 @@ import { SharedLists } from "../PartingFrom/SharedLists";
 
 export const onApply = async (
   editedRow,
-  state,
   iDField,
   isNew,
-  setResult,
-  postAction,
-  putAction,
-  schemaParameters
+  action,
+  schemaParameters = false
 ) => {
-  const action = isNew ? postAction : putAction;
-  //const dataEditerow = ;
-  let row = SharedLists(editedRow, schemaParameters, "parameterField");
-  if (row) editedRow = row;
+  // let row = schemaParameters
+  //   ? SharedLists(editedRow, schemaParameters, "parameterField")
+  //   : null;
+  // if (row) editedRow = row;
   const body = isNew
     ? editedRow
     : {
         entityID: `${editedRow[iDField]}`,
         ...{ patchJSON: editedRow },
       };
-  console.log("body", body, editedRow);
+
   const res = await APIHandling(
     action.routeAdderss,
     action.dashboardFormActionMethodType,
     body
   );
-  setResult(res);
+  console.log("editedRow", editedRow);
 
-  if (res.success) {
-    const newRow = { ...res.data, ...editedRow };
-    if (isNew) {
-      state.rows = [...state.rows, newRow];
-      // cancelAddedRows({ rowIds });
-    } else {
-      const updatedRows = state.rows.map((row) => {
-        if (row[iDField] === editedRow[iDField]) {
-          return newRow; // Replace the existing row with the updated newRow
-        }
-        return row;
-      });
-
-      // Update the state with the updated rows
-      state.rows = updatedRows;
-    }
-  }
+  return res;
 };

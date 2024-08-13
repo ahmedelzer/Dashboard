@@ -1,4 +1,4 @@
-function DisplayError({ dataError, parameterField, setTitle, setStyle }) {
+function DisplayError({ dataError, parameterField, setTitle }) {
   const fieldLowercase = parameterField?.toLowerCase();
   let errors = dataError?.error?.errors;
   const lowercaseError = {};

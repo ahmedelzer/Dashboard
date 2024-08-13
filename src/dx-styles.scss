@@ -17,7 +17,7 @@
     @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
   }
   .btn-accent {
-    @apply bg-accent hover:bg-accent-hover transition-all;
+    @apply bg transition-all;
   }
   .input {
     @apply h-[50px] rounded-[8px] w-full outline-none px-6;

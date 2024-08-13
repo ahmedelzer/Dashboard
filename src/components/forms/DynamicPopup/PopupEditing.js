@@ -26,24 +26,6 @@ const PopupEditing = React.memo(
     schema,
     addSelectedList,
   }) => {
-    // const [editedRow, setEditedRow] = useState({});
-    // function ExtractRow(){
-    //   const isNew = addedRows.length > 0;
-    //           let rowId;
-    // if (isNew) {
-    //   rowId = 0;
-    //   editedRow = {};
-    // } else {
-    //   [rowId] = editingRowIds;
-    //   const targetRow = rows.filter(
-    //     (row) => getRowId(row) === rowId
-    //   )[0];
-    //   editedRow = {
-    //     ...targetRow,
-    //   };
-    // }
-    // }
-
     return (
       <Plugin>
         <Template name="popupEditing">
@@ -69,7 +51,6 @@ const PopupEditing = React.memo(
             ) => {
               const isNew = addedRows.length > 0;
               let editedRow;
-
               let rowId;
               let rowIds = [0];
               if (isNew) {
@@ -82,27 +63,35 @@ const PopupEditing = React.memo(
                 )[0];
                 editedRow = { ...targetRow, ...rowChanges[rowId] };
               }
-
-              const callback = (updatedRow) => {
-                editedRow = updatedRow();
-                console.log("editedRow call", editedRow);
-              };
               const iDField = schema.idField;
               const onApplyChanges = async () => {
-                onApply(
-                  editedRow,
-                  state,
-                  iDField,
-                  isNew,
-                  setResult,
-                  postAction,
-                  putAction
-                );
+                console.log("====================================");
+                console.log(editedRow);
+                console.log("====================================");
+                const action = isNew ? postAction : putAction;
+                const apply = await onApply(editedRow, iDField, isNew, action);
+                setResult(apply);
+                if (apply && apply.success) {
+                  const newRow = { ...apply.data, ...editedRow };
+                  if (isNew) {
+                    state.rows = [...state.rows, newRow];
+                    cancelAddedRows({ rowIds });
+                  } else {
+                    const updatedRows = state.rows.map((row) => {
+                      if (row[iDField] === editedRow[iDField]) {
+                        return newRow; // Replace the existing row with the updated newRow
+                      }
+                      return row;
+                    });
 
-                rowIds = [rowId];
-                stopEditRows({ rowIds });
-                setResult({});
-                cancelChangedRows({ rowIds });
+                    // Update the state with the updated rows
+                    state.rows = updatedRows;
+                  }
+                  rowIds = [rowId];
+                  stopEditRows({ rowIds });
+                  setResult({});
+                  cancelChangedRows({ rowIds });
+                }
               };
               const cancelChanges = () => {
                 if (isNew) {
@@ -115,10 +104,6 @@ const PopupEditing = React.memo(
                 }
                 setResult({});
               };
-
-              {
-                /* const open = isSelectionRow ? true : false; */
-              }
               const open = editingRowIds.length > 0 || isNew;
               return (
                 <Popup
@@ -128,9 +113,7 @@ const PopupEditing = React.memo(
                   onCancelChanges={cancelChanges}
                   tableSchema={schema}
                   errorResult={result}
-                  rows={state.rows}
                   isNewRow={isNew}
-                  callback={callback}
                 />
               );
             }}

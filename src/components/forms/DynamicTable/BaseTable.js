@@ -155,12 +155,14 @@ function BaseTable({
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
     const dynamicColumns =
-      schema?.dashboardFormSchemaParameters?.map((param) => ({
-        name: param.parameterField,
-        title: param.parameterTitel,
-        type: param.parameterType,
-        getCellValue: (row) => row[param.parameterField],
-      })) || [];
+      schema?.dashboardFormSchemaParameters
+        .filter((column) => !column.isIDField)
+        ?.map((param) => ({
+          name: param.parameterField,
+          title: param.parameterTitel,
+          type: param.parameterType,
+          getCellValue: (row) => row[param.parameterField],
+        })) || [];
 
     setColumns([...dynamicColumns]);
   }, [schema]);
