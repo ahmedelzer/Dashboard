@@ -42,11 +42,12 @@ const CustomDropdown = ({
     <FormGroup className=" flex justify-between form-control">
       <input
         name={props.fieldName}
+        className={`${props.className} form-control w-[96%]`}
         readOnly
         ref={inputRef}
         value={displayField}
         placeholder={displayField}
-        className="form-control w-[96%]"
+        title={props.title}
       />
 
       <div

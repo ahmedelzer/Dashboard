@@ -16,7 +16,6 @@ export default function FieldGroup({ value, onChange, ...props }) {
   return (
     <input
       {...props}
-      value={value}
       onChange={onChange}
       onFocus={props.onFocus}
       className={`${props.className} form-control`}

@@ -63,15 +63,21 @@ const PopupEditing = React.memo(
                 )[0];
                 editedRow = { ...targetRow, ...rowChanges[rowId] };
               }
+
+              const ReturnRow = (updatedRow) => {
+                editedRow = updatedRow();
+                console.log("editedRow call", editedRow);
+              };
               const iDField = schema.idField;
               const onApplyChanges = async () => {
-                console.log("====================================");
-                console.log(editedRow);
-                console.log("====================================");
                 const action = isNew ? postAction : putAction;
                 const apply = await onApply(editedRow, iDField, isNew, action);
                 setResult(apply);
-                if (apply && apply.success) {
+                console.log("====================================");
+                console.log(apply);
+                console.log(editedRow);
+                console.log("====================================");
+                if (apply && apply.success === true) {
                   const newRow = { ...apply.data, ...editedRow };
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
@@ -114,6 +120,7 @@ const PopupEditing = React.memo(
                   tableSchema={schema}
                   errorResult={result}
                   isNewRow={isNew}
+                  returnRow={ReturnRow}
                 />
               );
             }}

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
+import TransformerContainer from "./PartingFrom/TransformerContainer";
+import { ImageParameterWithPanelActions } from "../inputs";
+import FileInput from "./PartingFrom/FileInput";
 
 let schema = {
   dashboardFormSchemaID: "f6a7f028-bf0c-46be-8dbe-82cfa9adcf31",
@@ -74,16 +77,17 @@ let schema = {
 
 function Data() {
   // Initialize state for row
-  const [row, setRow] = useState({});
+  let row = {};
 
   // Use useEffect to log the current row whenever it updates
   useEffect(() => {
     console.log(row, "row");
   }, [row]);
+  let popupComponent = <FormContainer tableSchema={schema} row={row} />;
 
   return (
     <>
-      <FormContainer tableSchema={schema} row={row} setRow={setRow} />
+      <FileInput label={"ddj"} />
     </>
   );
 }

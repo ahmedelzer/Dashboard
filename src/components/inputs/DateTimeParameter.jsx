@@ -16,10 +16,11 @@ class DateTimeParameter extends BaseInput {
     }
 
     return (
-      <div className="mb-3">
+      <div className="mb-3" title={this.props.title}>
         <DateBox
           value={new Date(value ? value : Date.now())}
           readOnly={!enable}
+          title={this.props.title}
           type="datetime"
           name={fieldName}
           key={fieldName}

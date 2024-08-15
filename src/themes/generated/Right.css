@@ -1,3 +1,5 @@
-* {
-  direction: rtl;
+.dx-overlay-content,
+.dx-drawer-panel-content,
+.side-nav-inner-toolbar {
+  direction: ltr !important;
 }

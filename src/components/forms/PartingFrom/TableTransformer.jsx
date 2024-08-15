@@ -205,9 +205,15 @@ import { styles } from "./styles";
 //   },
 // ];
 const TableTransformer = ({ TransFormSchema }) => {
-  const [schema, setSchema] = useState([]);
+  const { Right } = useContext(LanguageContext);
+
+  const [trigger, setTrigger] = useState(0);
+  const [schema, setSchema] = useState(0);
+  const [action, setAction] = useState(0);
+  const [automated, setAutomated] = useState(false);
+
   const [open, setOpen] = useState(false);
-  const [selectionContext, setSelectionContext] = useState([{}]);
+  const [selectionContext, setSelectionContext] = useState([]);
   const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
   const leftSchema = TransFormSchema.find((schema) => !schema.isMainSchema); //Table
   const rightSchemaWithoutID = rightSchema.dashboardFormSchemaParameters.filter(
@@ -236,11 +242,6 @@ const TableTransformer = ({ TransFormSchema }) => {
     schemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Delete"
     );
-  console.log("====================================");
-  console.log(rightSchema.dashboardFormSchemaParameters);
-  console.log(leftSchema.dashboardFormSchemaParameters);
-  console.log(rightSchemaWithoutID);
-  console.log("====================================");
   const [leftSelection, setLeftSelection] = useState([]);
   const [rightSelection, setRightSelection] = useState([]);
 
@@ -249,28 +250,32 @@ const TableTransformer = ({ TransFormSchema }) => {
     leftSchema.dashboardFormSchemaParameters,
     ["parameterField"]
   );
+  const RefreshTable = () => {
+    setTrigger((prevTrigger) => prevTrigger + 1); // Increment trigger
+  };
 
   const TransformData = (
     selection,
     setSelectionContext,
     setSelection,
-    addedSchema,
-    removedSchema
+    schema,
+    actionSchema
   ) => {
-    console.log(isSubset, "isSubset");
-
-    if (!isSubset) {
-      setOpen(true);
+    if (selection.length > 0) {
+      setOpen(!isSubset);
+      setSelectionContext(selection);
+      setAction(actionSchema);
+      setSchema(schema);
       setSelection([]);
+      setAutomated(isSubset);
     }
-    setSelectionContext(leftSelection);
   };
   return (
     <div>
       <div className={styles.container}>
         <div className={styles.tableContainer}>
           <Table
-            key={leftSchema?.idField}
+            key={trigger}
             schema={leftSchema}
             selectionRow={true}
             isSearchingTable={false}
@@ -292,16 +297,20 @@ const TableTransformer = ({ TransFormSchema }) => {
                 setSelectionContext,
                 setLeftSelection,
                 rightSchema,
-                leftSchema
+                postAction
               )
             }
             className={styles.button}
           >
             <div className={styles.smallScreenIcon}>
-              <FaArrowAltCircleUp size={22} />
+              <FaArrowAltCircleDown size={22} />
             </div>
             <div className={styles.largeScreenIcon}>
-              <FaArrowAltCircleRight size={22} />
+              {Right ? (
+                <FaArrowAltCircleLeft size={22} />
+              ) : (
+                <FaArrowAltCircleRight size={22} />
+              )}
             </div>
           </button>
           <button
@@ -312,22 +321,28 @@ const TableTransformer = ({ TransFormSchema }) => {
                 rightSelection,
                 setSelectionContext,
                 setRightSelection,
-                leftSchema
+                leftSchema,
+                deleteAction
               )
             }
             className={styles.button}
           >
             <div className={styles.smallScreenIcon}>
-              <FaArrowAltCircleDown size={22} />
+              <FaArrowAltCircleUp size={22} />
             </div>
             <div className={styles.largeScreenIcon}>
-              <FaArrowAltCircleLeft size={22} />
+              {Right ? (
+                <FaArrowAltCircleRight size={22} />
+              ) : (
+                <FaArrowAltCircleLeft size={22} />
+              )}
             </div>
           </button>
         </div>
         <div className={styles.tableContainer}>
           <Table
-            key={rightSchema?.idField}
+            // key={rightSchema?.idField}
+            key={trigger}
             schema={rightSchema}
             isSearchingTable={false}
             deleteMessage={false}
@@ -341,11 +356,13 @@ const TableTransformer = ({ TransFormSchema }) => {
         </div>
       </div>
       <DuringTransactionContainer
-        tableSchema={rightSchema}
+        setSelectionContext={setSelectionContext}
+        tableSchema={schema}
         selectionContext={selectionContext}
-        isSubset={isSubset}
+        automated={automated}
         open={open}
-        action={postAction}
+        TransformDone={RefreshTable}
+        action={action}
         setOpen={setOpen}
       />
     </div>

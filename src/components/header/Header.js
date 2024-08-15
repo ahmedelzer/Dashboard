@@ -21,6 +21,7 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
         <Item
           visible={menuToggleEnabled}
           location={Right ? "after" : "before"}
+          // location={"before"}
           widget={"dxButton"}
           cssClass={"menu-button"}
         >
@@ -28,11 +29,13 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
         </Item>
         <Item
           location={Right ? "after" : "before"}
+          // location={"before"}
           cssClass={"header-title"}
           text={title}
           visible={!!title}
         />
         <Item
+          // location={"after"}
           location={Right ? "before" : "after"}
           locateInMenu={"auto"}
           menuItemTemplate={"userPanelTemplate"}
@@ -46,7 +49,11 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
             <UserPanel menuMode={"context"} />
           </Button>
         </Item>
-        <Item location={Right ? "before" : "after"} locateInMenu="auto">
+        <Item
+          // location={"after"}
+          location={Right ? "before" : "after"}
+          locateInMenu="auto"
+        >
           <Button
             width={open ? 100 : 30}
             onClick={() => setopen(true)}

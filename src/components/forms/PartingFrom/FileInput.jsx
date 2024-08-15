@@ -9,10 +9,11 @@ function FileInput({ label }) {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files && files.length > 0) {
-      addFile(files[0]);
+      [...files].forEach((file) => {
+        addFile(file);
+      });
     }
   };
-
   const handleDragOver = (event) => {
     event.preventDefault();
   };

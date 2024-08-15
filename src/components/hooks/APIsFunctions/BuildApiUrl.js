@@ -15,6 +15,5 @@ export function buildApiUrl(apiRequest, constants) {
     .join("&");
 
   const apiUrl = `${GetProjectUrl()}/${apiRequest.routeAdderss}?${queryParam}`;
-  console.log("apiRequest", apiRequest);
   return apiUrl;
 }

@@ -3,6 +3,10 @@
     { "text": "Yes", "value": true },
     { "text": "No", "value": false }
   ],
-  "image": { "imageAltValue": "uploaded", "UrlPlaceholder": "Enter image URL" },
+  "image": {
+    "imageAltValue": "uploaded",
+    "UrlPlaceholder": "Enter image URL",
+    "defaultImage": "https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"
+  },
   "base": { "placeholder": "Enter " }
 }

@@ -91,8 +91,8 @@ function BaseTable({
   selection,
   setSelection,
   addSelectedList,
+  refreshData,
 }) {
-  console.log("schemaBasetable", schema);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
@@ -108,7 +108,6 @@ function BaseTable({
       setSelectedRow(row); // Update selectedRow state with the clicked row
       setPanelOpen(false);
     }
-    console.log("row", row);
   };
   const CustomRow = ({ row, onRowClick, ...restProps }) => {
     if (selection) {
@@ -186,7 +185,6 @@ function BaseTable({
   const loadData = () => {
     const { requestedSkip, take, lastQuery, loading } = state;
     const query = dataSourceAPI(getAction, requestedSkip, take);
-    console.log("dataSourceAPI", query);
     if (query !== lastQuery && !loading) {
       const cached = cache.getRows(requestedSkip, take);
       if (cached.length === take) {
@@ -212,6 +210,10 @@ function BaseTable({
   };
 
   useEffect(() => loadData());
+  // useEffect(() => {
+  //   loadData();
+  //   console.log("refreshData", new Date().getTime());
+  // }, [refreshData]);
   //e
   const { rows, skip, totalCount, loading } = state;
 

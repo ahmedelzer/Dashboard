@@ -5,41 +5,23 @@ import { Button } from "reactstrap";
 import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 import { SharedLists } from "./SharedLists";
 import { onApply } from "../DynamicPopup/OnApplay";
-
+import local from "../../../locals/EN/tableTransform.json";
 function DuringTransactionContainer({
   tableSchema,
-  transformedList,
+  TransformDone,
+  automated,
   selectionContext,
   open,
   setOpen,
   action,
+  setSelectionContext,
 }) {
-  const parameterFieldValue = "parameterField";
-  const textButtonNextValue = "Next";
   const iDField = tableSchema.idField;
-  const textButtonFinishValue = "Finish";
-  const textButtonSkipValue = "Skip";
   const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
-  const [textButton, setTextButton] = useState(textButtonNextValue);
-  const [index, setIndex] = useState(0);
-  let editedRow = {};
-  useEffect(() => {
-    console.log("====================================");
-    console.log("change");
-    console.log("====================================");
-  }, [initialRow, editedRow]);
-  editedRow = { ...initialRow, ...editedRow };
-  if (initialRow) {
-  }
-  const apply = async () =>
-    await onApply(
-      editedRow,
-      iDField,
-      true,
-      action,
-      tableSchema.dashboardFormSchemaParameters
-    );
+  const [textButton, setTextButton] = useState(local.textButtonNextValue);
+  let index = 0;
+  let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
       setInitialRow(selectionContext[0]);
@@ -47,64 +29,82 @@ function DuringTransactionContainer({
   }, [selectionContext]);
 
   function MoveOn() {
-    setIndex((prevIndex) => prevIndex + 1);
-    setInitialRow(selectionContext[index + 1]);
-  }
-  function MoveNext() {
-    if (index < selectionContext.length - 1) {
-      MoveOn();
-      setTextButton(textButtonNextValue);
-    } else {
-      setTextButton(textButtonFinishValue);
-      setOpen(false);
+    if (index < selectionContext.length) {
+      ++index;
+      setInitialRow(selectionContext[index]);
     }
   }
-  function TransformDone(result) {
-    //
-    // selectionContext.remove()
-    // transformedList.add(result)
+  function ChangeNextButton() {
+    if (index < selectionContext.length - 1) {
+      setTextButton(local.textButtonNextValue);
+    } else {
+      setTextButton(local.textButtonFinishValue);
+    }
   }
-  const handleButtonClick = () => {
-    // console.log(apply());
-    console.log("editedRow", editedRow);
+  function Skip() {
+    MoveOn();
+    ChangeNextButton();
+  }
 
-    // if (result) {
-    //   MoveOn();
-    //   TransformDone(result);
-    // }
-  };
-  const AutomatedTransform = () => {
-    onApply(
-      initialRow,
-      // state,
+  const handleButtonClick = async () => {
+    const apply = await onApply(
+      editedRow,
       iDField,
       true,
-      setResult,
-      action
+      action,
+      tableSchema.dashboardFormSchemaParameters
     );
-    MoveOn();
-    TransformDone(result);
+    setResult(apply);
+    if (apply && apply.success === true) {
+      MoveOn();
+      ChangeNextButton();
+
+      TransformDone();
+    }
+  };
+  const AutomatedTransform = async () => {
+    editedRow = { ...initialRow };
+    const apply = async () =>
+      await onApply(
+        editedRow,
+        iDField,
+        true,
+        action,
+        tableSchema.dashboardFormSchemaParameters
+      );
+    for (var i = 0; i < selectionContext.length; i++) {
+      await apply();
+      MoveOn();
+    }
+    TransformDone();
+  };
+  useEffect(() => {
+    if (automated) {
+      AutomatedTransform();
+    }
+  }, [automated]);
+  const ReturnRow = (updatedRow) => {
+    editedRow = { ...updatedRow(), ...initialRow };
   };
   return (
     <>
-      {open ? (
+      {open && (
         <div>
           <FormContainer
             tableSchema={tableSchema}
             row={editedRow}
+            returnRow={ReturnRow}
             errorResult={result}
           />
           <div className="flex justify-end">
-            <Button onClick={handleButtonClick} className="pop">
-              {textButtonSkipValue}
+            <Button onClick={Skip} className="pop mx-2">
+              {local.textButtonSkipValue}
             </Button>
             <Button onClick={handleButtonClick} className="pop">
               {textButton}
             </Button>
           </div>
         </div>
-      ) : (
-        <></>
       )}
     </>
   );

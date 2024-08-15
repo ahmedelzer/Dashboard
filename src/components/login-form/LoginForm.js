@@ -11,8 +11,9 @@ import Form, {
 import LoadIndicator from "devextreme-react/load-indicator";
 import notify from "devextreme/ui/notify";
 import { useAuth } from "../../contexts/auth";
-
+import local from "../../locals/EN/login.json";
 import "./LoginForm.scss";
+import { TextParameter } from "../inputs";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ export default function LoginForm() {
     async (e) => {
       e.preventDefault();
       const { email, password } = formData.current;
+      console.log("====================================");
+      console.log(email, password);
+      console.log("====================================");
       setLoading(true);
 
       const result = await signIn(email, password);
@@ -48,7 +52,8 @@ export default function LoginForm() {
           editorOptions={emailEditorOptions}
         >
           <RequiredRule message="Email is required" />
-          <EmailRule message="Email is invalid" />
+          {/* <EmailRule message="Email is invalid" /> */}
+          <TextParameter enable={true} />
           <Label visible={false} />
         </Item>
         <Item
@@ -57,10 +62,11 @@ export default function LoginForm() {
           editorOptions={passwordEditorOptions}
         >
           <RequiredRule message="Password is required" />
+          <TextParameter enable={true} />
           <Label visible={false} />
         </Item>
         <Item
-          dataField={"rememberMe"}
+          dataField={local.rememberMe}
           editorType={"dxCheckBox"}
           editorOptions={rememberMeEditorOptions}
         >
@@ -70,29 +76,23 @@ export default function LoginForm() {
           <ButtonOptions
             width={"100%"}
             type={"default"}
+            // type={"submit"}
             useSubmitBehavior={true}
           >
             <span className="dx-button-text">
               {loading ? (
                 <LoadIndicator width={"24px"} height={"24px"} visible={true} />
               ) : (
-                "Sign In"
+                `${local.sign}`
               )}
             </span>
           </ButtonOptions>
         </ButtonItem>
         <Item>
           <div className={"link"}>
-            <Link to={"/reset-password"}>Forgot password?</Link>
+            <Link to={"/reset-password"}>{local.forgotPassword}?</Link>
           </div>
         </Item>
-        <ButtonItem>
-          <ButtonOptions
-            text={"Create an account"}
-            width={"100%"}
-            onClick={onCreateAccountClick}
-          />
-        </ButtonItem>
       </Form>
     </form>
   );

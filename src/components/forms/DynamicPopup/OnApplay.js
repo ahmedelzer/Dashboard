@@ -8,10 +8,10 @@ export const onApply = async (
   action,
   schemaParameters = false
 ) => {
-  // let row = schemaParameters
-  //   ? SharedLists(editedRow, schemaParameters, "parameterField")
-  //   : null;
-  // if (row) editedRow = row;
+  let row = schemaParameters
+    ? SharedLists(editedRow, schemaParameters, "parameterField")
+    : null;
+  if (row) editedRow = row;
   const body = isNew
     ? editedRow
     : {
@@ -24,7 +24,6 @@ export const onApply = async (
     action.dashboardFormActionMethodType,
     body
   );
-  console.log("editedRow", editedRow);
 
   return res;
 };

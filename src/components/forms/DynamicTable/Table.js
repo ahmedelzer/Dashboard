@@ -22,6 +22,7 @@ const DynamicTable = ({
   addSelectedList = false,
   PopupComponent = false,
   schemaActions = false,
+  refreshData,
 }) => {
   const [result, setResult] = useState({});
   const {
@@ -31,6 +32,7 @@ const DynamicTable = ({
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
     defaultProjectProxyRoute
+    // trigger
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
   SetReoute(schema.projectProxyRoute);
@@ -83,6 +85,8 @@ const DynamicTable = ({
         selection={selection}
         setSelection={setSelection}
         addSelectedList={addSelectedList}
+        // trigger={trigger}
+        refreshData={refreshData}
       />
     </div>
   );

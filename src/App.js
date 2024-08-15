@@ -1,7 +1,7 @@
 import "devextreme/dist/css/dx.common.css";
 import "./themes/generated/theme.base.css";
 import "./themes/generated/theme.additional.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { HashRouter as Router } from "react-router-dom";
 import "./dx-styles.scss";
 import LoadPanel from "devextreme-react/load-panel";
@@ -21,7 +21,10 @@ function App() {
   if (Right) {
     SetRight();
   }
-
+  useEffect(() => {
+    const setDir = Right ? "rtl" : "ltr";
+    window.document.dir = setDir || "rtl";
+  }, [Right]);
   if (loading) {
     return <LoadPanel visible={true} />;
   }

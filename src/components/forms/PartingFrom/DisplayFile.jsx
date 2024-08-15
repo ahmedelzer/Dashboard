@@ -11,8 +11,8 @@ function DisplayFile({ photo, onEdit, onDelete, actions }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <img
-        src={photo}
-        // src={URL.createObjectURL(photo.file)}
+        // src={photo}
+        src={URL.createObjectURL(photo.file)}
         alt="Uploaded"
         className="w-full object-cover rounded-md"
       />

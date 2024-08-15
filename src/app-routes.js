@@ -10,10 +10,6 @@ import { withNavigationWatcher } from "./contexts/navigation";
 
 const routes = [
   {
-    path: "/profile",
-    element: AddingDropdown,
-  },
-  {
     path: "/dynamicLiveForm/:dashboardItemID",
     element: DynamicLiveForm,
   },

@@ -4,7 +4,7 @@ import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import { Sm } from "./Sm";
 import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 
-function FormContainer({ tableSchema, row, errorResult }) {
+function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
   ).parameterField;
@@ -12,16 +12,8 @@ function FormContainer({ tableSchema, row, errorResult }) {
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
   //todo).parameterField;
-  //
-  useEffect(() => {
-    console.log("====================================");
-    console.log(row);
-    console.log("====================================");
-  }, [row]);
-  // Instantiate Onchange
-  const onChange = new Onchange(row).UpdateRow;
+  const onChange = new Onchange(row);
   function SetValue(param) {
-    row = { ...onChange };
     if (param.lookupID) {
       return row;
     } else {
@@ -32,7 +24,7 @@ function FormContainer({ tableSchema, row, errorResult }) {
   return (
     <div>
       {" "}
-      <Container>
+      <Container onBlur={() => returnRow(onChange.ReturnRow)}>
         <Row>
           {tableSchema?.dashboardFormSchemaParameters
             ?.filter((column) => !column.isIDField)
@@ -44,7 +36,7 @@ function FormContainer({ tableSchema, row, errorResult }) {
                   }
                   data={param}
                   value={SetValue(param)}
-                  onChange={onChange}
+                  onChange={onChange.UpdateRow}
                   errorResult={errorResult}
                 />
               </Col>

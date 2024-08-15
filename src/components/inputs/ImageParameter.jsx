@@ -3,7 +3,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import inputs from "../../locals/EN/inputs.json";
 import { Image } from "react-bootstrap";
-
+import defaultImage from "../../default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
 class ImageParameter extends Component {
   constructor(props) {
     super(props);
@@ -83,7 +83,8 @@ class ImageParameter extends Component {
     const { fieldName, value } = this.props;
     const { isHovered } = this.state;
     const imageAltValue = inputs.image.imageAltValue;
-    // console.log(this.imageRef?.current?.src);
+    // const defaultImage = inputs.image.defaultImage;
+    // console.log(this.imageRef?.current?.src)
 
     return (
       <div
@@ -94,7 +95,7 @@ class ImageParameter extends Component {
       >
         <img
           ref={this.imageRef}
-          src={value}
+          src={value || defaultImage}
           alt={imageAltValue}
           key={fieldName}
           className={`w-full object-cover rounded-md form-control ${this.props.className}`}

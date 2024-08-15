@@ -12,11 +12,24 @@ class ImageParameterWithPanelActions extends Component {
       FileData: "",
     };
     this.handleImageUpload = this.handleImageUpload.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+    this.handleDragOver = this.handleDragOver.bind(this);
   }
 
   handleImageUpload(path) {
     this.setState({ FileData: path });
   }
+  handleDrop = (event) => {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    if (files && files.length > 0) {
+      this.handleImageUpload(URL.createObjectURL(files[0]));
+    }
+  };
+
+  handleDragOver = (event) => {
+    event.preventDefault();
+  };
 
   render() {
     const { FileData } = this.state;
@@ -30,7 +43,7 @@ class ImageParameterWithPanelActions extends Component {
     ];
 
     return (
-      <div>
+      <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
         <ImageParameter {...this.props} value={FileData} actions={actions} />
       </div>
     );

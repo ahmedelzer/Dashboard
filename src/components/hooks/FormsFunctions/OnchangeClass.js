@@ -23,6 +23,6 @@ export class Onchange {
     }
     console.log(this.row);
 
-    // return this.row;
+    return this.row;
   };
 }
