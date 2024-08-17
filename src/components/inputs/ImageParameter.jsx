@@ -3,7 +3,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import inputs from "../../locals/EN/inputs.json";
 import { Image } from "react-bootstrap";
-import defaultImage from "../../default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
+import defaultImage from "../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
 class ImageParameter extends Component {
   constructor(props) {
     super(props);

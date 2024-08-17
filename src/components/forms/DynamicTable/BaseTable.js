@@ -26,6 +26,8 @@ import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import Loading from "../../loading/Loading";
 import WaringPop from "../PartingFrom/WaringPop";
+import { Modal } from "reactstrap";
+import SelectForm from "../SelectForm";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -92,15 +94,25 @@ function BaseTable({
   setSelection,
   addSelectedList,
   refreshData,
+  rowDetails,
 }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const getRowId = (row) => row[schema.idField];
+  const toggleRowExpanded = (row) => {
+    setExpandedRows((prevExpandedRows) =>
+      prevExpandedRows.includes(row)
+        ? prevExpandedRows.filter((id) => id !== row)
+        : [...prevExpandedRows, row]
+    );
+  };
   const dataSourceAPI = (query, skip, take) =>
     buildApiUrl(query, {
       pageIndex: skip / take + 1,
       pageSize: take,
+      ...rowDetails,
     });
 
   const rowDoubleClick = (row) => {
@@ -139,11 +151,23 @@ function BaseTable({
       );
     } else {
       return (
-        <Table.Row
-          {...restProps}
-          onDoubleClick={() => rowDoubleClick(row)}
-          style={{ cursor: "pointer" }}
-        />
+        <>
+          <Table.Row
+            {...restProps}
+            onDoubleClick={() => rowDoubleClick(row)}
+            // onClick={() => toggleRowExpanded(getRowId(row))}
+            style={{ cursor: "pointer" }}
+          />
+          {expandedRows.includes(row) && (
+            <tr>
+              <td colSpan={columns.length}>
+                <div className="p-3">
+                  <SelectForm row={row} />
+                </div>
+              </td>
+            </tr>
+          )}
+        </>
       );
     }
   };
@@ -163,7 +187,10 @@ function BaseTable({
           getCellValue: (row) => row[param.parameterField],
         })) || [];
 
-    setColumns([...dynamicColumns]);
+    setColumns([
+      ...dynamicColumns,
+      { name: "details", title: "details", type: "text" },
+    ]);
   }, [schema]);
 
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
@@ -235,14 +262,18 @@ function BaseTable({
     setModalIsOpen(false);
     setRowToDelete(null);
   };
-  const DetailsButton = ({ row }) => (
-    <button
-      className="bg text-white px-2 py-1 rounded"
-      onClick={() => alert(`Details of ${row.name}`)}
-    >
-      Details
-    </button>
-  );
+  const DetailsButton = ({ row, schema }) => {
+    return (
+      <div>
+        <button
+          className="bg text-white px-2 py-1 rounded"
+          onClick={() => toggleRowExpanded(row)}
+        >
+          Details
+        </button>
+      </div>
+    );
+  };
 
   const DetailsCell = (props) => {
     if (props.column.name === "details") {

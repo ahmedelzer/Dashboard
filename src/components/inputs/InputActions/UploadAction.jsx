@@ -29,7 +29,7 @@ class UploadAction extends BaseAction {
       // };
       // console.log(file);
     };
-    //todo set htmlFor Logo
+
     return (
       <div>
         {/* <div>

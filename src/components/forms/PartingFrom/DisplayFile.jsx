@@ -6,7 +6,7 @@ function DisplayFile({ photo, onEdit, onDelete, actions }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div
-      className="relative cursor-pointer"
+      className="relative cursor-pointer group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -17,7 +17,7 @@ function DisplayFile({ photo, onEdit, onDelete, actions }) {
         className="w-full object-cover rounded-md"
       />
       {isHovered && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="absolute w-full h-full inset-0 flex items-center justify-center bg-black bg-opacity-50">
           {actions?.map((action, index) => (
             <label key={index} htmlFor="" className="p-0 m-0">
               <div

@@ -20,19 +20,28 @@ function DuringTransactionContainer({
   const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
   const [textButton, setTextButton] = useState(local.textButtonNextValue);
-  let index = 0;
+  const [index, setIndex] = useState(0);
   let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
       setInitialRow(selectionContext[0]);
+      ChangeNextButton();
+      setIndex(0);
     }
   }, [selectionContext]);
 
   function MoveOn() {
-    if (index < selectionContext.length) {
-      ++index;
-      setInitialRow(selectionContext[index]);
+    const newIndex = index + 1;
+    IndexIncreasing(index);
+
+    if (newIndex < selectionContext.length) {
+      setInitialRow(selectionContext[newIndex]);
+    } else {
+      setOpen(false);
     }
+  }
+  function IndexIncreasing(currentIndex) {
+    setIndex(currentIndex + 1);
   }
   function ChangeNextButton() {
     if (index < selectionContext.length - 1) {

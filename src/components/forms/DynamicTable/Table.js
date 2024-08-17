@@ -23,6 +23,7 @@ const DynamicTable = ({
   PopupComponent = false,
   schemaActions = false,
   refreshData,
+  rowDetails = false,
 }) => {
   const [result, setResult] = useState({});
   const {
@@ -87,6 +88,7 @@ const DynamicTable = ({
         addSelectedList={addSelectedList}
         // trigger={trigger}
         refreshData={refreshData}
+        rowDetails={rowDetails}
       />
     </div>
   );
