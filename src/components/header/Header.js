@@ -10,7 +10,7 @@ import { LanguageContext } from "../../contexts/Language";
 
 export default function Header({ menuToggleEnabled, title, toggleMenu }) {
   const [open, setopen] = useState(false);
-  const { Right } = useContext(LanguageContext);
+  const { Right, setRight } = useContext(LanguageContext);
   return (
     <header className={"header-component flex"}>
       <Toolbar

@@ -42,7 +42,7 @@ export default function SideNavOuterToolbar({ title, children }) {
         ? MenuStatus.Closed
         : prevMenuStatus
     );
-    return menuStatus === MenuStatus.Closed ? true : false;
+    return menuStatus !== MenuStatus.Closed;
   }, [isLarge]);
 
   const onNavigationChanged = useCallback(
@@ -68,15 +68,14 @@ export default function SideNavOuterToolbar({ title, children }) {
       <Header menuToggleEnabled toggleMenu={toggleMenu} title={title} />
       <Drawer
         className={["drawer", patchCssClass].join(" ")}
-        // position={"before"}
-        position={Right ? "after" : "before"}
+        position={Right ? "right" : "left"}
         closeOnOutsideClick={onOutsideClick}
         openedStateMode={isLarge ? "shrink" : "overlap"}
         revealMode={isXSmall ? "slide" : "expand"}
         minSize={isXSmall ? 0 : 60}
         maxSize={250}
-        shading={isLarge ? false : true}
-        opened={menuStatus === MenuStatus.Closed ? false : true}
+        shading={!isLarge}
+        opened={menuStatus !== MenuStatus.Closed}
         template={"menu"}
       >
         <div className={"container"}>

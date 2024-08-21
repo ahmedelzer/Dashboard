@@ -4,8 +4,11 @@ import ImageParameter from "../ImageParameter";
 import BrowserUrlAction from "./BrowserUrlAction";
 import WebcamActions from "./WebcamActins";
 import DisplayFile from "../../forms/PartingFrom/DisplayFile";
+import FileParamter from "../FileParamter";
+import FileParameter from "../FileParamter";
+import BaseInput from "../BaseInput";
 
-class ImageParameterWithPanelActions extends Component {
+class ImageParameterWithPanelActions extends BaseInput {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,8 +19,12 @@ class ImageParameterWithPanelActions extends Component {
     this.handleDragOver = this.handleDragOver.bind(this);
   }
 
-  handleImageUpload(path) {
+  handleImageUpload(path, type) {
     this.setState({ FileData: path });
+    // if (this.props.isFileContainer) {
+    //   this.props.addFile(path, type);
+    //   // console.log(path);
+    // }
   }
   handleDrop = (event) => {
     event.preventDefault();
@@ -33,9 +40,11 @@ class ImageParameterWithPanelActions extends Component {
 
   render() {
     const { FileData } = this.state;
+    const { isFileContainer = false } = this.props;
     let actions = [
       <UploadAction
         fieldName={this.props.fieldName}
+        isFileContainer={isFileContainer}
         onImageUpload={this.handleImageUpload}
       />,
       <WebcamActions onImageUpload={this.handleImageUpload} />,
@@ -44,11 +53,16 @@ class ImageParameterWithPanelActions extends Component {
         onImageUpload={this.handleImageUpload}
       />,
     ];
-
     return (
-      <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
-        <ImageParameter {...this.props} value={FileData} actions={actions} />
-      </div>
+      <>
+        {/* {isFileContainer ? (
+          <FileParameter {...this.props} value={FileData} actions={actions} />
+        ) : ( */}
+        <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
+          <ImageParameter {...this.props} value={FileData} actions={actions} />
+        </div>
+        {/* )} */}
+      </>
     );
   }
 }

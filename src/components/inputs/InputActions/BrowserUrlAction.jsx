@@ -39,7 +39,7 @@ class BrowserUrlAction extends BaseAction {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.startsWith("image")) {
           const blob = await response.blob();
-          this.props.onImageUpload(URL.createObjectURL(blob));
+          this.props.onImageUpload(URL.createObjectURL(blob), blob.type);
           this.toggleModal();
         } else {
           this.setState({ error: "URL does not point to an image" });

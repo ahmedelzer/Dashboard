@@ -15,19 +15,12 @@ class UploadAction extends BaseAction {
   render() {
     const { onChange, fieldName, enable } = this.props;
     const fetchImage = async (e) => {
-      const file = e.target.files[0];
-
-      this.props.onImageUpload(URL.createObjectURL(file));
-
-      // this.props.onImageUpload(URL.createObjectURL(file));
-      // const reader = new FileReader();
-      // reader.readAsDataURL(file);
-      // reader.onload = () => {
-      //   let base64Data = reader.result;
-      //   const [, base64String] = base64Data.split(";base64,");
-      //   onChange(e, base64String);
-      // };
-      // console.log(file);
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        [...files].forEach((file) => {
+          this.props.onImageUpload(URL.createObjectURL(file), file.type);
+        });
+      }
     };
 
     return (
@@ -62,6 +55,7 @@ class UploadAction extends BaseAction {
             name={fieldName}
             type="file"
             className="hidden"
+            multiple={this.props.isFileContainer}
           />
           {/* </Button> */}
         </label>

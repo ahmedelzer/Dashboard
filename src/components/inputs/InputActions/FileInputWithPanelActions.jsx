@@ -5,8 +5,9 @@ import BrowserUrlAction from "./BrowserUrlAction";
 import WebcamActions from "./WebcamActins";
 import DisplayFile from "../../forms/PartingFrom/DisplayFile";
 import FileInput from "../../forms/PartingFrom/FileInput";
+import convertImageToBase64 from "./ConvertImageToBase64";
 
-class ImageParameterWithPanelActions extends Component {
+class FileInputWithPanelActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,17 +21,6 @@ class ImageParameterWithPanelActions extends Component {
   handleImageUpload(path) {
     this.setState({ FileData: path });
   }
-  handleDrop = (event) => {
-    event.preventDefault();
-    const files = event.dataTransfer.files;
-    if (files && files.length > 0) {
-      this.handleImageUpload(URL.createObjectURL(files[0]));
-    }
-  };
-
-  handleDragOver = (event) => {
-    event.preventDefault();
-  };
 
   render() {
     const { FileData } = this.state;
@@ -44,12 +34,12 @@ class ImageParameterWithPanelActions extends Component {
     ];
 
     return (
-      <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
-        {/* <ImageParameter {...this.props} value={FileData} actions={actions} /> */}
-        <FileInput {...this.props} value={FileData} actions={actions} />
-      </div>
+      // <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
+      // {/* <ImageParameter {...this.props} value={FileData} actions={actions} /> */}
+      <FileInput {...this.props} value={FileData} actions={actions} />
+      // </div>
     );
   }
 }
 
-export default ImageParameterWithPanelActions;
+export default FileInputWithPanelActions;

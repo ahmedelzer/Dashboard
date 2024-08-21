@@ -8,3 +8,18 @@ export const styles = {
   smallScreenIcon: "lg:hidden",
   largeScreenIcon: "hidden lg:block",
 };
+// styles.js
+
+export const stylesFile = {
+  container: "p-4",
+  gridContainer:
+    "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
+  fileItem: "relative border p-2 rounded",
+  validFile: "relative border-2 p-2 rounded !border-green-500", // Add this style for valid files
+  fileControls: "flex justify-between items-center",
+  deleteIcon: "cursor-pointer text-red-500",
+  pagination: "flex justify-center mt-4",
+  paginationButton: "px-4 py-2 border rounded",
+  hiddenInput: "hidden",
+  label: "cursor-pointer w-[100%]",
+};

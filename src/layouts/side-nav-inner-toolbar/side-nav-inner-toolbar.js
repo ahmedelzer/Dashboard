@@ -45,7 +45,7 @@ export default function SideNavInnerToolbar({ title, children }) {
         ? MenuStatus.Closed
         : prevMenuStatus
     );
-    return menuStatus === MenuStatus.Closed ? true : false;
+    return menuStatus !== MenuStatus.Closed;
   }, [isLarge]);
 
   const onNavigationChanged = useCallback(
@@ -64,19 +64,18 @@ export default function SideNavInnerToolbar({ title, children }) {
     },
     [navigate, menuStatus, isLarge]
   );
-  // {Right ? "after" : "before"}
   return (
     <div className={"side-nav-inner-toolbar"}>
       <Drawer
         className={["drawer", patchCssClass].join(" ")}
-        position={Right ? "after" : "before"}
+        position={Right ? "right" : "left"}
         closeOnOutsideClick={onOutsideClick}
         openedStateMode={isLarge ? "shrink" : "overlap"}
         revealMode={isXSmall ? "slide" : "expand"}
         minSize={isXSmall ? 0 : 60}
         maxSize={250}
-        shading={isLarge ? false : true}
-        opened={menuStatus === MenuStatus.Closed ? false : true}
+        shading={!isLarge}
+        opened={menuStatus !== MenuStatus.Closed}
         template={"menu"}
       >
         <div className={"container"}>

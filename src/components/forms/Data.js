@@ -25,13 +25,14 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import Loading from ".././loading/Loading";
 import WaringPop from "./PartingFrom/WaringPop";
 import { TypeProvider } from "./DynamicTable/TypeProvider";
-
+import FileContainer from "./FileContainer/FileContainer";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import useFetch from ".././hooks/APIsFunctions/useFetch";
 import PopupEditing from "./DynamicPopup/PopupEditing";
 import Popup from "./DynamicPopup/Popup";
 import GetSchemaActionsUrl from ".././hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { SetReoute, defaultProjectProxyRoute } from "../.././request";
+import FileInputWithPanelActions from "../inputs/InputActions/FileInputWithPanelActions";
 let schema = {
   dashboardFormSchemaID: "dc7f5dea-b409-4911-b30c-ebb5fa1311b9",
   schemaType: "Table",
@@ -120,7 +121,15 @@ function Data() {
         isSearchingTable={false}
         // rowDetails={row}
       /> */}
-      <FileInput />
+      {/* <FileInput /> */}
+      <FileContainer
+        fieldName={"image"}
+        title={"Image"}
+        // value={URL.createObjectURL(photo.file)}
+        value={""}
+        enable={true}
+        onChange={() => {}}
+      />
     </>
   );
 }

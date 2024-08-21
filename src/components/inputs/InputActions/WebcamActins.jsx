@@ -18,7 +18,7 @@ class WebcamActions extends BaseAction {
   handleCapture(e) {
     const { onChange } = this.props;
     const imageSrc = this.webcamRef.current.getScreenshot();
-    this.props.onImageUpload(imageSrc);
+    this.props.onImageUpload(imageSrc, "image");
     // Convert the captured image to base64
     // const canvas = document.createElement("canvas");
     // const ctx = canvas.getContext("2d");

@@ -24,8 +24,8 @@ function DuringTransactionContainer({
   let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
-      setInitialRow(selectionContext[0]);
       ChangeNextButton();
+      setInitialRow(selectionContext[0]);
       setIndex(0);
     }
   }, [selectionContext]);
@@ -44,6 +44,7 @@ function DuringTransactionContainer({
     setIndex(currentIndex + 1);
   }
   function ChangeNextButton() {
+    console.log(selectionContext.length - 1, index, "after");
     if (index < selectionContext.length - 1) {
       setTextButton(local.textButtonNextValue);
     } else {
@@ -51,6 +52,7 @@ function DuringTransactionContainer({
     }
   }
   function Skip() {
+    console.log(selectionContext.length - 1, index, "be");
     MoveOn();
     ChangeNextButton();
   }

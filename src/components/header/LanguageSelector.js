@@ -6,13 +6,11 @@ import { BiSolidCircleHalf } from "react-icons/bi";
 import { LanguageContext } from "../../contexts/Language";
 import { defaultProjectProxyRoute } from "../../request";
 const LanguageSelector = () => {
-  const { setRight, setLan } = useContext(LanguageContext);
-  const { i18n } = useTranslation();
+  const { setRight, Right, setLan } = useContext(LanguageContext);
   const { data } = useFetch(
     "/Language/GetLanguages?ActiveStatus=1&PageSize=100&PageNumber=1",
     defaultProjectProxyRoute
   );
-
   const changeLanguage = (e) => {
     const selectedLanguage = e.target.value;
     const selectedLanguageObject = data.dataSource.find(
@@ -22,6 +20,10 @@ const LanguageSelector = () => {
       setLan(selectedLanguage);
       setRight(selectedLanguageObject.rightDirectionEnable);
       window.localStorage.setItem(
+        "right",
+        selectedLanguageObject.rightDirectionEnable
+      );
+      window.localStorage.setItem(
         "languageID",
         selectedLanguageObject.languageId
       );
@@ -30,10 +32,9 @@ const LanguageSelector = () => {
   };
 
   return (
-    <div className="circle-container ">
+    <div className="circle-container">
       <select
         id="languageSelect"
-        value={i18n.language}
         className="uppercase text-xs color !cursor-pointer"
         onChange={changeLanguage}
       >
