@@ -246,8 +246,8 @@ const TableTransformer = ({ TransFormSchema }) => {
   const [rightSelection, setRightSelection] = useState([]);
 
   const isSubset = IsSecondListSubsetOfFirstList(
-    rightSchemaWithoutID,
     leftSchema.dashboardFormSchemaParameters,
+    rightSchemaWithoutID,
     ["parameterField"]
   );
   const RefreshTable = () => {

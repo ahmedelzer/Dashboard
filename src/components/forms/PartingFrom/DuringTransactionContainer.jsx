@@ -14,21 +14,22 @@ function DuringTransactionContainer({
   open,
   setOpen,
   action,
-  setSelectionContext,
 }) {
   const iDField = tableSchema.idField;
   const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
-  const [textButton, setTextButton] = useState(local.textButtonNextValue);
+  const [textButton, setTextButton] = useState("");
   const [index, setIndex] = useState(0);
   let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
-      ChangeNextButton();
       setInitialRow(selectionContext[0]);
       setIndex(0);
     }
   }, [selectionContext]);
+  useEffect(() => {
+    ChangeNextButton();
+  }, [index, selectionContext]);
 
   function MoveOn() {
     const newIndex = index + 1;
@@ -44,7 +45,6 @@ function DuringTransactionContainer({
     setIndex(currentIndex + 1);
   }
   function ChangeNextButton() {
-    console.log(selectionContext.length - 1, index, "after");
     if (index < selectionContext.length - 1) {
       setTextButton(local.textButtonNextValue);
     } else {
@@ -52,9 +52,7 @@ function DuringTransactionContainer({
     }
   }
   function Skip() {
-    console.log(selectionContext.length - 1, index, "be");
     MoveOn();
-    ChangeNextButton();
   }
 
   const handleButtonClick = async () => {
@@ -74,7 +72,9 @@ function DuringTransactionContainer({
     }
   };
   const AutomatedTransform = async () => {
+    console.log("automated value", 2);
     editedRow = { ...initialRow };
+
     const apply = async () =>
       await onApply(
         editedRow,
@@ -84,12 +84,14 @@ function DuringTransactionContainer({
         tableSchema.dashboardFormSchemaParameters
       );
     for (var i = 0; i < selectionContext.length; i++) {
-      await apply();
+      console.log("automated value", i);
+      // await apply();
       MoveOn();
     }
     TransformDone();
   };
   useEffect(() => {
+    console.log("automated value", 1);
     if (automated) {
       AutomatedTransform();
     }

@@ -24,6 +24,7 @@ const DynamicTable = ({
   schemaActions = false,
   refreshData,
   rowDetails = false,
+  subSchemas,
 }) => {
   const [result, setResult] = useState({});
   const {
@@ -33,7 +34,6 @@ const DynamicTable = ({
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
     defaultProjectProxyRoute
-    // trigger
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
   SetReoute(schema.projectProxyRoute);
@@ -89,6 +89,7 @@ const DynamicTable = ({
         // trigger={trigger}
         refreshData={refreshData}
         rowDetails={rowDetails}
+        subSchemas={subSchemas}
       />
     </div>
   );

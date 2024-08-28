@@ -24,42 +24,21 @@ class UploadAction extends BaseAction {
     };
 
     return (
-      <div>
-        {/* <div>
-          {value ? (
-            <img
-              src={URL.createObjectURL(imgFile)}
-              className="cursor-pointer mb-2"
-              alt=""
-            />
-          ) : null}
-          <div>
-            <input
-              {...this.props}
-              type="file"
-              // onChange={handleImageChange}
-              onChange={(e) => fetchImage(e)}
-              accept="image/*"
-              className={`form-control`}
-            />
-          </div>
-        </div> */}
-        <label htmlFor={fieldName} className="cursor-pointer">
-          {/* <Button className="pop"> */}
-          <LuUpload className="color" size={24} />
+      <label htmlFor={fieldName} className="cursor-pointer !m-0 !p-0">
+        {/* <Button className="pop"> */}
+        <LuUpload className="color" size={24} />
 
-          <input
-            onChange={fetchImage}
-            id={fieldName}
-            enable={enable}
-            name={fieldName}
-            type="file"
-            className="hidden"
-            multiple={this.props.isFileContainer}
-          />
-          {/* </Button> */}
-        </label>
-      </div>
+        <input
+          onChange={fetchImage}
+          id={fieldName}
+          enable={enable}
+          name={fieldName}
+          type="file"
+          className="hidden"
+          multiple={this.props.isFileContainer}
+        />
+        {/* </Button> */}
+      </label>
     );
   }
 }

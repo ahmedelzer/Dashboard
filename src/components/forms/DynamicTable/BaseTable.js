@@ -10,7 +10,7 @@ import {
   TableSelection,
   TableFixedColumns,
 } from "@devexpress/dx-react-grid-bootstrap4";
-import { createRowCache } from "@devexpress/dx-react-grid";
+import { createRowCache, VirtualTableState } from "@devexpress/dx-react-grid";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import Popup from "../DynamicPopup/Popup";
 import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
@@ -21,6 +21,7 @@ import {
   PagingState,
   SelectionState,
 } from "@devexpress/dx-react-grid";
+import Switch from "devextreme-react/switch";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
@@ -28,7 +29,8 @@ import Loading from "../../loading/Loading";
 import WaringPop from "../PartingFrom/WaringPop";
 import { Modal } from "reactstrap";
 import SelectForm from "../SelectForm";
-
+import { TbListDetails } from "react-icons/tb";
+import { loadData } from "../../hooks/APIsFunctions/loadData";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const URL =
@@ -95,11 +97,15 @@ function BaseTable({
   addSelectedList,
   refreshData,
   rowDetails,
+  subSchemas,
 }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
+  const [subSchema, setSubSchema] = useState(null);
+  const [fieldName, setFieldName] = useState("");
+  const [title, setTitle] = useState("");
   const getRowId = (row) => row[schema.idField];
   const toggleRowExpanded = (row) => {
     setExpandedRows((prevExpandedRows) =>
@@ -156,13 +162,22 @@ function BaseTable({
             {...restProps}
             onDoubleClick={() => rowDoubleClick(row)}
             // onClick={() => toggleRowExpanded(getRowId(row))}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", width: "100%" }}
           />
           {expandedRows.includes(row) && (
+            //make this take the width of the row
             <tr>
-              <td colSpan={columns.length}>
+              <td colSpan={columns.length + 1}>
                 <div className="p-3">
-                  <SelectForm row={row} />
+                  <SelectForm
+                    row={row}
+                    parentSchemaParameters={
+                      schema?.dashboardFormSchemaParameters
+                    }
+                    schema={subSchema}
+                    fieldName={fieldName}
+                    title={title}
+                  />
                 </div>
               </td>
             </tr>
@@ -184,12 +199,13 @@ function BaseTable({
           name: param.parameterField,
           title: param.parameterTitel,
           type: param.parameterType,
+          lookupID: param.lookupID,
           getCellValue: (row) => row[param.parameterField],
         })) || [];
 
     setColumns([
       ...dynamicColumns,
-      { name: "details", title: "details", type: "text" },
+      { name: "switch", title: "switch", type: "text" },
     ]);
   }, [schema]);
 
@@ -209,34 +225,10 @@ function BaseTable({
     dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
   };
   //e
-  const loadData = () => {
-    const { requestedSkip, take, lastQuery, loading } = state;
-    const query = dataSourceAPI(getAction, requestedSkip, take);
-    if (query !== lastQuery && !loading) {
-      const cached = cache.getRows(requestedSkip, take);
-      if (cached.length === take) {
-        updateRows(requestedSkip, take);
-      } else {
-        dispatch({ type: "FETCH_INIT" });
-        fetch(query)
-          .then((response) => response.json())
-          .then(({ dataSource, count }) => {
-            cache.setRows(requestedSkip, dataSource);
-            updateRows(requestedSkip, take, count);
-          })
-          .catch(() => dispatch({ type: "REQUEST_ERROR" }));
-        // var response =  fetchDataWithHandling(query, 'GET');
-        // response === 'REQUEST_ERROR'? (dispatch({ type: 'REQUEST_ERROR' })):
-        // (
-        //   cache.setRows(requestedSkip, response.dataSource);
-        //     updateRows(requestedSkip, take, response.count);
-        // )
-      }
-      dispatch({ type: "UPDATE_QUERY", payload: query });
-    }
-  };
 
-  useEffect(() => loadData());
+  useEffect(() =>
+    loadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
+  );
   // useEffect(() => {
   //   loadData();
   //   console.log("refreshData", new Date().getTime());
@@ -262,24 +254,47 @@ function BaseTable({
     setModalIsOpen(false);
     setRowToDelete(null);
   };
-  const DetailsButton = ({ row, schema }) => {
+  const DetailsButton = ({ row, fieldName, title }) => {
+    const handleClick = () => {
+      setFieldName(fieldName);
+      setTitle(title);
+      toggleRowExpanded(row);
+    };
     return (
       <div>
         <button
           className="bg text-white px-2 py-1 rounded"
-          onClick={() => toggleRowExpanded(row)}
+          onClick={handleClick}
         >
-          Details
+          <TbListDetails size={18} />
         </button>
       </div>
     );
   };
-
+  const SwitchCell = ({ value, onValueChange }) => {
+    return (
+      <Switch value={value} onValueChanged={(e) => onValueChange(e.value)} />
+    );
+  };
   const DetailsCell = (props) => {
-    if (props.column.name === "details") {
+    if (props.column.type === "ItemsContainer") {
+      const findSubSchemas = subSchemas?.find(
+        (schema) => schema.dashboardFormSchemaID === props.column.lookupID
+      );
+      setSubSchema(findSubSchemas);
       return (
         <Table.Cell {...props}>
-          <DetailsButton row={props.row} />
+          <DetailsButton
+            row={props.row}
+            fieldName={props.column.name}
+            title={props.column.title}
+          />
+        </Table.Cell>
+      );
+    } else if (props.column.name === "switch") {
+      return (
+        <Table.Cell {...props}>
+          <SwitchCell row={props.row} onValueChange={(newValue) => {}} />
         </Table.Cell>
       );
     }
@@ -291,9 +306,8 @@ function BaseTable({
       return <Loading />;
     }
   }, [rows]);
-
   const columnsFormat = columns
-    .filter((column) => column.type !== "text")
+    .filter((column) => column.type === "image")
     .map((column) => column.name);
   const handleRowClick = (row) => {
     const isSelected = selection.some(
@@ -308,78 +322,84 @@ function BaseTable({
     );
   };
   return (
-    <Grid
-      // rows={initialRows}
-      // columns={initialColumns}
-      rows={rows}
-      columns={columns}
-      getRowId={getRowId}
-      i18nIsDynamicList={true}
-      className="flex"
-      style={{ position: "relative" }}
-    >
-      {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
-      {paging ? <IntegratedPaging /> : null}
-
-      <TypeProvider for={columnsFormat} />
-      <EditingState onCommitChanges={commitChanges} />
-      {/* {selectionRow && (
+    <div className="card">
+      <Grid
+        // rows={initialRows}
+        // columns={initialColumns}
+        rows={rows}
+        columns={columns}
+        getRowId={getRowId}
+        i18nIsDynamicList={true}
+        className="flex"
+        style={{ position: "relative" }}
+      >
+        {/* <VirtualTableState
+          loading={loading}
+          totalRowCount={totalCount}
+          pageSize={VIRTUAL_PAGE_SIZE}
+          skip={skip}
+          getRows={getRemoteRows}
+        /> */}
+        {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
+        {paging ? <IntegratedPaging /> : null}
+        <TypeProvider for={columnsFormat} />
+        <EditingState onCommitChanges={commitChanges} />
+        {/* {selectionRow && (
         <SelectionState
           selection={selection}
           onSelectionChange={setSelection}
           
         />
       )} */}
-      {selectionRow && (
-        <SelectionState
-          selection={selection.map((row) => row[schema.idField])}
-          onSelectionChange={(newSelection) => {
-            setSelection(
-              rows.filter((row) => newSelection.includes(row[schema.idField]))
-            );
-          }}
-        />
-      )}
-      {selectionRow && <IntegratedSelection />}
-
-      <Table
-        rowComponent={({ row, ...props }) => (
-          <CustomRow
-            {...props}
-            onRowDoubleClick={rowDoubleClick}
-            row={row}
-            onRowClick={handleRowClick}
-            // selected={selection?.includes(row[schema.idField])}
-            selected={selection?.some(
-              (selectedRow) =>
-                selectedRow[schema.idField] === row[schema.idField]
-            )}
+        {selectionRow && (
+          <SelectionState
+            selection={selection.map((row) => row[schema.idField])}
+            onSelectionChange={(newSelection) => {
+              setSelection(
+                rows.filter((row) => newSelection.includes(row[schema.idField]))
+              );
+            }}
           />
         )}
-        cellComponent={DetailsCell}
-      />
-      {/* {selectionRow && <TableSelection showSelectAll />} */}
-
-      <TableEditColumn
-        messages={{
-          addCommand: "+",
-          editCommand: <MdEdit />,
-          deleteCommand: <MdDelete />,
-        }}
-        showAddCommand={addMessage}
-        showEditCommand={editMessage}
-        showDeleteCommand={deleteMessage}
-      />
-      <TableHeaderRow />
-
-      {!isSearchingTable ? popupComponent({ state }) : <></>}
-      {paging ? <PagingPanel /> : null}
-      <WaringPop
-        confirmDelete={confirmDelete}
-        modalIsOpen={modalIsOpen}
-        setModalIsOpen={setModalIsOpen}
-      />
-    </Grid>
+        {selectionRow && <IntegratedSelection />}
+        <Table
+          rowComponent={({ row, ...props }) => (
+            <CustomRow
+              {...props}
+              onRowDoubleClick={rowDoubleClick}
+              row={row}
+              onRowClick={handleRowClick}
+              // selected={selection?.includes(row[schema.idField])}
+              selected={selection?.some(
+                (selectedRow) =>
+                  selectedRow[schema.idField] === row[schema.idField]
+              )}
+            />
+          )}
+          cellComponent={DetailsCell}
+        />
+        {/* {selectionRow && <TableSelection showSelectAll />} */}
+        <TableEditColumn
+          messages={{
+            addCommand: "+",
+            editCommand: <MdEdit />,
+            deleteCommand: <MdDelete />,
+          }}
+          showAddCommand={addMessage}
+          showEditCommand={editMessage}
+          showDeleteCommand={deleteMessage}
+        />
+        <TableHeaderRow />
+        {/* <VirtualTable /> can you make lazy loading work without this */}
+        {!isSearchingTable ? popupComponent({ state }) : <></>}
+        {paging ? <PagingPanel /> : null}
+        <WaringPop
+          confirmDelete={confirmDelete}
+          modalIsOpen={modalIsOpen}
+          setModalIsOpen={setModalIsOpen}
+        />
+      </Grid>
+    </div>
   );
 }
 export default BaseTable;

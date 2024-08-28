@@ -1,0 +1,8 @@
+{
+  "pagination": {
+    "buttonPrevious": "Previous",
+    "buttonNext": "Next",
+    "page": "Page",
+    "of": "of"
+  }
+}

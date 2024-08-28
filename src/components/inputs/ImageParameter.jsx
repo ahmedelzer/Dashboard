@@ -104,7 +104,7 @@ class ImageParameter extends Component {
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
             {this.props.actions?.map((action, index) => (
               <label key={index} htmlFor="" className="p-0 m-0">
-                <div className="bg-white rounded-full border-1 border px-2 mx-1 cursor-pointer">
+                <div className="rounded-full px-2 mx-1 cursor-pointer">
                   {action}
                 </div>
               </label>

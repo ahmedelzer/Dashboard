@@ -7,7 +7,7 @@ import DisplayFile from "../../forms/PartingFrom/DisplayFile";
 import FileParamter from "../FileParamter";
 import FileParameter from "../FileParamter";
 import BaseInput from "../BaseInput";
-
+import defaultImage from "../../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
 class ImageParameterWithPanelActions extends BaseInput {
   constructor(props) {
     super(props);
@@ -20,14 +20,16 @@ class ImageParameterWithPanelActions extends BaseInput {
   }
 
   handleImageUpload(path, type) {
-    this.setState({ FileData: path });
-    // if (this.props.isFileContainer) {
-    //   this.props.addFile(path, type);
-    //   // console.log(path);
-    // }
+    this.setState({ FileData: this.props.addFile ? defaultImage : path });
+    if (this.props.addFile) {
+      this.props.addFile(path, type);
+    }
   }
   handleDrop = (event) => {
     event.preventDefault();
+    if (!this.props.allowDrop) {
+      return;
+    }
     const files = event.dataTransfer.files;
     if (files && files.length > 0) {
       this.handleImageUpload(URL.createObjectURL(files[0]));
@@ -66,5 +68,7 @@ class ImageParameterWithPanelActions extends BaseInput {
     );
   }
 }
-
+ImageParameterWithPanelActions.defaultProps = {
+  allowDrop: true, // Initialize allowDrop to true by default
+};
 export default ImageParameterWithPanelActions;

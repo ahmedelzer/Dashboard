@@ -1,0 +1,16 @@
+make delete work with api // done but test it after add id and delete action
+make transformDone //done
+solve button next and finsh in transform
+//////////////
+make upload action work as we want automate //form server 
+
+///////
+json file login info 
+
+schema 
+api
+
+project main proxy route 
+
+//make component for dataceller to login form //done
+////////////

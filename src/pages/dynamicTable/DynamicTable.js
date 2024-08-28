@@ -15,8 +15,8 @@ export default function DynamicTable() {
     GetFormSchema(dashboardItemID),
     defaultProjectProxyRoute
   );
-  // const lookup= useFetch('/Dashboard/GetDashboardFormLookups');
-  console.log("lookup", data);
+
+  // const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
   if (error && !data) {
     // Handle error, e.g., display an error message
     return <div>Error: {error.message}</div>;
@@ -26,27 +26,22 @@ export default function DynamicTable() {
     // Display a loading indicator while data is being fetched
     return <Loading />;
   }
-  console.log("datahdahadhisis", data);
-  function SelectForm(schema) {
+  const mainSchema = data?.find((item) => item.isMainSchema);
+  const subSchemas = data?.filter((item) => !item.isMainSchema);
+  function SelectForm(schema, subSchemas) {
     if (schema.schemaType === "Table") {
       return (
-        <div className={Right ? "text-right" : ""}>
+        <div>
           <Table
             key={schema.idField}
             schema={schema}
             isSearchingTable={false}
+            subSchemas={subSchemas}
           />
         </div>
-      );
-    } else if (schema.schemaType === "Form") {
-      return (
-        <PartionFrom
-          Header={schema.dashboardFormSchemaInfoDTOView.schemaHeader}
-          key={schema.dashboardFormSchemaInfoDTOView.dashboardFormSchemaID}
-        />
       );
     }
   }
 
-  return <div>{data && data.map((schema) => SelectForm(schema))}</div>;
+  return <div>{data && SelectForm(mainSchema, subSchemas)}</div>;
 }
