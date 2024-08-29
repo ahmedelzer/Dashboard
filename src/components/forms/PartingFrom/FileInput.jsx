@@ -1,22 +1,19 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { CheckBox } from "devextreme-react/check-box"; // Import DevExtreme CheckBox
+import { CheckBox } from "devextreme-react/check-box";
 import { ImageParameterWithPanelActions } from "../../inputs";
 import { MdDelete } from "react-icons/md";
 import TypeFile from "./TypeFile";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
-import { defaultProjectProxyRoute, SetReoute } from "../../../request";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
 import { stylesFile } from "./styles";
 import convertImageToBase64 from "../../inputs/InputActions/ConvertImageToBase64";
-import { PrepareInputValue } from "../../inputs/InputActions/PrepareInputValue";
 import { Button } from "reactstrap";
-import local from "../../../locals/EN/fileContainer.json";
 import DeleteItem from "./DeleteItem";
 import { baseURLWithoutApi } from "../../../request";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import { createRowCache } from "@devexpress/dx-react-grid";
 import { loadData } from "../../hooks/APIsFunctions/loadData";
-const VIRTUAL_PAGE_SIZE = 2;
+import local from "../../../locals/EN/fileContainer.json";
+
+const VIRTUAL_PAGE_SIZE = 4;
 const MAX_ROWS = 50000;
 
 const initialState = {
@@ -28,6 +25,7 @@ const initialState = {
   loading: false,
   lastQuery: "",
 };
+
 function reducer(state, { type, payload }) {
   switch (type) {
     case "UPDATE_ROWS":
@@ -61,6 +59,7 @@ function reducer(state, { type, payload }) {
       return state;
   }
 }
+
 function FileInput({
   row,
   value,
@@ -70,49 +69,39 @@ function FileInput({
   title,
   getAction,
 }) {
-  const [Files, setFiles] = useState(value || []);
+  const [Files, setFiles] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteWithApi, setDeleteWithApi] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [itemsPerPage, setItemsPerPage] = useState(8); //todo it is take // Default for large screens
-
-  const getRemoteRows = (requestedSkip, take) => {
-    console.log("Current" + requestedSkip + " skip" + take);
-    dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
-  };
-  const [currentvalueFromAction, setCurrentvalueFromAction] = useState([]);
-  // console.log(valueFromAction, currentvalueFromAction);
-
-  const [indexOfLastFile, setIndexOfLastFile] = useState(
-    currentPage * itemsPerPage
-  );
-  const indexOfFirstFile = indexOfLastFile - itemsPerPage;
-  const currentFiles = Files.slice(indexOfFirstFile, indexOfLastFile);
-
-  const totalPages = Math.ceil((Files.length + state.totalCount) / state.take);
-  function ChangeContainerInfo(items) {
-    setIndexOfLastFile(currentPage * itemsPerPage);
-    setItemsPerPage(items);
-  }
+  const [itemsPerPage, setItemsPerPage] = useState(8); // Default for large screens
+  // Function to update items per page based on screen width
+  const { [fieldName]: _, ...rowWithoutFieldName } = row;
   const updateItemsPerPage = () => {
     const width = window.innerWidth;
-    if (width >= 1200) {
-      ChangeContainerInfo(8);
-    } else if (width >= 992) {
-      ChangeContainerInfo(6); // 3 columns, 2 rows
+    if (width >= 1024) {
+      setItemsPerPage(8);
     } else if (width >= 768) {
-      ChangeContainerInfo(4); // 2 columns, 2 rows
+      setItemsPerPage(6);
+    } else if (width >= 640) {
+      setItemsPerPage(4);
     } else {
-      ChangeContainerInfo(2); // 1 column, 2 rows
+      setItemsPerPage(2);
     }
   };
+
+  // Set itemsPerPage on component mount and window resize
   useEffect(() => {
     updateItemsPerPage(); // Set initial value
-  }, [window.res]);
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
 
-  //here
+  const getRemoteRows = (requestedSkip, take) => {
+    dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
+    // Load remote data logic here
+  };
 
   const dataSourceAPI = (query, skip, take) =>
     buildApiUrl(query, {
@@ -120,7 +109,9 @@ function FileInput({
       pageSize: take,
       ...row,
     });
-  const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
+
+  const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
+
   const updateRows = (skip, count, newTotalCount) => {
     dispatch({
       type: "UPDATE_ROWS",
@@ -131,10 +122,27 @@ function FileInput({
       },
     });
   };
+
+  // Load data whenever skip or take state changes
   useEffect(() => {
     loadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
   });
-  const { [fieldName]: _, ...rowWithoutFieldName } = row;
+  const filesFromAPI = state.rows?.map((row) => ({
+    ...row,
+
+    displayFile: `${baseURLWithoutApi}/${row.displayFile}`,
+    fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
+  }));
+  const indexOfLastFile = currentPage * itemsPerPage;
+  const indexOfFirstFile = indexOfLastFile - itemsPerPage;
+  const currentFiles = filesFromAPI.slice(indexOfFirstFile, indexOfLastFile);
+
+  const totalPages = Math.ceil(state.totalCount / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    getRemoteRows(indexOfFirstFile + 1, indexOfLastFile * 2);
+    setCurrentPage(newPage);
+  };
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -145,6 +153,7 @@ function FileInput({
       });
     }
   };
+
   const handleDragOver = (event) => {
     event.preventDefault();
   };
@@ -157,6 +166,7 @@ function FileInput({
       });
     }
   };
+
   const addFileActions = async (path, type) => {
     try {
       const base64String = await convertImageToBase64(path);
@@ -176,21 +186,19 @@ function FileInput({
       return null;
     }
   };
-  //todo marge actions
+
   const addFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      // addFileActions(file,file.type);
-      let base64Data = reader.result;
-      const [, base64String] = base64Data.split(";base64,");
+      const [, base64String] = reader.result.split(";base64,");
       setFiles((prevFiles) => [
         ...prevFiles,
         {
-          ...rowWithoutFieldName,
           file: file,
           [fieldName]: base64String,
           id: prevFiles.length,
+          ...rowWithoutFieldName,
         },
       ]);
     };
@@ -208,65 +216,52 @@ function FileInput({
     setDeleteID(index);
     setDeleteWithApi(withApi);
     setModalIsOpen(true);
-    // confirem
-    // DeleteItem
   };
+
   const handleToDeleteWithoutAPI = (index) => {
     setFiles((prevFiles) => prevFiles.filter((i) => i.id !== index));
     setSelectedFiles((prevSelected) =>
       prevSelected.filter((i) => i.id !== index)
     );
   };
+
   const handleToDeleteWithAPI = (index) => {
-    //todo set id to delete files from api
-    // valueFromAction.filter((i) => i.id !== index)
+    // Logic for deleting with API
   };
+
   const handleToDelete = deleteWithApi
     ? handleToDeleteWithAPI
     : handleToDeleteWithoutAPI;
-  // Pagination logic
-
-  const handlePageChange = (newPage) => {
-    getRemoteRows(currentPage * state.take, state.totalCount - state.take);
-    setCurrentPage(newPage);
-
-    //loadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-    //setCurrentvalueFromAction(valueFromAction.slice(state.skip, state.take));
-  };
 
   return (
     <div className={stylesFile.container}>
-      <div className={stylesFile.gridContainer}>
-        {state?.rows
-          .map((row) => {
-            return {
-              ...row,
-              displayFile: `${baseURLWithoutApi}/${row.displayFile}`,
-              fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
-            };
-          })
-          .map((photo, i) => (
-            <div
-              key={i}
-              title={title || "imf"}
-              className={stylesFile.validFile}
-            >
-              <div className={stylesFile.fileControls + " !justify-end"}>
-                <MdDelete
-                  onClick={() => handleDelete(photo.id, true)}
-                  className={stylesFile.deleteIcon}
-                  size={24}
-                />
-              </div>
-              <TypeFile
-                file={photo.displayFile}
-                title={title}
-                type={photo.fileCodeNumber}
-              />
-            </div>
-          ))}
-        {currentFiles.map((photo, i) => (
-          <div key={i} title={title || "imf"} className={stylesFile.fileItem}>
+      <div className={stylesFile.fileListContainer}>
+        <div onDrop={handleDrop} onDragOver={handleDragOver}>
+          <label
+            htmlFor="Logo"
+            className={stylesFile.fileScroll + " !border-0"}
+          >
+            <ImageParameterWithPanelActions
+              fieldName={fieldName || "image"}
+              addFile={addFileActions}
+              isFileContainer={true}
+              enable={true}
+              allowDrop={false}
+              title={title}
+              onChange={() => {}}
+            />
+            <input
+              onChange={handleImage}
+              id="Logo"
+              name="Logo"
+              type="file"
+              className={stylesFile.hiddenInput}
+              multiple
+            />
+          </label>
+        </div>
+        {Files?.map((photo, i) => (
+          <div key={i} title={title || "imf"} className={stylesFile.fileScroll}>
             <div className={stylesFile.fileControls}>
               <CheckBox
                 value={selectedFiles.includes(photo)}
@@ -281,33 +276,32 @@ function FileInput({
             <TypeFile file={photo.file} title={title} type={photo.type} />
           </div>
         ))}
-        <div onDrop={handleDrop} onDragOver={handleDragOver}>
-          <label htmlFor="Logo" className={stylesFile.label}>
-            <ImageParameterWithPanelActions
-              fieldName={fieldName || "image"}
-              addFile={addFileActions}
-              isFileContainer={true}
-              enable={true}
-              allowDrop={false}
-              onChange={() => {}}
-              title={title}
-            />
-            <input
-              onChange={handleImage}
-              id="Logo"
-              name="Logo"
-              type="file"
-              className={stylesFile.hiddenInput}
-              multiple
-            />
-          </label>
-        </div>
       </div>
+
+      <div className={stylesFile.gridContainer}>
+        {currentFiles.map((photo, i) => (
+          <div key={i} title={title || "imf"} className={stylesFile.validFile}>
+            <div className={stylesFile.fileControls + " !justify-end"}>
+              <MdDelete
+                onClick={() => handleDelete(photo.id, true)}
+                className={stylesFile.deleteIcon}
+                size={24}
+              />
+            </div>
+            <TypeFile
+              file={photo.displayFile}
+              title={title}
+              type={photo.fileCodeNumber}
+            />
+          </div>
+        ))}
+      </div>
+
       <div className={stylesFile.pagination}>
         <Button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={stylesFile.paginationButton + " pop "}
+          className={stylesFile.paginationButton + " pop"}
         >
           {local.pagination.buttonPrevious}
         </Button>
@@ -318,18 +312,15 @@ function FileInput({
         <Button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className={stylesFile.paginationButton + " pop "}
+          className={stylesFile.paginationButton + " pop"}
         >
           {local.pagination.buttonNext}
         </Button>
       </div>
       <DeleteItem
-        id={deleteID}
-        // action={}
-        deleteWithApi={deleteWithApi}
-        setModalIsOpen={setModalIsOpen}
-        modalIsOpen={modalIsOpen}
-        DeleteItemCallback={handleToDelete}
+        deleteIsOpen={modalIsOpen}
+        setDeleteIsOpen={setModalIsOpen}
+        deleteFunction={handleToDelete}
       />
     </div>
   );

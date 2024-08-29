@@ -72,26 +72,21 @@ function DuringTransactionContainer({
     }
   };
   const AutomatedTransform = async () => {
-    console.log("automated value", 2);
-    editedRow = { ...initialRow };
-
-    const apply = async () =>
-      await onApply(
-        editedRow,
-        iDField,
-        true,
-        action,
-        tableSchema.dashboardFormSchemaParameters
-      );
     for (var i = 0; i < selectionContext.length; i++) {
-      console.log("automated value", i);
-      // await apply();
+      const apply = async () =>
+        await onApply(
+          selectionContext[i],
+          iDField,
+          true,
+          action,
+          tableSchema.dashboardFormSchemaParameters
+        );
+      await apply();
       MoveOn();
     }
     TransformDone();
   };
   useEffect(() => {
-    console.log("automated value", 1);
     if (automated) {
       AutomatedTransform();
     }
