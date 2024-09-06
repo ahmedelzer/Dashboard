@@ -1,50 +1,25 @@
-import React, { useState, useReducer, useEffect, useMemo } from "react";
 import {
   DataTypeProvider,
-  VirtualTableState,
+  EditingState,
   createRowCache,
 } from "@devexpress/dx-react-grid";
-import { EditingState } from "@devexpress/dx-react-grid";
-import Loading from "../../loading/Loading";
 import {
   Grid,
   Table,
-  TableHeaderRow,
-  VirtualTable,
-  TableEditRow,
   TableEditColumn,
+  TableHeaderRow,
 } from "@devexpress/dx-react-grid-bootstrap4";
-import TestApi from "../../hooks/APIsFunctions/TestApi";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Container,
-  Row,
-  Col,
-  Label,
-  FormGroup,
-  Input,
-} from "reactstrap";
-import { MdEdit } from "react-icons/md";
-import {
-  Plugin,
-  Template,
-  TemplateConnector,
-  TemplatePlaceholder,
-} from "@devexpress/dx-react-core";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
-import { FaCirclePlus } from "react-icons/fa6";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
+import { MdEdit } from "react-icons/md";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
-import APIHandling from "../../hooks/APIsFunctions/APIHandling";
-import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
-import PopupEditing from "../DynamicPopup/PopupEditing";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import Loading from "../../loading/Loading";
 import Popup from "../DynamicPopup/Popup";
+import PopupEditing from "../DynamicPopup/PopupEditing";
 
 import { socket } from "../../hooks/APIsFunctions/WebsocketClient";
+import LoadData from "../../hooks/APIsFunctions/loadData";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -112,8 +87,6 @@ const DynamicTable = ({
   );
   const schemaActions = data;
 
-  console.log("data", data);
-
   const getAction =
     schemaActions &&
     schemaActions.find(
@@ -132,9 +105,6 @@ const DynamicTable = ({
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
   const [result, setResult] = useState({});
-  console.log("putAction", putAction);
-
-  console.log(data);
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
     const dynamicColumns =
@@ -163,39 +133,11 @@ const DynamicTable = ({
     dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
   };
 
-  const loadData = () => {
-    const { requestedSkip, take, lastQuery, loading } = state;
-    const query = dataSourceAPI(getAction, requestedSkip, take);
-    if (query !== lastQuery && !loading) {
-      const cached = cache.getRows(requestedSkip, take);
-      if (cached.length === take) {
-        updateRows(requestedSkip, take);
-      } else {
-        dispatch({ type: "FETCH_INIT" });
-        fetch(query)
-          .then((response) => response.json())
-          .then(({ dataSource, count }) => {
-            cache.setRows(requestedSkip, dataSource);
-            updateRows(requestedSkip, take, count);
-          })
-          .catch(() => dispatch({ type: "REQUEST_ERROR" }));
-        // var response =  fetchDataWithHandling(query, 'GET');
-        // response === 'REQUEST_ERROR'? (dispatch({ type: 'REQUEST_ERROR' })):
-        // (
-        //   cache.setRows(requestedSkip, response.dataSource);
-        //     updateRows(requestedSkip, take, response.count);
-        // )
-      }
-      dispatch({ type: "UPDATE_QUERY", payload: query });
-    }
-  };
-
-  useEffect(() => loadData());
+  useEffect(() => LoadData());
 
   const { rows, skip, totalCount, loading } = state;
 
   const commitChanges = ({ added, changed }) => {
-    console.log("t", "done");
     let changedRows;
     if (added) {
       const startingAddedId =
@@ -275,7 +217,6 @@ const DynamicTable = ({
   });
   const rowDoubleClick = (row) => {
     setSelectedRow(row); // Update selectedRow state with the clicked row
-    console.log("row", row);
   };
   return (
     <div className="card">

@@ -21,7 +21,6 @@ export class Onchange {
       const newParam = { [name]: valueAfterPreparing };
       this.row = { ...this.row, ...newParam };
     }
-    console.log(this.row);
 
     return this.row;
   };

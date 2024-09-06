@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 
@@ -10,9 +10,6 @@ import {
 } from "@devexpress/dx-react-core";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 
-import APIHandling from "../../hooks/APIsFunctions/APIHandling";
-import { LanguageContext } from "../../../contexts/Language";
-import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 import { onApply } from "./OnApplay";
 
 const PopupEditing = React.memo(
@@ -66,17 +63,12 @@ const PopupEditing = React.memo(
 
               const ReturnRow = (updatedRow) => {
                 editedRow = updatedRow();
-                console.log("editedRow call", editedRow);
               };
               const iDField = schema.idField;
               const onApplyChanges = async () => {
                 const action = isNew ? postAction : putAction;
                 const apply = await onApply(editedRow, iDField, isNew, action);
                 setResult(apply);
-                console.log("====================================");
-                console.log(apply);
-                console.log(editedRow);
-                console.log("====================================");
                 if (apply && apply.success === true) {
                   const newRow = { ...apply.data, ...editedRow };
                   if (isNew) {

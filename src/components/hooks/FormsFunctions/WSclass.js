@@ -8,25 +8,17 @@ export class WSclass {
   }
 
   connect() {
-    console.log("connect", "conecting");
-
-    this.socket.onopen = (e) => {
-      console.log("Connected to server", e);
-    };
-    console.log("====================================");
+    this.socket.onopen = (e) => {};
 
     this.socket.onmessage = (event) => {
-      console.log("Received message:", event.data);
       // You can handle the received message here
     };
 
     this.socket.onclose = (event) => {
-      console.log("Connection closed:", event);
       // You can handle the connection closed event here
     };
 
     this.socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
       // You can handle WebSocket errors here
     };
   }
@@ -63,7 +55,6 @@ export class WSclass {
   disconnect() {
     if (this.socket) {
       this.socket.close();
-      console.log("Disconnected from server");
     }
   }
 }

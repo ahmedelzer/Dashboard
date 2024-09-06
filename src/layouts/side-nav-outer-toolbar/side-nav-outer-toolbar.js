@@ -1,6 +1,12 @@
 import Drawer from "devextreme-react/drawer";
 import ScrollView from "devextreme-react/scroll-view";
-import React, { useState, useCallback, useRef, useContext } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useContext,
+  useEffect,
+} from "react";
 import { useNavigate } from "react-router";
 import { Header, SideNavigationMenu, Footer } from "../../components";
 import "./side-nav-outer-toolbar.scss";
@@ -62,7 +68,10 @@ export default function SideNavOuterToolbar({ title, children }) {
     },
     [navigate, menuStatus, isLarge]
   );
-
+  const [direction, setDiction] = useState(Right ? "rtl" : "ltr");
+  useEffect(() => {
+    setDiction(Right ? "rtl" : "ltr");
+  }, [Right]);
   return (
     <div className={"side-nav-outer-toolbar"}>
       <Header menuToggleEnabled toggleMenu={toggleMenu} title={title} />
@@ -78,7 +87,7 @@ export default function SideNavOuterToolbar({ title, children }) {
         opened={menuStatus !== MenuStatus.Closed}
         template={"menu"}
       >
-        <div className={"container"}>
+        <div className={"container"} dir={direction}>
           <ScrollView ref={scrollViewRef} className={"layout-body with-footer"}>
             <div className={"content"}>
               {React.Children.map(children, (item) => {

@@ -6,10 +6,11 @@ import {
   ChangePasswordForm,
   CreateAccountForm,
 } from "./components";
+import React from "react";
 
 export default function UnauthenticatedContent() {
   return (
-    <Routes>
+    <React.Fragment>
       <Route
         path="/login"
         element={
@@ -37,7 +38,7 @@ export default function UnauthenticatedContent() {
           </SingleCard>
         }
       />
-      <Route path="*" element={<Navigate to={"/login"} />}></Route>
-    </Routes>
+      <Route path="*" element={<Navigate to="/login" />} />
+    </React.Fragment>
   );
 }

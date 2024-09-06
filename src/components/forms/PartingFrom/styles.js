@@ -40,3 +40,13 @@ export const stylesWaringPop = {
   cancelButton:
     "text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center",
 };
+export const panelActionsStyle = {
+  containerWithButton: "w-full relative mt-12",
+  buttonContainer: "flex justify-end items-center absolute bottom-0 right-0",
+  button: "pop mr-2",
+};
+export const buttonContainerStyle = {
+  container: "flex justify-end",
+  button: "pop mx-2", // Apply shared styles for buttons
+  lastButton: "pop", // Specific styles for the last button (if different)
+};

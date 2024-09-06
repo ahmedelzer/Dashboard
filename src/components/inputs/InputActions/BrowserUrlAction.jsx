@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import BaseAction from "./BaseAction";
 import { FaLink } from "react-icons/fa";
-import inputs from "../../../locals/EN/inputs.json";
+import input from "../../../locals/EN/inputs.json";
+// import localization from "../../../locals/EN/imageActions/browser.json";
+import { LanguageContext } from "../../../contexts/Language";
+
+import { browserActionsStyle } from "./styles";
 
 class BrowserUrlAction extends BaseAction {
   constructor(props) {
@@ -18,6 +22,8 @@ class BrowserUrlAction extends BaseAction {
   }
 
   Change(event) {
+    const { localization } = this.context;
+
     const imageUrl = event.target.value;
     let error = false;
 
@@ -25,13 +31,15 @@ class BrowserUrlAction extends BaseAction {
     try {
       new URL(imageUrl);
     } catch (_) {
-      error = "Invalid URL format";
+      error = localization.browser.error.invalidUrl;
     }
 
     this.setState({ imageUrl, error });
   }
 
   async fetchImage(e) {
+    const { localization } = this.context;
+
     const { imageUrl } = this.state;
     try {
       const response = await fetch(imageUrl);
@@ -42,13 +50,18 @@ class BrowserUrlAction extends BaseAction {
           this.props.onImageUpload(URL.createObjectURL(blob), blob.type);
           this.toggleModal();
         } else {
-          this.setState({ error: "URL does not point to an image" });
+          this.setState({ error: localization.browser.error.notImage });
         }
       } else {
-        this.setState({ error: `Failed to fetch image: ${response.status}` });
+        this.setState({
+          error: localization.browser.error.fetchFailed.replace(
+            "{status}",
+            response.status
+          ),
+        });
       }
     } catch (error) {
-      this.setState({ error: "Error fetching image" });
+      this.setState({ error: localization.browser.error.fetchError });
     }
   }
 
@@ -58,41 +71,46 @@ class BrowserUrlAction extends BaseAction {
 
   render() {
     const { modalOpen, imageUrl, error } = this.state;
+    const { localization } = this.context;
 
     return (
       <div>
-        <FaLink onClick={this.toggleModal} className="color" size={24} />
+        <FaLink
+          onClick={this.toggleModal}
+          className={browserActionsStyle.icon}
+          size={24}
+        />
         <Modal isOpen={modalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>
-            Fetch Image from URL
+            {localization.browser.modal.header}
           </ModalHeader>
           <ModalBody>
             <input
               type="text"
-              placeholder={inputs.image.UrlPlaceholder}
+              placeholder={input.image.placeholder}
               onChange={this.Change}
-              className={`form-control ${error ? "is-invalid" : ""}`}
-              // value={imageUrl}
+              className={`${browserActionsStyle.formControl} ${
+                error ? browserActionsStyle.isInvalid : ""
+              }`}
             />
             {error && (
-              <div className="invalid-feedback">
-                {typeof error === "string"
-                  ? error
-                  : "URL is invalid or not pointing to an image."}
-              </div>
+              <div className={browserActionsStyle.invalidFeedback}>{error}</div>
             )}
           </ModalBody>
           <ModalFooter>
             <Button
               onClick={this.fetchImage}
-              className="pop mt-2 text-center"
+              className={browserActionsStyle.modalFooterButton}
               name={this.props.fieldName}
               disabled={!!error || !imageUrl}
             >
-              Fetch Image
+              {localization.browser.modal.button.fetch}
             </Button>
-            <Button color="pop" onClick={this.toggleModal}>
-              Cancel
+            <Button
+              color={browserActionsStyle.modalButton}
+              onClick={this.toggleModal}
+            >
+              {localization.browser.modal.button.cancel}
             </Button>
           </ModalFooter>
         </Modal>
@@ -100,5 +118,6 @@ class BrowserUrlAction extends BaseAction {
     );
   }
 }
+BrowserUrlAction.contextType = LanguageContext;
 
 export default BrowserUrlAction;

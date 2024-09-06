@@ -1,0 +1,9 @@
+{
+  "modal": {
+    "header": "Capture Image",
+    "button": {
+      "capture": "Capture Image",
+      "cancel": "Cancel"
+    }
+  }
+}

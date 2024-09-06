@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import FormContainer from "../DynamicPopup/FormContainer";
-import { LanguageContext } from "../../../contexts/Language";
 import { Button } from "reactstrap";
-import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
-import { SharedLists } from "./SharedLists";
+import FormContainer from "../DynamicPopup/FormContainer";
 import { onApply } from "../DynamicPopup/OnApplay";
-import local from "../../../locals/EN/tableTransform.json";
+import { buttonContainerStyle } from "./styles";
+import { LanguageContext } from "../../../contexts/Language";
 function DuringTransactionContainer({
   tableSchema,
   TransformDone,
@@ -14,7 +12,10 @@ function DuringTransactionContainer({
   open,
   setOpen,
   action,
+  setSelectionContext,
 }) {
+  const { localization } = useContext(LanguageContext);
+
   const iDField = tableSchema.idField;
   const [result, setResult] = useState(false);
   const [initialRow, setInitialRow] = useState({});
@@ -46,9 +47,9 @@ function DuringTransactionContainer({
   }
   function ChangeNextButton() {
     if (index < selectionContext.length - 1) {
-      setTextButton(local.textButtonNextValue);
+      setTextButton(localization.tableTransform.textButtonNextValue);
     } else {
-      setTextButton(local.textButtonFinishValue);
+      setTextButton(localization.tableTransform.textButtonFinishValue);
     }
   }
   function Skip() {
@@ -71,19 +72,38 @@ function DuringTransactionContainer({
       TransformDone();
     }
   };
+  // const AutomatedTransform = async () => {
+  //   for (var i = 0; i < selectionContext.length; i++) {
+  //     const apply = async () =>
+  //       await onApply(
+  //         selectionContext[i],
+  //         iDField,
+  //         true,
+  //         action,
+  //         tableSchema.dashboardFormSchemaParameters
+  //       );
+  //     await apply();
+  //     MoveOn();
+  //   }
+  //   TransformDone();
+  // };
   const AutomatedTransform = async () => {
-    for (var i = 0; i < selectionContext.length; i++) {
-      const apply = async () =>
-        await onApply(
-          selectionContext[i],
+    // Create an array of promises for all the tasks
+    const tasks = selectionContext.map(
+      (item, index) =>
+        onApply(
+          item,
           iDField,
           true,
           action,
           tableSchema.dashboardFormSchemaParameters
-        );
-      await apply();
-      MoveOn();
-    }
+        ).then(() => MoveOn()) // Move on after each task
+    );
+
+    // Wait for all tasks to complete concurrently
+    await Promise.all(tasks);
+    setSelectionContext([]);
+    // Invoke TransformDone once all tasks are finished
     TransformDone();
   };
   useEffect(() => {
@@ -104,11 +124,14 @@ function DuringTransactionContainer({
             returnRow={ReturnRow}
             errorResult={result}
           />
-          <div className="flex justify-end">
-            <Button onClick={Skip} className="pop mx-2">
-              {local.textButtonSkipValue}
+          <div className={buttonContainerStyle.container}>
+            <Button onClick={Skip} className={buttonContainerStyle.button}>
+              {localization.tableTransform.textButtonSkipValue}
             </Button>
-            <Button onClick={handleButtonClick} className="pop">
+            <Button
+              onClick={handleButtonClick}
+              className={buttonContainerStyle.lastButton}
+            >
               {textButton}
             </Button>
           </div>

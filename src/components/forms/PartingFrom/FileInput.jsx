@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import { CheckBox } from "devextreme-react/check-box";
 import { ImageParameterWithPanelActions } from "../../inputs";
 import { MdDelete } from "react-icons/md";
@@ -10,9 +16,9 @@ import DeleteItem from "./DeleteItem";
 import { baseURLWithoutApi } from "../../../request";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import { createRowCache } from "@devexpress/dx-react-grid";
-import { loadData } from "../../hooks/APIsFunctions/loadData";
-import local from "../../../locals/EN/fileContainer.json";
-
+import LoadData from "../../hooks/APIsFunctions/loadData";
+import { IoCloseCircleSharp } from "react-icons/io5";
+import { LanguageContext } from "../../../contexts/Language";
 const VIRTUAL_PAGE_SIZE = 4;
 const MAX_ROWS = 50000;
 
@@ -62,14 +68,18 @@ function reducer(state, { type, payload }) {
 
 function FileInput({
   row,
-  value,
   selectedFiles,
   setSelectedFiles,
   fieldName,
   title,
   getAction,
+  idField,
+  handleToDeleteWithAPI,
+  deleteAction,
 }) {
   const [Files, setFiles] = useState([]);
+  const { localization } = useContext(LanguageContext);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,8 +115,8 @@ function FileInput({
 
   const dataSourceAPI = (query, skip, take) =>
     buildApiUrl(query, {
-      pageIndex: skip / take + 1,
-      pageSize: take,
+      pageIndex: currentPage,
+      pageSize: itemsPerPage,
       ...row,
     });
 
@@ -118,29 +128,19 @@ function FileInput({
       payload: {
         skip,
         rows: cache.getRows(skip, count),
-        totalCount: newTotalCount < MAX_ROWS ? newTotalCount : MAX_ROWS,
+        totalCount: newTotalCount ? newTotalCount : state.totalCount,
       },
     });
   };
 
   // Load data whenever skip or take state changes
   useEffect(() => {
-    loadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
+    LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
   });
-  const filesFromAPI = state.rows?.map((row) => ({
-    ...row,
-
-    displayFile: `${baseURLWithoutApi}/${row.displayFile}`,
-    fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
-  }));
-  const indexOfLastFile = currentPage * itemsPerPage;
-  const indexOfFirstFile = indexOfLastFile - itemsPerPage;
-  const currentFiles = filesFromAPI.slice(indexOfFirstFile, indexOfLastFile);
-
   const totalPages = Math.ceil(state.totalCount / itemsPerPage);
 
   const handlePageChange = (newPage) => {
-    getRemoteRows(indexOfFirstFile + 1, indexOfLastFile * 2);
+    getRemoteRows(newPage, itemsPerPage);
     setCurrentPage(newPage);
   };
 
@@ -225,10 +225,6 @@ function FileInput({
     );
   };
 
-  const handleToDeleteWithAPI = (index) => {
-    // Logic for deleting with API
-  };
-
   const handleToDelete = deleteWithApi
     ? handleToDeleteWithAPI
     : handleToDeleteWithoutAPI;
@@ -267,7 +263,7 @@ function FileInput({
                 value={selectedFiles.includes(photo)}
                 onValueChanged={() => handleCheckboxChange(photo)}
               />
-              <MdDelete
+              <IoCloseCircleSharp
                 onClick={() => handleDelete(photo.id, false)}
                 className={stylesFile.deleteIcon}
                 size={24}
@@ -279,22 +275,36 @@ function FileInput({
       </div>
 
       <div className={stylesFile.gridContainer}>
-        {currentFiles.map((photo, i) => (
-          <div key={i} title={title || "imf"} className={stylesFile.validFile}>
-            <div className={stylesFile.fileControls + " !justify-end"}>
-              <MdDelete
-                onClick={() => handleDelete(photo.id, true)}
-                className={stylesFile.deleteIcon}
-                size={24}
+        {state.rows
+          ?.map((row) => ({
+            ...row,
+
+            displayFile: `${baseURLWithoutApi}/${row.displayFile}`,
+            fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
+            id: row[idField],
+          }))
+          .map((photo, i) => (
+            <div
+              key={i}
+              title={title || "imf"}
+              className={stylesFile.validFile}
+            >
+              {deleteAction && (
+                <div className={stylesFile.fileControls + " !justify-end"}>
+                  <MdDelete
+                    onClick={() => handleDelete(photo.id, true)}
+                    className={stylesFile.deleteIcon}
+                    size={24}
+                  />
+                </div>
+              )}
+              <TypeFile
+                file={photo.displayFile}
+                title={title}
+                type={photo.fileCodeNumber}
               />
             </div>
-            <TypeFile
-              file={photo.displayFile}
-              title={title}
-              type={photo.fileCodeNumber}
-            />
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className={stylesFile.pagination}>
@@ -303,24 +313,27 @@ function FileInput({
           disabled={currentPage === 1}
           className={stylesFile.paginationButton + " pop"}
         >
-          {local.pagination.buttonPrevious}
+          {localization.fileContainer.pagination.buttonPrevious}
         </Button>
         <span className="mx-4">
-          {local.pagination.page} {currentPage} {local.pagination.of}{" "}
-          {totalPages}
+          {localization.fileContainer.pagination.page} {currentPage}{" "}
+          {localization.fileContainer.pagination.of} {totalPages}
         </span>
         <Button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
           className={stylesFile.paginationButton + " pop"}
         >
-          {local.pagination.buttonNext}
+          {localization.fileContainer.pagination.buttonNext}
         </Button>
       </div>
       <DeleteItem
-        deleteIsOpen={modalIsOpen}
-        setDeleteIsOpen={setModalIsOpen}
-        deleteFunction={handleToDelete}
+        id={deleteID}
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+        DeleteItemCallback={handleToDelete}
+        deleteWithApi={deleteWithApi}
+        action={deleteAction}
       />
     </div>
   );

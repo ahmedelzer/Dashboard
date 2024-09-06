@@ -1,7 +1,5 @@
 import { GetProjectUrl } from "../../../request";
-import { projectProxyRoute } from "../../../request";
-import { baseURL } from "../../../request";
-export function buildApiUrl(apiRequest, constants) {
+export function buildApiUrl(apiRequest, constants, projectUrl) {
   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
     // Handle the case where apiRequest is null or does not have dashboardFormSchemaActionQueryParams
     return null; // or some default value or throw an error, depending on your use case

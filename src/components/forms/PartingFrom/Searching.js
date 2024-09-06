@@ -1,16 +1,7 @@
 import React from "react";
 // import { ModalBody, ModalHeader, ModalTitle } from "react-bootstrap";
 // import Modal from "react-bootstrap/Modal";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
+import { Modal, ModalBody } from "reactstrap";
 function Searching({ open, SearchForm }) {
   return (
     <div className=" w-full h-full">

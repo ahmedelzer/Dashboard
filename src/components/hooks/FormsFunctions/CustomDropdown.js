@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { DropDownBox } from "devextreme-react/drop-down-box";
-import { List } from "devextreme-react/list";
+import React, { useEffect, useRef } from "react";
 import { FormGroup } from "reactstrap";
+import { customDropdownStyle } from "./styles";
 const CustomDropdown = ({
   returnField,
   panelContent,
@@ -39,10 +38,10 @@ const CustomDropdown = ({
     }
   }, [returnField, onChange]);
   return (
-    <FormGroup className=" flex justify-between form-control">
+    <FormGroup className={customDropdownStyle.formGroup}>
       <input
         name={props.fieldName}
-        className={`${props.className} form-control w-[96%]`}
+        className={`${props.className} ${customDropdownStyle.inputField}`}
         readOnly
         ref={inputRef}
         value={displayField}
@@ -51,33 +50,17 @@ const CustomDropdown = ({
       />
 
       <div
-        className=" cursor-pointer  flex justify-center items-center"
+        className={customDropdownStyle.togglePanelButton}
         onClick={handleTogglePanel}
       >
-        {/* <span>{buttonText}</span> */}
-        <span style={{ marginLeft: "5px" }}>{isPanelOpen ? "▲" : "▼"}</span>
+        <span className={customDropdownStyle.span}>
+          {isPanelOpen ? "▲" : "▼"}
+        </span>
       </div>
 
       {isPanelOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            border: "1px solid #ccc",
-            background: "#fff",
-            zIndex: 1,
-            marginTop: "5px",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          {panelContent}
-        </div>
+        <div className={customDropdownStyle.panelContent}>{panelContent}</div>
       )}
-      {/* <div ref={dropdownRef} style={{ position: "relative" }}>
-        <label>{displayField}</label>
-
-      </div> */}
     </FormGroup>
     // <DropDownBox
     //   dataSource={dataSource}

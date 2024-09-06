@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { FormGroup, Label, Input } from "reactstrap";
+import React from "react";
 import FieldGroup from "../hooks/FormsFunctions/FieldGroup";
 import BaseInput from "./BaseInput";
 // import "./styles.css"; // Assuming you have a CSS file for custom styles
@@ -12,8 +11,6 @@ class TextParameter extends BaseInput {
     };
   }
   handleChange = (e) => {
-    console.log("BaseInput handleChange triggered");
-
     const { onChange } = this.props;
     if (onChange) {
       onChange(e);

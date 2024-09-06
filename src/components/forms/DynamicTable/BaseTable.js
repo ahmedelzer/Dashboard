@@ -1,43 +1,46 @@
-import React, { useState, useReducer, useEffect, useMemo } from "react";
 import {
-  Grid,
-  Table,
-  PagingPanel,
-  TableHeaderRow,
-  VirtualTable,
-  TableEditRow,
-  TableEditColumn,
-  TableSelection,
-  TableFixedColumns,
-} from "@devexpress/dx-react-grid-bootstrap4";
-import { createRowCache, VirtualTableState } from "@devexpress/dx-react-grid";
-import PopupEditing from "../DynamicPopup/PopupEditing";
-import Popup from "../DynamicPopup/Popup";
-import { ImageTypeProvider, TypeProvider } from "./TypeProvider";
-import {
+  createRowCache,
   EditingState,
   IntegratedPaging,
   IntegratedSelection,
   PagingState,
   SelectionState,
 } from "@devexpress/dx-react-grid";
-import Switch from "devextreme-react/switch";
-import { MdDelete, MdEdit } from "react-icons/md";
-import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
+import {
+  Grid,
+  PagingPanel,
+  Table,
+  TableEditColumn,
+  TableHeaderRow,
+} from "@devexpress/dx-react-grid-bootstrap4";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
+import Switch from "devextreme-react/switch";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import { MdDelete, MdEdit } from "react-icons/md";
+import { TbListDetails } from "react-icons/tb";
+import { LanguageContext } from "../../../contexts/Language";
+import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
+import LoadData from "../../hooks/APIsFunctions/loadData";
 import Loading from "../../loading/Loading";
 import WaringPop from "../PartingFrom/WaringPop";
-import { Modal } from "reactstrap";
 import SelectForm from "../SelectForm";
-import { TbListDetails } from "react-icons/tb";
-import { loadData } from "../../hooks/APIsFunctions/loadData";
+import "./LoadingDots.css";
+import {
+  customRowStyle,
+  detailsButtonStyle,
+  listObserverStyle,
+} from "./styles";
+import { TypeProvider } from "./TypeProvider";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
-const URL =
-  "https://js.devexpress.com/Demos/WidgetsGalleryDataService/api/Sales";
-const buildQueryString = (skip, take) =>
-  `${URL}?requireTotalCount=true&skip=${skip}&take=${take}`;
-
 const initialState = {
   rows: [],
   skip: 0,
@@ -52,7 +55,8 @@ function reducer(state, { type, payload }) {
     case "UPDATE_ROWS":
       return {
         ...state,
-        ...payload,
+        rows: [...state.rows, ...payload?.rows], // Append new rows to the existing rows
+        totalCount: payload.totalCount,
         loading: false,
       };
     case "START_LOADING":
@@ -100,12 +104,16 @@ function BaseTable({
   subSchemas,
 }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { localization } = useContext(LanguageContext);
+
   const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [subSchema, setSubSchema] = useState(null);
   const [fieldName, setFieldName] = useState("");
   const [title, setTitle] = useState("");
+  const [currentSkip, setCurrentSkip] = useState(1);
+  const observerRef = useRef();
   const getRowId = (row) => row[schema.idField];
   const toggleRowExpanded = (row) => {
     setExpandedRows((prevExpandedRows) =>
@@ -116,7 +124,7 @@ function BaseTable({
   };
   const dataSourceAPI = (query, skip, take) =>
     buildApiUrl(query, {
-      pageIndex: skip / take + 1,
+      pageIndex: skip + 1,
       pageSize: take,
       ...rowDetails,
     });
@@ -128,19 +136,30 @@ function BaseTable({
     }
   };
   const CustomRow = ({ row, onRowClick, ...restProps }) => {
+    if (row.isLoading) {
+      return (
+        <Table.Row {...restProps}>
+          <Table.Cell colSpan={columns.length + 1} className=" text-center">
+            <div className="loading-dots">
+              <span>{localization.loadData.loading}</span>
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+            </div>
+          </Table.Cell>
+        </Table.Row>
+      );
+    }
     if (selection) {
       return (
         <Table.Row
           {...restProps}
           onClick={() => onRowClick(row)}
-          className="!hover:bg-red bg"
+          className={`${customRowStyle.row} ${customRowStyle.selectedRow}`}
           style={{
-            cursor: "pointer",
             backgroundColor: restProps.selected
               ? "var(--main-color2)"
               : "white",
-            position: "relative",
-            zIndex: 1,
           }}
         >
           {React.Children.map(restProps.children, (child) =>
@@ -162,13 +181,13 @@ function BaseTable({
             {...restProps}
             onDoubleClick={() => rowDoubleClick(row)}
             // onClick={() => toggleRowExpanded(getRowId(row))}
-            style={{ cursor: "pointer", width: "100%" }}
+            className={customRowStyle.tableRow}
           />
           {expandedRows.includes(row) && (
             //make this take the width of the row
             <tr>
               <td colSpan={columns.length + 1}>
-                <div className="p-3">
+                <div className={customRowStyle.expandedRow}>
                   <SelectForm
                     row={row}
                     parentSchemaParameters={
@@ -227,7 +246,7 @@ function BaseTable({
   //e
 
   useEffect(() =>
-    loadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
+    LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
   );
   // useEffect(() => {
   //   loadData();
@@ -262,10 +281,7 @@ function BaseTable({
     };
     return (
       <div>
-        <button
-          className="bg text-white px-2 py-1 rounded"
-          onClick={handleClick}
-        >
+        <button className={detailsButtonStyle.button} onClick={handleClick}>
           <TbListDetails size={18} />
         </button>
       </div>
@@ -321,25 +337,46 @@ function BaseTable({
         : [...prevSelection, row]
     );
   };
+  ///todo make sure the observers work every time you get to the div after calling the new rows
+  const observerCallback = useCallback(
+    (entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && rows.length < totalCount && !loading) {
+        getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2);
+        setCurrentSkip(currentSkip + 1);
+      }
+    },
+    [rows, totalCount, loading, skip]
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1, // Trigger when 10% of the element is visible
+    });
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [observerCallback]);
   return (
     <div className="card">
       <Grid
         // rows={initialRows}
         // columns={initialColumns}
-        rows={rows}
+        // rows={rows}
+        rows={rows.concat(loading ? [{ isLoading: true }] : [])}
         columns={columns}
         getRowId={getRowId}
         i18nIsDynamicList={true}
-        className="flex"
-        style={{ position: "relative" }}
       >
-        {/* <VirtualTableState
-          loading={loading}
-          totalRowCount={totalCount}
-          pageSize={VIRTUAL_PAGE_SIZE}
-          skip={skip}
-          getRows={getRemoteRows}
-        /> */}
         {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
         {paging ? <IntegratedPaging /> : null}
         <TypeProvider for={columnsFormat} />
@@ -378,6 +415,7 @@ function BaseTable({
           )}
           cellComponent={DetailsCell}
         />
+        {/* {loading && <Loading />} */}
         {/* {selectionRow && <TableSelection showSelectAll />} */}
         <TableEditColumn
           messages={{
@@ -399,6 +437,9 @@ function BaseTable({
           setModalIsOpen={setModalIsOpen}
         />
       </Grid>
+      {state.rows && (
+        <div ref={observerRef} className={listObserverStyle.container} />
+      )}
     </div>
   );
 }

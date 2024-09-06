@@ -1,7 +1,7 @@
 {
   "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-  "schemaType": "Login",
-  "idField": "username",
+  "schemaType": "Language",
+  "idField": "LanguageID",
   "dashboardFormSchemaParameters": [
     {
       "dashboardFormSchemaParameterID": "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
@@ -30,9 +30,10 @@
       "indexNumber": 0
     }
   ],
+
   "isMainSchema": true,
   "dataSourceName": null,
-  "projectProxyRoute": "Centralization",
+  "projectProxyRoute": "BrandingMartLanguage",
   "propertyName": null,
   "indexNumber": 0
 }

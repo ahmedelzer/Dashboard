@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
-import "./DynamicTable.scss";
 import Table from "../../components/forms/DynamicTable/Table";
 import useFetch from "../../components/hooks/APIsFunctions/useFetch";
-import Loading from "../../components/loading/Loading";
-import { useParams } from "react-router-dom";
-import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
-import { LanguageContext } from "../../contexts/Language";
-import { defaultProjectProxyRoute, SetReoute } from "../../request";
 import GetFormSchema from "../../components/hooks/DashboardAPIs/GetFormSchema";
+import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
+import Loading from "../../components/loading/Loading";
+import { LanguageContext } from "../../contexts/Language";
+import { defaultProjectProxyRoute } from "../../request";
+import "./DynamicTable.scss";
+
 export default function DynamicTable() {
-  const { dashboardItemID } = useParams();
+  // const { dashboardItemID } = useParams();
+  const dashboardItemID = ExtractIDFromPath(window.location.pathname);
   const { Right } = useContext(LanguageContext);
   const { data, error, isLoading } = useFetch(
     GetFormSchema(dashboardItemID),

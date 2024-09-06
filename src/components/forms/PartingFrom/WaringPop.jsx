@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Modal } from "reactstrap";
 import { stylesWaringPop } from "./styles";
-import local from "../../../locals/EN/waringpop.json";
+import { LanguageContext } from "../../../contexts/Language";
 function WaringPop({ modalIsOpen, setModalIsOpen, confirmDelete }) {
+  const { localization } = useContext(LanguageContext);
+
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -47,19 +49,19 @@ function WaringPop({ modalIsOpen, setModalIsOpen, confirmDelete }) {
             ></path>
           </svg>
           <h4 className={stylesWaringPop.messageText}>
-            {local.deleteConfirmation}
+            {localization.waringpop.deleteConfirmation}
           </h4>
           <button
             onClick={confirmDelete}
             className={stylesWaringPop.confirmButton}
           >
-            {local.yes}
+            {localization.waringpop.yes}
           </button>
           <button
             onClick={() => setModalIsOpen(false)}
             className={stylesWaringPop.cancelButton}
           >
-            {local.no}
+            {localization.waringpop.no}
           </button>
         </div>
       </div>

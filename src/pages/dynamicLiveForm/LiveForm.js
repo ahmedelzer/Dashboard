@@ -1,20 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import "../dynamicTable/DynamicTable.scss";
-import useFetch from "../../components/hooks/APIsFunctions/useFetch";
-import Loading from "../../components/loading/Loading";
-import { useParams } from "react-router-dom";
-import { LanguageContext } from "../../contexts/Language";
-import WebsoketTest from "../../components/forms/DynamicForm/WebsoketTest";
-import PanelActions from "../../components/forms/PartingFrom/PanelActions";
-import { defaultProjectProxyRoute, projectProxyRoute } from "../../request";
-import GetSchemaActionsUrl from "../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
-import BaseTable from "../../components/forms/DynamicTable/BaseTable";
-import FormContainer from "../../components/forms/DynamicPopup/FormContainer";
-import Table from "../../components/forms/DynamicTable/Table";
-import APIHandling from "../../components/hooks/APIsFunctions/APIHandling";
+import React, { useContext } from "react";
 import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
+import useFetch from "../../components/hooks/APIsFunctions/useFetch";
+import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
+import Loading from "../../components/loading/Loading";
+import { LanguageContext } from "../../contexts/Language";
+import { defaultProjectProxyRoute } from "../../request";
+import "../dynamicTable/DynamicTable.scss";
 function LiveForm() {
-  const { dashboardItemID } = useParams();
+  const dashboardItemID = ExtractIDFromPath(window.location.pathname);
   const { Right } = useContext(LanguageContext);
 
   const { data, error, isLoading } = useFetch(

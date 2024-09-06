@@ -1,35 +1,38 @@
-import defaultUser from '../utils/default-user';
+import { jwtDecode } from "jwt-decode";
+import defaultUser from "../utils/default-user";
+import Cookies from "js-cookie";
+const token = Cookies.get("token");
+const user = token
+  ? {
+      avatarUrl:
+        "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
+      ...jwtDecode(token),
+    }
+  : null;
 
 export async function signIn(email, password) {
   try {
-    // Send request
-    console.log(email, password);
-
     return {
       isOk: true,
-      data: defaultUser
+      data: user,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Authentication failed"
+      message: "Authentication failed",
     };
   }
 }
 
 export async function getUser() {
   try {
-    // Send request
-
     return {
       isOk: true,
-      data: defaultUser
+      data: user,
     };
-  }
-  catch {
+  } catch {
     return {
-      isOk: false
+      isOk: false,
     };
   }
 }
@@ -37,16 +40,14 @@ export async function getUser() {
 export async function createAccount(email, password) {
   try {
     // Send request
-    console.log(email, password);
 
     return {
-      isOk: true
+      isOk: true,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Failed to create account"
+      message: "Failed to create account",
     };
   }
 }
@@ -54,33 +55,27 @@ export async function createAccount(email, password) {
 export async function changePassword(email, recoveryCode) {
   try {
     // Send request
-    console.log(email, recoveryCode);
 
     return {
-      isOk: true
+      isOk: true,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Failed to change password"
-    }
+      message: "Failed to change password",
+    };
   }
 }
 
 export async function resetPassword(email) {
   try {
-    // Send request
-    console.log(email);
-
     return {
-      isOk: true
+      isOk: true,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Failed to reset password"
+      message: "Failed to reset password",
     };
   }
 }

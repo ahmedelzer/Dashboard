@@ -1,9 +1,10 @@
-import React, { Component, createRef } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import Webcam from "react-webcam";
-import BaseAction from "./BaseAction";
+import React, { createRef } from "react";
 import { FaCamera } from "react-icons/fa";
-
+import Webcam from "react-webcam";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+// import localization from "../../../locals/EN/imageActions/webcam.json";
+import BaseAction from "./BaseAction";
+import { LanguageContext } from "../../../contexts/Language";
 class WebcamActions extends BaseAction {
   constructor(props) {
     super(props);
@@ -41,18 +42,19 @@ class WebcamActions extends BaseAction {
 
   render() {
     const { modalOpen } = this.state;
-
+    const { localization } = this.context;
     return (
       <div>
         <FaCamera onClick={this.toggleModal} className="color" size={24} />
         <Modal isOpen={modalOpen} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>Capture Image</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>
+            {localization.webcam.modal.header}
+          </ModalHeader>
           <ModalBody>
             <Webcam
               audio={false}
               ref={this.webcamRef}
               screenshotFormat="image/jpeg"
-              style={{ width: "100%", height: "auto" }}
             />
           </ModalBody>
           <ModalFooter>
@@ -61,10 +63,10 @@ class WebcamActions extends BaseAction {
               onClick={this.handleCapture}
               name={this.props.fieldName}
             >
-              Capture Image
+              {localization.webcam.modal.button.capture}
             </Button>
             <Button color="pop" onClick={this.toggleModal}>
-              Cancel
+              {localization.webcam.modal.button.cancel}
             </Button>
           </ModalFooter>
         </Modal>
@@ -72,5 +74,5 @@ class WebcamActions extends BaseAction {
     );
   }
 }
-
+WebcamActions.contextType = LanguageContext;
 export default WebcamActions;

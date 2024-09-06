@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
 import {
-  PagingState,
   IntegratedPaging,
+  PagingState,
   createRowCache,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
+  PagingPanel,
   Table,
   TableHeaderRow,
-  PagingPanel,
 } from "@devexpress/dx-react-grid-bootstrap4";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const initialState = {

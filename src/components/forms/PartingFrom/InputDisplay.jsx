@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormGroup, Label } from "reactstrap";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
-import GetFormSchema from "../../hooks/DashboardAPIs/GetFormSchema";
-import { defaultProjectProxyRoute } from "../../../request";
-import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 import inputs from "../../../locals/EN/inputs.json";
+import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 function InputDisplay({ props, BaseInput, errorResult }) {
   const [title, setTitle] = useState(props.title);
   const [style, setStyle] = useState("");

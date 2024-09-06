@@ -1,9 +1,9 @@
 import React, { Component, createRef } from "react";
-import { MdOutlineModeEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
-import inputs from "../../locals/EN/inputs.json";
-import { Image } from "react-bootstrap";
 import defaultImage from "../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
+// import inputs from "../../locals/EN/inputs.json";
+import { imageInputStyle } from "./styles";
+import { LanguageContext } from "../../contexts/Language";
+
 class ImageParameter extends Component {
   constructor(props) {
     super(props);
@@ -82,13 +82,15 @@ class ImageParameter extends Component {
   render() {
     const { fieldName, value } = this.props;
     const { isHovered } = this.state;
-    const imageAltValue = inputs.image.imageAltValue;
+    const { localization } = this.context;
+    const imageAltValue = localization.inputs.image.imageAltValue;
+
     // const defaultImage = inputs.image.defaultImage;
     // console.log(this.imageRef?.current?.src)
 
     return (
       <div
-        className="relative cursor-pointer"
+        className={imageInputStyle.container}
         title={this.props.title}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
@@ -98,15 +100,13 @@ class ImageParameter extends Component {
           src={value || defaultImage}
           alt={imageAltValue}
           key={fieldName}
-          className={`w-full object-cover rounded-md form-control ${this.props.className}`}
+          className={`${imageInputStyle.image} ${this.props.className}`}
         />
         {isHovered && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className={imageInputStyle.hoverOverlay}>
             {this.props.actions?.map((action, index) => (
               <label key={index} htmlFor="" className="p-0 m-0">
-                <div className="rounded-full px-2 mx-1 cursor-pointer">
-                  {action}
-                </div>
+                <div className={imageInputStyle.actionItem}>{action}</div>
               </label>
             ))}
           </div>
@@ -115,5 +115,6 @@ class ImageParameter extends Component {
     );
   }
 }
+ImageParameter.contextType = LanguageContext;
 
 export default ImageParameter;

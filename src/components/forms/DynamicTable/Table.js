@@ -1,12 +1,12 @@
-import React, { useState, useReducer, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
-import PopupEditing from "../DynamicPopup/PopupEditing";
-import Popup from "../DynamicPopup/Popup";
-import BaseTable from "./BaseTable";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { SetReoute, defaultProjectProxyRoute } from "../../../request";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import Popup from "../DynamicPopup/Popup";
+import PopupEditing from "../DynamicPopup/PopupEditing";
+import BaseTable from "./BaseTable";
 const DynamicTable = ({
   schema,
   isSearchingTable,
@@ -53,6 +53,11 @@ const DynamicTable = ({
     schemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Put"
     );
+  const deleteAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Delete"
+    );
   const PopupComponentTable = ({ state }) => {
     return (
       <PopupEditing
@@ -69,14 +74,14 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="card">
+    <div>
       <BaseTable
         key={schema.idField}
         schema={schema}
         selectionRow={selectionRow}
-        addMessage={addMessage}
-        editMessage={editMessage}
-        deleteMessage={deleteMessage}
+        addMessage={addMessage && postAction}
+        editMessage={editMessage && putAction}
+        deleteMessage={deleteMessage && deleteAction}
         isSearchingTable={isSearchingTable}
         setSelectedRow={setSelectedRow}
         paging={paging}

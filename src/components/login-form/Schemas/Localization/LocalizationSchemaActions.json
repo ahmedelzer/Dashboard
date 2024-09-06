@@ -1,0 +1,10 @@
+[
+  {
+    "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "Language/GetLocalization",
+    "body": null,
+    "returnPropertyName": "dataSource",
+    "dashboardFormSchemaActionQueryParams": []
+  }
+]

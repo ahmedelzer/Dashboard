@@ -1,54 +1,93 @@
-import React, { useState, useRef, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import Form, {
-  Item,
-  Label,
   ButtonItem,
   ButtonOptions,
-  RequiredRule,
-  EmailRule,
+  Item,
+  Label,
 } from "devextreme-react/form";
 import LoadIndicator from "devextreme-react/load-indicator";
 import notify from "devextreme/ui/notify";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
 import local from "../../locals/EN/login.json";
-import "./LoginForm.scss";
-import schema from "./LoginFormSchema.json";
+import { SetReoute } from "../../request";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
+import { onApply } from "../forms/DynamicPopup/OnApplay";
+import "./LoginForm.scss";
+import schema from "./Schemas/LoginSchema/LoginFormSchema.json";
+import schemaActions from "./Schemas/LoginSchema/LoginFormSchemaActions.json";
+import { LanguageContext } from "../../contexts/Language";
+
 export default function LoginForm() {
-  const { signIn } = useAuth();
+  const { setUser, signIn } = useAuth();
+  const { localization } = useContext(LanguageContext);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(false);
-  let editedRow = {};
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Display message if available
+  useEffect(() => {
+    if (location.state && location.state.message) {
+      notify(location.state.message, "error", 2000);
+    }
+  }, [location.state]);
+  SetReoute(schema.projectProxyRoute);
+  const postAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Post"
+    );
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       const form = e.target;
       const formData = new FormData(form);
       const formJson = Object.fromEntries(formData.entries());
-      console.log("====================================");
-      console.log(formJson);
-      console.log("====================================");
-      // setLoading(true);
-      // const result = await signIn(username, password);
-      // if (!result.isOk) {
-      //   setLoading(false);
-      // notify(result.message, "error", 2000);
-      // }
+      setLoading(true);
+      const apply = await onApply(formJson, "", true, postAction);
+      setResult(apply);
+      if (apply && apply.success === true) {
+        const decodedToken = jwtDecode(apply.data.token);
+        const expiresInSeconds = decodedToken.exp;
+        const expirationDate = new Date(expiresInSeconds * 1000);
+        if (formJson.rememberMe) {
+          Cookies.set("token", apply.data.token, { expires: expirationDate });
+        } else {
+          Cookies.set("token", apply.data.token);
+        }
+        const user = {
+          avatarUrl:
+            "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
+          ...decodedToken,
+        };
+        setUser(user);
+        navigate("/home");
+      } else if (!apply.success) {
+        // notify(apply.message, "error", 2000);
+      }
+      setLoading(false);
     },
+
     [signIn]
   );
+  const rememberMeEditorOptions = {
+    text: localization.login.rememberMeEditorOptions.text,
+    elementAttr: { class: "form-text" },
+  };
   return (
     <form className={"login-form"} onSubmit={onSubmit}>
       <FormContainer
-        row={editedRow}
+        disabled={loading}
+        row={{}}
         tableSchema={schema}
         returnRow={() => {}}
         errorResult={result}
       />
       <Form disabled={loading}>
         <Item
-          dataField={local.rememberMe}
+          dataField={"rememberMe"}
           editorType={"dxCheckBox"}
           editorOptions={rememberMeEditorOptions}
         >
@@ -70,11 +109,6 @@ export default function LoginForm() {
             </span>
           </ButtonOptions>
         </ButtonItem>
-        <Item>
-          <div className={"link"}>
-            <Link to={"/reset-password"}>{local.forgotPassword}?</Link>
-          </div>
-        </Item>
       </Form>
     </form>
   );
@@ -91,6 +125,6 @@ const passwordEditorOptions = {
   mode: "password",
 };
 const rememberMeEditorOptions = {
-  text: "Remember me",
+  text: "",
   elementAttr: { class: "form-text" },
 };

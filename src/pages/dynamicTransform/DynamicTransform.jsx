@@ -1,18 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import "../dynamicTable/DynamicTable.scss";
-import useFetch from "../../components/hooks/APIsFunctions/useFetch";
-import Loading from "../../components/loading/Loading";
-import { useParams } from "react-router-dom";
-import { LanguageContext } from "../../contexts/Language";
-import WebsoketTest from "../../components/forms/DynamicForm/WebsoketTest";
-import PanelActions from "../../components/forms/PartingFrom/PanelActions";
-import { defaultProjectProxyRoute, projectProxyRoute } from "../../request";
-import GetSchemaActionsUrl from "../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
-import BaseTable from "../../components/forms/DynamicTable/BaseTable";
-import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
+import React, { useContext } from "react";
 import TableTransformer from "../../components/forms/PartingFrom/TableTransformer";
-function LiveForm() {
-  const { dashboardItemID } = useParams();
+import useFetch from "../../components/hooks/APIsFunctions/useFetch";
+import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
+import Loading from "../../components/loading/Loading";
+import { LanguageContext } from "../../contexts/Language";
+import { defaultProjectProxyRoute } from "../../request";
+import "../dynamicTable/DynamicTable.scss";
+function DynamicTransform() {
+  const dashboardItemID = ExtractIDFromPath(window.location.pathname);
   const { Right } = useContext(LanguageContext);
 
   const { data, error, isLoading } = useFetch(
@@ -38,4 +33,4 @@ function LiveForm() {
     </>
   );
 }
-export default LiveForm;
+export default DynamicTransform;

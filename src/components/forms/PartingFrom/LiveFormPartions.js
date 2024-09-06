@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import FormContainer from "../DynamicPopup/FormContainer";
-import PopupEditing from "../DynamicPopup/PopupEditing";
-import FormContainerEditing from "./FormContainerEditing";
 
 function LiveFormPartions({ Schema, data, editedRow, setEditedgRow }) {
   const [rowID, setRowID] = useState("");
@@ -44,10 +42,6 @@ function LiveFormPartions({ Schema, data, editedRow, setEditedgRow }) {
       rowID,
       change: createRowChange(editedRow, value, name),
     };
-    console.log("====================================changeArgs");
-    console.log(editedRow);
-    console.log(state);
-    console.log("====================================");
     // if (isNew) {
     // changeAddedRow(changeArgs);
     //   console.log("added row", editedRow);

@@ -1,13 +1,15 @@
-export const loadData = (
+export default function LoadData(
   state,
   dataSourceAPI,
   getAction,
   cache,
   updateRows,
   dispatch
-) => {
+) {
   const { requestedSkip, take, lastQuery, loading } = state;
+  // const navigate = useNavigate(); seen error dom hooks
   const query = dataSourceAPI(getAction, requestedSkip, take);
+  if (!getAction) return;
   if (query !== lastQuery && !loading) {
     const cached = cache.getRows(requestedSkip, take);
     if (cached.length === take) {
@@ -17,6 +19,11 @@ export const loadData = (
       fetch(query)
         .then((response) => response.json())
         .then(({ dataSource, count }) => {
+          if (dataSource.code === 401) {
+            //todo handle error message
+            // RedirectToLogin(navigate, dataSource);
+            return;
+          }
           cache.setRows(requestedSkip, dataSource);
           updateRows(requestedSkip, take, count);
         })
@@ -24,4 +31,4 @@ export const loadData = (
     }
     dispatch({ type: "UPDATE_QUERY", payload: query });
   }
-};
+}

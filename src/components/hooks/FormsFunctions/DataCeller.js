@@ -1,17 +1,7 @@
 import React from "react";
 import InputDisplay from "../../forms/PartingFrom/InputDisplay";
-import {
-  BooleanParameter,
-  DateParameter,
-  DateTimeParameter,
-  TextParameter,
-  BaseInput,
-  LookupInput,
-  ImageParameterWithPanelActions,
-} from "../../inputs";
 import { CreateInputProps } from "./CreateInputProps";
 import { GetInputComponent } from "./GetInputComponent";
-import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 
 export default function DataCellRender({ data, errorResult, onChange, value }) {
   // Determine the key to use for input mapping

@@ -1,5 +1,9 @@
 {
   "sign": "Sign In",
   "forgotPassword": "Forgot password",
-  "rememberMe": "Remember me"
+  "rememberMe": "rememberMe",
+  "rememberMeEditorOptions": {
+    "text": "Remember me",
+    "elementAttr": { "class": "form-text" }
+  }
 }

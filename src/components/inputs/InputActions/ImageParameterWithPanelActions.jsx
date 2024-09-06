@@ -1,13 +1,10 @@
-import React, { Component } from "react";
-import UploadAction from "./UploadAction";
+import React from "react";
+import defaultImage from "../../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
+import BaseInput from "../BaseInput";
 import ImageParameter from "../ImageParameter";
 import BrowserUrlAction from "./BrowserUrlAction";
+import UploadAction from "./UploadAction";
 import WebcamActions from "./WebcamActins";
-import DisplayFile from "../../forms/PartingFrom/DisplayFile";
-import FileParamter from "../FileParamter";
-import FileParameter from "../FileParamter";
-import BaseInput from "../BaseInput";
-import defaultImage from "../../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
 class ImageParameterWithPanelActions extends BaseInput {
   constructor(props) {
     super(props);

@@ -1,0 +1,18 @@
+{
+  "modal": {
+    "header": "Fetch Image from URL",
+    "button": {
+      "fetch": "Fetch Image",
+      "cancel": "Cancel"
+    }
+  },
+  "input": {
+    "placeholder": "Enter image URL"
+  },
+  "error": {
+    "invalidUrl": "Invalid URL format",
+    "fetchError": "Error fetching image",
+    "notImage": "URL does not point to an image",
+    "fetchFailed": "Failed to fetch image: {status}"
+  }
+}

@@ -1,16 +1,19 @@
-make delete work with api // done but test it after add id and delete action
-make transformDone //done
-solve button next and finsh in transform
-//////////////
-make upload action work as we want automate //form server 
+locliztion&&style //Done
+handle hureation in all api//done but in 2 fetch error dom hook apear
+assign routest from token //Done
+basetable loading // Done
+build website 
+remove # // check is in front side //Done
 
-///////
-json file login info 
-
-schema 
-api
-
-project main proxy route 
-
-//make component for dataceller to login form //done
-////////////
+deidline 3 pm
+//////////
+deflut user//Done
+make cookie for expaire time //Done
+/////////
+1-information of title and icon and name ex: ahmed ashraf 
+2-the side nav do not open when click on any item //solved
+4-load data do not use in all parts //Done
+5-handle error message authantction and code of 401 //need a test
+6-DashboardMenuItemID do not read from browser //Done
+7-the localzation data do not have languges only have EN and do not add functionaitty of change lan by local data //Done
+8-logs delete && verables,files and fun do not use //Done

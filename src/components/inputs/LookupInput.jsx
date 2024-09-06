@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import { Button } from "reactstrap";
-import BaseInput from "./BaseInput"; // Assuming BaseInput is in the same folder or adjust the path
-import CustomDropdown from "../hooks/FormsFunctions/CustomDropdown";
-import Table from "../forms/DynamicTable/Table";
-import GetFormSchema from "../hooks/DashboardAPIs/GetFormSchema";
-import useFetch, { fetchData } from "../hooks/APIsFunctions/useFetch";
+import React from "react";
 import { defaultProjectProxyRoute } from "../../request";
+import Table from "../forms/DynamicTable/Table";
+import { fetchData } from "../hooks/APIsFunctions/useFetch";
+import CustomDropdown from "../hooks/FormsFunctions/CustomDropdown";
+import BaseInput from "./BaseInput"; // Assuming BaseInput is in the same folder or adjust the path
 class LookupInput extends BaseInput {
   constructor(props) {
     super(props);
@@ -51,7 +49,7 @@ class LookupInput extends BaseInput {
     const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
     const { data, selectedRow, isPanelOpen } = this.state;
     const panelContent = (
-      <div className="drop-list text-center">
+      <div className="drop-list">
         {data && (
           <Table
             schema={data}

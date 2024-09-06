@@ -1,7 +1,9 @@
 import React from "react";
 import { RadioGroup } from "devextreme-react";
 import BaseInput from "./BaseInput";
-import inputs from "../../locals/EN/inputs.json";
+// import inputs from "../../locals/EN/inputs.json";
+import { LanguageContext } from "../../contexts/Language";
+
 class BooleanParameter extends BaseInput {
   handleChange = (e) => {
     const { onChange } = this.props;
@@ -11,12 +13,13 @@ class BooleanParameter extends BaseInput {
   };
 
   render() {
+    const { localization } = this.context;
     const { value, fieldName, Enable, onKeyPress } = this.props;
 
     return (
       <div>
         <RadioGroup
-          items={inputs.boolean}
+          items={localization.inputs.boolean}
           value={value}
           onValueChanged={this.handleChange}
           onKeyPress={onKeyPress}
@@ -28,6 +31,7 @@ class BooleanParameter extends BaseInput {
     );
   }
 }
+BooleanParameter.contextType = LanguageContext;
 
 export default BooleanParameter;
 

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import useFetch from "../../hooks/APIsFunctions/useFetch";
-import { defaultProjectProxyRoute, websoketBaseURI } from "../../../request";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
-import PanelActions from "./PanelActions";
-import BaseTable from "../DynamicTable/BaseTable";
-import { WSclass } from "../../hooks/FormsFunctions/WSclass";
+import { defaultProjectProxyRoute } from "../../../request";
 import { BuildWSURL } from "../../hooks/APIsFunctions/BuildWSURL";
-import APIHandling from "../../hooks/APIsFunctions/APIHandling";
-import LiveFormPartions from "./LiveFormPartions";
-import LiveTable from "../DynamicTable/LiveTable";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import { WSclass } from "../../hooks/FormsFunctions/WSclass";
 import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
+import BaseTable from "../DynamicTable/BaseTable";
+import PanelActions from "./PanelActions";
 
 function PartionFrom({ Schemas }) {
   const mainSchema = Schemas
@@ -78,9 +75,6 @@ function PartionFrom({ Schemas }) {
       };
     }
   };
-  console.log("====================================");
-  console.log(Schemas);
-  console.log("====================================");
   // const onApplyChangesForMainSchema = async () => {
   //   const action = mainID ? postAction : putAction;
   //   const isNew = mainID;
@@ -125,7 +119,6 @@ function PartionFrom({ Schemas }) {
   // };
   useEffect(() => {
     const GetDataSources = () => {
-      console.log("_mainID", mainID);
       if (mainID) {
         WSClient = new WSclass(`${BuildWSURL(getAction, mainID)}`);
         // WSClient.connect();

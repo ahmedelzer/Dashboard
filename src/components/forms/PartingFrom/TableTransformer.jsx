@@ -1,37 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   FaArrowAltCircleDown,
+  FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
   FaArrowAltCircleUp,
 } from "react-icons/fa";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
-import {
-  Grid,
-  TableHeaderRow,
-  TableEditRow,
-  TableEditColumn,
-  PagingPanel,
-  TableSelection,
-  // Table,
-} from "@devexpress/dx-react-grid-bootstrap4";
-import Table from "../DynamicTable/Table";
-import { MdEdit, MdDelete, MdAdd } from "react-icons/md";
 import "tailwindcss/tailwind.css";
-import {
-  EditingState,
-  IntegratedPaging,
-  IntegratedSelection,
-  PagingState,
-  SelectionState,
-} from "@devexpress/dx-react-grid";
-import WaringPop from "./WaringPop";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
 import { LanguageContext } from "../../../contexts/Language";
-import DuringTransactionContainer from "./DuringTransactionContainer";
-import BaseTable from "../DynamicTable/BaseTable";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { defaultProjectProxyRoute } from "../../../request";
-import FormContainerEditing from "./FormContainerEditing";
+import useFetch from "../../hooks/APIsFunctions/useFetch";
+import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
+import Table from "../DynamicTable/Table";
+import DuringTransactionContainer from "./DuringTransactionContainer";
 import { IsSecondListSubsetOfFirstList } from "./IsSecondListSubsetOfFirstList";
 import { styles } from "./styles";
 // const TransFormSchema = [
@@ -227,11 +207,11 @@ const TableTransformer = ({ TransFormSchema }) => {
     GetSchemaActionsUrl(rightSchema.dashboardFormSchemaID),
     defaultProjectProxyRoute
   );
-  const getAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
-    );
+  // const getAction =
+  //   schemaActions &&
+  //   schemaActions.find(
+  //     (action) => action.dashboardFormActionMethodType === "Get"
+  //   );
   const postAction =
     schemaActions &&
     schemaActions.find(

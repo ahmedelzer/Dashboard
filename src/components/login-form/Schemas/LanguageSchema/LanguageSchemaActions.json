@@ -1,0 +1,29 @@
+[
+  {
+    "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "Language/GetLanguages",
+    "body": null,
+    "returnPropertyName": "dataSource",
+    "dashboardFormSchemaActionQueryParams": [
+      {
+        "dashboardFormSchemaActionQueryParameterID": "5c060feb-679d-45fe-b48a-4ebce6fec77f",
+        "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+        "parameterName": "PageSize",
+        "dashboardFormParameterField": "pageSize"
+      },
+      {
+        "dashboardFormSchemaActionQueryParameterID": "bc7e84f0-42d6-4124-a7e8-587b8ea1d480",
+        "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+        "parameterName": "PageNumber",
+        "dashboardFormParameterField": "pageIndex"
+      },
+      {
+        "dashboardFormSchemaActionQueryParameterID": "bc7e84f0-42d6-4124-a7e8-587b8ea1d480",
+        "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+        "parameterName": "ActiveStatus",
+        "dashboardFormParameterField": "activeStatus"
+      }
+    ]
+  }
+]

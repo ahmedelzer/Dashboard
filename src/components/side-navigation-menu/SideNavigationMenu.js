@@ -1,24 +1,27 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-  useState,
-  useContext,
-} from "react";
 import TreeView from "devextreme-react/tree-view";
 import * as events from "devextreme/events";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigation } from "../../contexts/navigation";
+import { defaultProjectProxyRoute } from "../../request";
 import { useScreenSize } from "../../utils/media-query";
-import "./SideNavigationMenu.scss";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import { defaultProjectProxyRoute, SetReoute } from "../../request";
+import "./SideNavigationMenu.scss";
+import { LanguageContext } from "../../contexts/Language";
 let [id, setId] = "";
 function SideNavigationMenu(props) {
   let { data } = useFetch(
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
     defaultProjectProxyRoute
   );
+  const { localization } = useContext(LanguageContext);
+
   //   const data=
   //   [
   //     {
@@ -35,14 +38,14 @@ function SideNavigationMenu(props) {
   //         ]
   //     }
   // ]
-  const { selectedItemChanged, openMenu, compactMode, Id } = props;
+  const { selectedItemChanged } = props;
   [id, setId] = useState("");
-  console.log("Menu", data);
+
   // let navigation = [];
   let navigation = [
     {
       id: 1,
-      text: "Home",
+      text: localization.homePage.text,
       path: "/home",
       icon: "home",
     },
@@ -61,8 +64,6 @@ function SideNavigationMenu(props) {
       }),
     });
   });
-  // }
-  console.log(navigation);
   const { children, onMenuReady } = props;
   const { isLarge } = useScreenSize();
 

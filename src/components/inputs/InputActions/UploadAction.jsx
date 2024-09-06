@@ -1,11 +1,7 @@
 import React from "react";
-import BaseInput from "../BaseInput";
-import { DateBox } from "devextreme-react";
-import BaseAction from "./BaseAction";
-import { Button } from "reactstrap";
 import { LuUpload } from "react-icons/lu";
-import { IoIosCloudUpload } from "react-icons/io";
-import { FaCamera } from "react-icons/fa";
+import BaseAction from "./BaseAction";
+import { uploadActionStyle } from "./styles";
 class UploadAction extends BaseAction {
   constructor(props) {
     super(props);
@@ -24,9 +20,9 @@ class UploadAction extends BaseAction {
     };
 
     return (
-      <label htmlFor={fieldName} className="cursor-pointer !m-0 !p-0">
+      <label htmlFor={fieldName} className={uploadActionStyle.label}>
         {/* <Button className="pop"> */}
-        <LuUpload className="color" size={24} />
+        <LuUpload className={uploadActionStyle.icon} size={24} />
 
         <input
           onChange={fetchImage}
@@ -34,7 +30,7 @@ class UploadAction extends BaseAction {
           enable={enable}
           name={fieldName}
           type="file"
-          className="hidden"
+          className={uploadActionStyle.hiddenInput}
           multiple={this.props.isFileContainer}
         />
         {/* </Button> */}

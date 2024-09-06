@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Button } from "reactstrap";
+import { LanguageContext } from "../../../contexts/Language";
 import Searching from "./Searching";
+import { panelActionsStyle } from "./styles";
 function PanelActions({ SearchComponent, panelOpen, setPanelOpen }) {
+  const { localization } = useContext(LanguageContext);
+
   return (
-    <div className="w-full relative mt-12">
-      <div className="flex justify-end items-center absolute bottom-0 right-0">
-        <Button className="pop mr-2" onClick={() => setPanelOpen(true)}>
-          Search
+    <div className={panelActionsStyle.containerWithButton}>
+      <div className={panelActionsStyle.buttonContainer}>
+        <Button
+          className={panelActionsStyle.button}
+          onClick={() => setPanelOpen(true)}
+        >
+          {localization.panelActions.button.search}
         </Button>
         <Searching open={panelOpen} SearchForm={SearchComponent} />
         <Button type="submit" className="pop">
-          Clear
+          {localization.panelActions.button.clear}
         </Button>
       </div>
     </div>

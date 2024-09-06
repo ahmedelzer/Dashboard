@@ -61,15 +61,19 @@ function FileContainer({
     schemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Post"
     );
-  // const deleteAction = schemaActions.find(
-  //   (action) => action.dashboardFormActionMethodType === "Delete"
-  // );
+  const deleteAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Delete"
+    );
 
   return (
     <div>
-      <Button className={"pop my-2"} onClick={handleUpload}>
-        upload
-      </Button>
+      {postAction && (
+        <Button className={"pop my-2"} onClick={handleUpload}>
+          upload
+        </Button>
+      )}
       <div className="border rounded mb-2">
         <FileInput
           key={trigger}
@@ -79,6 +83,9 @@ function FileContainer({
           setSelectedFiles={setSelectedFiles}
           title={title}
           getAction={getAction}
+          idField={schema.idField}
+          handleToDeleteWithAPI={RefreshFiles}
+          deleteAction={deleteAction}
         />
       </div>
       <DuringTransactionContainer
@@ -89,6 +96,7 @@ function FileContainer({
         open={open}
         setOpen={setOpen}
         action={postAction}
+        setSelectionContext={setSelectedFilesContext}
       />
     </div>
   );
