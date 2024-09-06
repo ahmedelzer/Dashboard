@@ -120,7 +120,11 @@ const Language = ({ children }) => {
         textButtonNextValue: "Next",
         parameterFieldValue: "parameterField",
       },
-      waringPop: {},
+      waringPop: {
+        deleteConfirmation: "Are you sure you want to delete this item?",
+        yes: "Yes, I'm sure",
+        no: "No, cancel",
+      },
       messages: {},
     }
   );

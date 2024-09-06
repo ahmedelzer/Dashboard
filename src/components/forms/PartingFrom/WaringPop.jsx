@@ -49,19 +49,19 @@ function WaringPop({ modalIsOpen, setModalIsOpen, confirmDelete }) {
             ></path>
           </svg>
           <h4 className={stylesWaringPop.messageText}>
-            {localization.waringpop.deleteConfirmation}
+            {localization.waringPop.deleteConfirmation}
           </h4>
           <button
             onClick={confirmDelete}
             className={stylesWaringPop.confirmButton}
           >
-            {localization.waringpop.yes}
+            {localization.waringPop.yes}
           </button>
           <button
             onClick={() => setModalIsOpen(false)}
             className={stylesWaringPop.cancelButton}
           >
-            {localization.waringpop.no}
+            {localization.waringPop.no}
           </button>
         </div>
       </div>

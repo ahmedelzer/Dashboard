@@ -1,3 +1,5 @@
+import { languageID, languageName, token } from "../../../request";
+
 export default function LoadData(
   state,
   dataSourceAPI,
@@ -16,7 +18,15 @@ export default function LoadData(
       updateRows(requestedSkip, take);
     } else {
       dispatch({ type: "FETCH_INIT" });
-      fetch(query)
+      fetch(query, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          languageName: languageName,
+          languageID: languageID,
+          token: token,
+        },
+      })
         .then((response) => response.json())
         .then(({ dataSource, count }) => {
           if (dataSource.code === 401) {

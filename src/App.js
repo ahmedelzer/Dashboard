@@ -19,20 +19,53 @@ import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
 import Home from "./pages/home/Home";
+import LanguageSelector from "./components/header/LanguageSelector";
+import Button from "devextreme-react/button";
+import { BiWorld } from "react-icons/bi";
+import useFetch from "./components/hooks/APIsFunctions/useFetch";
+import LocalizationSchemaActions from "./components/login-form/Schemas/Localization/LocalizationSchemaActions.json";
+import { GetProjectUrl } from "./request";
 function App() {
   const { user, loading } = useAuth();
-  const { Right, localization } = useContext(LanguageContext);
+  const { Right, Lan, setLocalization, localization } =
+    useContext(LanguageContext);
+
+  const getLocalizationAction =
+    LocalizationSchemaActions &&
+    LocalizationSchemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Get"
+    );
+  // getLocalizationAction that objev
+  const { data: dataLocals } = useFetch(
+    "/" +
+      getLocalizationAction.routeAdderss +
+      "/" +
+      window.localStorage.getItem("language"),
+    GetProjectUrl()
+  );
+
   const [routes, setRoutes] = useState("");
+  const [open, setopen] = useState(false);
+
   useEffect(() => {
     if (user?.UsersGroupDashboardMenuItems) {
       setRoutes(JSON.parse(user?.UsersGroupDashboardMenuItems));
     }
   }, [user]);
   useEffect(() => {
+    const formattedDataLocals = dataLocals.replace(
+      /ObjectId\("([^"]+)"\)/g,
+      '"$1"'
+    );
+    const dataObject = JSON.parse(formattedDataLocals);
+    delete dataObject._id;
+
+    setLocalization(dataObject);
+    window.localStorage.setItem("localization", JSON.stringify(dataObject));
     if (localization && localization.appInfo && localization.appInfo.title) {
       document.title = localization.appInfo.title;
     }
-  }, [localization]);
+  }, []);
 
   useEffect(() => {
     if (Right) {
@@ -43,6 +76,26 @@ function App() {
   if (loading) {
     return <LoadPanel visible={true} />;
   }
+  const languageComponent = (
+    <Button
+      width={open ? 60 : 30}
+      onClick={() => setopen(true)}
+      height={"100%"}
+      stylingMode={"text"}
+      rtlEnabled={false}
+      className={open ? "!cursor-auto" : "!cursor-pointer"}
+    >
+      {open ? (
+        <div>
+          <LanguageSelector />
+        </div>
+      ) : (
+        <div className="flex justify-content-end align-items-center">
+          <BiWorld size={30} className="color" />
+        </div>
+      )}
+    </Button>
+  );
   return (
     <Routes>
       {/* Content Pages */}
@@ -72,7 +125,10 @@ function App() {
       <Route
         path="/login"
         element={
-          <SingleCard title={localization.login.sign}>
+          <SingleCard
+            title={localization.login.sign}
+            component={languageComponent}
+          >
             <LoginForm />
           </SingleCard>
         }

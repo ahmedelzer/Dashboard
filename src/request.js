@@ -1,5 +1,10 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+
 export const baseURL = "http://maingatewayapi.ihs-solutions.com:8000";
+export const languageName = window.localStorage.getItem("language");
+export const languageID = window.localStorage.getItem("languageID");
+export const token = Cookies.get("token");
 export const websoketBaseURI = "ws://ihs.ddnsking.com:8002/Chanels";
 export const defaultProjectProxyRoute =
   "http://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
@@ -23,10 +28,27 @@ export const baseURLWithoutApi = `${baseURL}/${window.sessionStorage.getItem(
 export function GetProjectUrl() {
   return `${baseURL}/${window.sessionStorage.getItem("projectProxyRoute")}/api`;
 }
-const lan = window.localStorage.getItem("language");
+export function getHeaders() {
+  const headers = {
+    languageName: languageName,
+    languageID: languageID,
+    token: token,
+  };
+
+  // Remove any undefined or null properties
+  Object.keys(headers).forEach(
+    (key) =>
+      (headers[key] === undefined || headers[key] === null) &&
+      delete headers[key]
+  );
+
+  return headers;
+}
+
 export const request = axios.create({
   baseURL: baseURL,
   headers: {
-    // languageName: lan,
+    "Content-Type": "application/json",
+    ...getHeaders(),
   },
 });
