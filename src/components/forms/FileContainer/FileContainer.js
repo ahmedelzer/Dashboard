@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FileInput from "../PartingFrom/FileInput";
 import { Button } from "reactstrap";
 import DuringTransactionContainer from "../PartingFrom/DuringTransactionContainer";
@@ -6,6 +6,7 @@ import { IsSecondListSubsetOfFirstList } from "../PartingFrom/IsSecondListSubset
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { defaultProjectProxyRoute, SetReoute } from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
+import { LanguageContext } from "../../../contexts/Language";
 
 function FileContainer({
   parentSchemaParameters,
@@ -14,6 +15,7 @@ function FileContainer({
   fieldName,
   title,
 }) {
+  const { localization } = useContext(LanguageContext);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [automated, setAutomated] = useState([]);
   const [trigger, setTrigger] = useState(0);
@@ -71,7 +73,7 @@ function FileContainer({
     <div>
       {postAction && (
         <Button className={"pop my-2"} onClick={handleUpload}>
-          upload
+          {localization.fileContainer.textButtonUploadValue}
         </Button>
       )}
       <div className="border rounded mb-2">

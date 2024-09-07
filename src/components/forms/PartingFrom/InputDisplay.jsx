@@ -3,12 +3,13 @@ import { FormGroup, Label } from "reactstrap";
 import inputs from "../../../locals/EN/inputs.json";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 function InputDisplay({ props, BaseInput, errorResult }) {
+  const [inputErrorResult, setInputErrorResult] = useState(errorResult);
   const [title, setTitle] = useState(props.title);
   const [style, setStyle] = useState("");
   const [changed, setChanged] = useState(false);
   const handleChange = (e) => {
-    if (title !== props.title) {
-      // setChanged(true);
+    if (inputErrorResult !== errorResult) {
+      setChanged(true);
     }
     if (props.onChange) {
       props.onChange(e); // Call the onChange prop if it exists
@@ -16,12 +17,12 @@ function InputDisplay({ props, BaseInput, errorResult }) {
     setStyle(" ");
   };
   useEffect(() => {
-    if (title !== props.title && !changed) {
+    if (!changed && inputErrorResult !== errorResult) {
       setStyle("is-invalid");
     } else {
       setStyle(" ");
     }
-  }, [title, props.title, changed]);
+  }, [inputErrorResult, errorResult, changed]);
   return (
     <FormGroup>
       <DisplayErorr
@@ -34,7 +35,7 @@ function InputDisplay({ props, BaseInput, errorResult }) {
       <BaseInput
         {...props}
         onChange={handleChange}
-        title={title}
+        title={props.title}
         placeholder={inputs.base.placeholder + props.title}
         className={style}
       />

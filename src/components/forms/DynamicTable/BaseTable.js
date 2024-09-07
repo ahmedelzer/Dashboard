@@ -222,10 +222,7 @@ function BaseTable({
           getCellValue: (row) => row[param.parameterField],
         })) || [];
 
-    setColumns([
-      ...dynamicColumns,
-      { name: "switch", title: "switch", type: "text" },
-    ]);
+    setColumns([...dynamicColumns]);
   }, [schema]);
 
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));

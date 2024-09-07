@@ -28,7 +28,7 @@ export const baseURLWithoutApi = `${baseURL}/${window.sessionStorage.getItem(
 export function GetProjectUrl() {
   return `${baseURL}/${window.sessionStorage.getItem("projectProxyRoute")}/api`;
 }
-export function getHeaders() {
+export function SetHeaders() {
   const headers = {
     languageName: languageName,
     languageID: languageID,
@@ -49,6 +49,6 @@ export const request = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
-    ...getHeaders(),
+    ...SetHeaders(),
   },
 });

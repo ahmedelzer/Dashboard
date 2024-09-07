@@ -2,21 +2,21 @@ import {
   GetProjectUrl,
   languageID,
   languageName,
+  SetHeaders,
   token,
 } from "../../../request";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
   // const navigate = useNavigate();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("languageName", languageName);
-  myHeaders.append("languageID", languageID);
-  myHeaders.append("token", token);
+
   // myHeaders.append("languageName", "ARABIC");
   var raw = JSON.stringify(sendBody);
 
   var requestOptions = {
     method: methodType,
     headers: myHeaders,
+    ...SetHeaders(),
     body: raw,
     redirect: "follow",
   };

@@ -1,4 +1,4 @@
-import { languageID, languageName, token } from "../../../request";
+import { languageID, languageName, SetHeaders, token } from "../../../request";
 
 export default function LoadData(
   state,
@@ -22,9 +22,7 @@ export default function LoadData(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          languageName: languageName,
-          languageID: languageID,
-          token: token,
+          ...SetHeaders(),
         },
       })
         .then((response) => response.json())

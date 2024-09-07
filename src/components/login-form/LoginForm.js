@@ -11,7 +11,6 @@ import { jwtDecode } from "jwt-decode";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
-import local from "../../locals/EN/login.json";
 import { SetReoute } from "../../request";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
 import { onApply } from "../forms/DynamicPopup/OnApplay";
@@ -72,6 +71,9 @@ export default function LoginForm() {
 
     [signIn]
   );
+  schema.dashboardFormSchemaParameters.map((param) => {
+    param.parameterTitel = localization.login[param.parameterField];
+  });
   const rememberMeEditorOptions = {
     text: localization.login.rememberMeEditorOptions.text,
     elementAttr: { class: "form-text" },
@@ -104,7 +106,7 @@ export default function LoginForm() {
               {loading ? (
                 <LoadIndicator width={"24px"} height={"24px"} visible={true} />
               ) : (
-                `${local.sign}`
+                `${localization.login.sign}`
               )}
             </span>
           </ButtonOptions>

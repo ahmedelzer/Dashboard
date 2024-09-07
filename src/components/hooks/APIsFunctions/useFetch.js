@@ -4,6 +4,7 @@ import {
   defaultProjectProxyRoute,
   GetProjectUrl,
   request,
+  SetHeaders,
 } from "../../../request";
 import RedirectToLogin from "./RedirectToLogin";
 import UseFetchWithoutBaseUrl from "./UseFetchWithoutBaseUrl";
@@ -20,7 +21,7 @@ export const fetchData = async (url, base_URL, options = {}) => {
     method: "GET", // or 'POST', 'PUT', etc.
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer your-token", // Add any other headers you need
+      ...SetHeaders(),
     },
   };
 

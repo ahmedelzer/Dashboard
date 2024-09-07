@@ -1,4 +1,5 @@
 import React, { useState, createContext } from "react";
+import { json } from "react-router-dom";
 
 //context
 export const LanguageContext = createContext();
@@ -11,9 +12,11 @@ const Language = ({ children }) => {
     window.localStorage.getItem("right") === "true" || false
   );
   const [fileBase64, setFileBase64] = useState(null);
+  const filet = {};
+  console.log("filet", typeof filet, filet);
   const [localization, setLocalization] = useState(
     JSON.parse(window.localStorage.getItem("localization")) || {
-      shortName: "EN",
+      shortName: "ENG_US",
       appInfo: {
         title: "Ahmed Ashraf2",
       },
@@ -64,6 +67,7 @@ const Language = ({ children }) => {
           page: "Page",
           of: "of",
         },
+        textButtonUploadValue: "upload",
       },
       footer: {
         footer: {
@@ -90,6 +94,8 @@ const Language = ({ children }) => {
       },
       login: {
         sign: "Sign In",
+        username: "User Name",
+        password: "Password",
         loginText: "Login",
         logoutText: "Logout",
         switchText: "Switch Account",

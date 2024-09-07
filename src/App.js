@@ -19,30 +19,21 @@ import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
 import Home from "./pages/home/Home";
-import LanguageSelector from "./components/header/LanguageSelector";
+import LanguageSelector, {
+  PrepareLanguage,
+  SelectFirstLanguage,
+} from "./components/header/LanguageSelector";
 import Button from "devextreme-react/button";
 import { BiWorld } from "react-icons/bi";
 import useFetch from "./components/hooks/APIsFunctions/useFetch";
 import LocalizationSchemaActions from "./components/login-form/Schemas/Localization/LocalizationSchemaActions.json";
-import { GetProjectUrl } from "./request";
+import schemaLanguages from "./components/login-form/Schemas/LanguageSchema/LanguageSchema.json";
+import { GetProjectUrl, SetReoute } from "./request";
 function App() {
   const { user, loading } = useAuth();
+  SetReoute(schemaLanguages.projectProxyRoute);
   const { Right, Lan, setLocalization, localization } =
     useContext(LanguageContext);
-
-  const getLocalizationAction =
-    LocalizationSchemaActions &&
-    LocalizationSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
-    );
-  // getLocalizationAction that objev
-  const { data: dataLocals } = useFetch(
-    "/" +
-      getLocalizationAction.routeAdderss +
-      "/" +
-      window.localStorage.getItem("language"),
-    GetProjectUrl()
-  );
 
   const [routes, setRoutes] = useState("");
   const [open, setopen] = useState(false);
@@ -53,19 +44,13 @@ function App() {
     }
   }, [user]);
   useEffect(() => {
-    const formattedDataLocals = dataLocals.replace(
-      /ObjectId\("([^"]+)"\)/g,
-      '"$1"'
-    );
-    const dataObject = JSON.parse(formattedDataLocals);
-    delete dataObject._id;
-
-    setLocalization(dataObject);
-    window.localStorage.setItem("localization", JSON.stringify(dataObject));
-    if (localization && localization.appInfo && localization.appInfo.title) {
-      document.title = localization.appInfo.title;
-    }
+    //SelectFirstLanguage();
+    //PrepareLanguage();
+    // if (localization && localization.appInfo && localization.appInfo.title) {
+    // document.title = dataObject.appInfo.title || localization.appInfo.title;
+    // }
   }, []);
+  console.log(typeof localization, localization);
 
   useEffect(() => {
     if (Right) {

@@ -12,44 +12,47 @@ import UseFetchWithoutBaseUrl from "../hooks/APIsFunctions/UseFetchWithoutBaseUr
 function PrepareLanguage(
   selectedLanguageObject,
   selectedLanguage,
-  dataLocals,
   setLan,
   setRight,
   setLocalization
 ) {
-  if (selectedLanguageObject) {
-    setLan(selectedLanguage);
-    setRight(selectedLanguageObject.rightDirectionEnable);
-    // Replace ObjectId(...) with just the ID string in dataLocals
-    const formattedDataLocals = dataLocals.replace(
-      /ObjectId\("([^"]+)"\)/g,
-      '"$1"'
+  const getLocalizationAction =
+    LocalizationSchemaActions &&
+    LocalizationSchemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Get"
     );
+  const { data: dataLocals } = useFetch(
+    "/" +
+      getLocalizationAction.routeAdderss +
+      "/" +
+      window.localStorage.getItem("language"),
+    GetProjectUrl()
+  );
+  if (selectedLanguageObject) {
+    const localFormat = dataLocals?.replace(/ObjectId\("([^"]+)"\)/g, '"$1"');
 
     // Parse the formatted string into a JavaScript object
-    const dataObject = JSON.parse(formattedDataLocals);
-
-    // Remove the _id property if it exists
+    const dataObject = JSON.parse(localFormat);
     delete dataObject._id;
-
+    // console.log(
+    //   "Preparing1",
+    //   typeof dataObject,
+    //   localFormat,
+    //   typeof dataLocals
+    // );
     // Set the localization state with the updated object
-    setLocalization(dataObject);
 
     // Store the updated object back to localStorage
+    setLocalization(dataObject);
+    window.localStorage.removeItem("localization");
+
     window.localStorage.setItem("localization", JSON.stringify(dataObject));
 
-    window.localStorage.setItem(
-      "right",
-      selectedLanguageObject.rightDirectionEnable
-    );
-    window.localStorage.setItem(
-      "languageID",
-      selectedLanguageObject.languageId
-    );
-    window.localStorage.setItem("language", selectedLanguage);
+    return true;
   }
 }
-const LanguageSelector = () => {
+
+const LanguageSelector = (inti) => {
   SetReoute(schemaLanguages.projectProxyRoute);
   const { setRight, setLocalization, setLan } = useContext(LanguageContext);
   const dataSourceAPI = (query) =>
@@ -69,30 +72,30 @@ const LanguageSelector = () => {
   const selectedLanguageObject = data?.dataSource?.find(
     (language) => language.shortName === selectedLanguage
   );
-  // local
-  const getLocalizationAction =
-    LocalizationSchemaActions &&
-    LocalizationSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
-    );
-  // getLocalizationAction that objev
-  const { data: dataLocals } = useFetch(
-    "/" +
-      getLocalizationAction.routeAdderss +
-      "/" +
-      window.localStorage.getItem("language"),
-    GetProjectUrl()
-  );
+  setLan(selectedLanguage);
   useEffect(() => {
-    PrepareLanguage(
-      selectedLanguageObject,
-      selectedLanguage,
-      dataLocals,
-      setLan,
-      setRight,
-      setLocalization
-    );
-  });
+    if (selectedLanguageObject) {
+      setRight(selectedLanguageObject.rightDirectionEnable);
+      window.localStorage.setItem(
+        "right",
+        selectedLanguageObject.rightDirectionEnable
+      );
+      window.localStorage.setItem(
+        "languageID",
+        selectedLanguageObject.languageId
+      );
+      window.localStorage.setItem("language", selectedLanguage);
+    }
+  }, [selectedLanguageObject]);
+
+  // local
+  const result = PrepareLanguage(
+    selectedLanguageObject,
+    selectedLanguage,
+    setLan,
+    setRight,
+    setLocalization
+  );
 
   const changeLanguage = (e) => {
     const selectedLanguage = e.target.value;
@@ -102,12 +105,14 @@ const LanguageSelector = () => {
     PrepareLanguage(
       selectedLanguageObject,
       selectedLanguage,
-      dataLocals,
       setLan,
       setRight,
       setLocalization
     );
   };
+  useEffect(() => {
+    console.log("language fired");
+  }, [inti]);
 
   return (
     <div className="circle-container">
