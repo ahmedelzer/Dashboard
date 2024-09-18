@@ -1,5 +1,4 @@
 const appInfo = {
-    title: 'Ahmed Ashraf'
+  title: "Branding Mart",
 };
 export default appInfo;
-

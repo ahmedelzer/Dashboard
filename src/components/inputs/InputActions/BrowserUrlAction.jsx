@@ -99,18 +99,18 @@ class BrowserUrlAction extends BaseAction {
           </ModalBody>
           <ModalFooter>
             <Button
+              className={browserActionsStyle.modalButton}
+              onClick={this.toggleModal}
+            >
+              {localization.browser.modal.button.cancel}
+            </Button>
+            <Button
               onClick={this.fetchImage}
               className={browserActionsStyle.modalFooterButton}
               name={this.props.fieldName}
               disabled={!!error || !imageUrl}
             >
               {localization.browser.modal.button.fetch}
-            </Button>
-            <Button
-              color={browserActionsStyle.modalButton}
-              onClick={this.toggleModal}
-            >
-              {localization.browser.modal.button.cancel}
             </Button>
           </ModalFooter>
         </Modal>

@@ -1,3 +1,4 @@
+import FilesWithScrollPaging from "../../forms/PartingFrom/fileInput/FilesWithScrollPaging";
 import {
   BooleanParameter,
   DateParameter,
@@ -20,6 +21,8 @@ export function GetInputComponent(type) {
       return ImageParameterWithPanelActions;
     case "lookup":
       return LookupInput;
+    //detailsCell
+
     default:
       return TextParameter;
   }

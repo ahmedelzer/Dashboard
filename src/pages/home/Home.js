@@ -1,11 +1,9 @@
 import React from "react";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../contexts/auth";
 function Home() {
   //todo: make url and title for iframe and check allows
+  //todo: do not forget the localzation of DateTimeParameter and add send the type of file to ashraf
   const { user } = useAuth();
-
   return (
     <div>
       {user.HomeDashboard && (

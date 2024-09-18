@@ -1,37 +1,29 @@
+import Button from "devextreme-react/button";
 import LoadPanel from "devextreme-react/load-panel";
 import "devextreme/dist/css/dx.common.css";
 import React, { useContext, useEffect, useState } from "react";
+import { BiWorld } from "react-icons/bi";
 import {
   Navigate,
   Route,
   BrowserRouter as Router,
   Routes,
 } from "react-router-dom";
-import appInfo from "./app-info";
 import ApiRoutes from "./app-routes";
 import { Footer, LoginForm } from "./components";
+import LanguageSelector from "./components/header/LanguageSelector";
 import Language, { LanguageContext } from "./contexts/Language";
 import { AuthProvider, useAuth } from "./contexts/auth";
 import { NavigationProvider } from "./contexts/navigation";
 import "./dx-styles.scss";
 import { SideNavInnerToolbar as SideNavBarLayout, SingleCard } from "./layouts";
+import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
-import Home from "./pages/home/Home";
-import LanguageSelector, {
-  PrepareLanguage,
-  SelectFirstLanguage,
-} from "./components/header/LanguageSelector";
-import Button from "devextreme-react/button";
-import { BiWorld } from "react-icons/bi";
-import useFetch from "./components/hooks/APIsFunctions/useFetch";
-import LocalizationSchemaActions from "./components/login-form/Schemas/Localization/LocalizationSchemaActions.json";
-import schemaLanguages from "./components/login-form/Schemas/LanguageSchema/LanguageSchema.json";
-import { GetProjectUrl, SetReoute } from "./request";
 function App() {
   const { user, loading } = useAuth();
-  SetReoute(schemaLanguages.projectProxyRoute);
+  // SetReoute(schemaLanguages.projectProxyRoute);
   const { Right, Lan, setLocalization, localization } =
     useContext(LanguageContext);
 
@@ -39,18 +31,23 @@ function App() {
   const [open, setopen] = useState(false);
 
   useEffect(() => {
-    if (user?.UsersGroupDashboardMenuItems) {
+    if (window.sessionStorage.getItem("routes")) {
+      setRoutes(JSON.parse(window.sessionStorage.getItem("routes")));
+    } else if (user?.UsersGroupDashboardMenuItems) {
+      window.sessionStorage.setItem(
+        "routes",
+        user?.UsersGroupDashboardMenuItems
+      );
       setRoutes(JSON.parse(user?.UsersGroupDashboardMenuItems));
     }
   }, [user]);
   useEffect(() => {
     //SelectFirstLanguage();
     //PrepareLanguage();
-    // if (localization && localization.appInfo && localization.appInfo.title) {
-    // document.title = dataObject.appInfo.title || localization.appInfo.title;
-    // }
+    if (localization && localization.appInfo && localization.appInfo.title) {
+      document.title = localization.appInfo.title;
+    }
   }, []);
-  console.log(typeof localization, localization);
 
   useEffect(() => {
     if (Right) {

@@ -23,7 +23,7 @@
     @apply h-[50px] rounded-[8px] w-full outline-none px-6;
   }
   .pop {
-    @apply bg-transparent text-[--main-color] hover:bg-[--main-color] hover:text-black;
+    @apply bg-transparent text-[--main-color2] hover:bg-[--main-color2] hover:text-black;
   }
   .peer-input {
     @apply bg-transparent placeholder-transparent;

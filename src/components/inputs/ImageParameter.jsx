@@ -24,7 +24,7 @@ class ImageParameter extends Component {
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
   componentDidMount() {
-    if (this.imageRef.current) {
+    if (this.imageRef.current && defaultImage !== this.imageRef.current?.src) {
       this.imageRef.current.addEventListener(
         "load",
         this.props.onChange({
@@ -32,6 +32,7 @@ class ImageParameter extends Component {
             name: this.props.fieldName,
             value: this.imageRef.current?.src,
             type: this.props.type,
+            // typeValue:
             // ...this.props,
           },
         })
@@ -40,7 +41,11 @@ class ImageParameter extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value && this.imageRef.current) {
+    if (
+      prevProps.value !== this.props.value &&
+      this.imageRef.current &&
+      defaultImage !== this.imageRef.current?.src
+    ) {
       this.imageRef.current.addEventListener(
         "load",
         this.props.onChange({
@@ -56,7 +61,7 @@ class ImageParameter extends Component {
   }
 
   componentWillUnmount() {
-    if (this.imageRef.current) {
+    if (this.imageRef.current && defaultImage !== this.imageRef.current?.src) {
       this.imageRef.current.removeEventListener(
         "load",
         this.props.onChange({

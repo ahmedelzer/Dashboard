@@ -29,10 +29,12 @@ export function GetProjectUrl() {
   return `${baseURL}/${window.sessionStorage.getItem("projectProxyRoute")}/api`;
 }
 export function SetHeaders() {
+  const encodedLanguageName = encodeURIComponent(languageName);
   const headers = {
-    languageName: languageName,
+    // languageName: "ENG_US",
+    languageName: encodedLanguageName,
+
     languageID: languageID,
-    token: token,
   };
 
   // Remove any undefined or null properties
@@ -44,6 +46,7 @@ export function SetHeaders() {
 
   return headers;
 }
+console.log(SetHeaders());
 
 export const request = axios.create({
   baseURL: baseURL,

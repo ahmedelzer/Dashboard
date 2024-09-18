@@ -1,5 +1,5 @@
 import { GetProjectUrl } from "../../../request";
-export function buildApiUrl(apiRequest, constants, projectUrl) {
+export function buildApiUrl(apiRequest, constants) {
   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
     // Handle the case where apiRequest is null or does not have dashboardFormSchemaActionQueryParams
     return null; // or some default value or throw an error, depending on your use case

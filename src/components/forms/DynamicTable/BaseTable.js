@@ -32,13 +32,13 @@ import LoadData from "../../hooks/APIsFunctions/loadData";
 import Loading from "../../loading/Loading";
 import WaringPop from "../PartingFrom/WaringPop";
 import SelectForm from "../SelectForm";
-import "./LoadingDots.css";
 import {
   customRowStyle,
   detailsButtonStyle,
   listObserverStyle,
 } from "./styles";
 import { TypeProvider } from "./TypeProvider";
+import DotsLoading from "../../loading/DotsLoading";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const initialState = {
@@ -110,6 +110,7 @@ function BaseTable({
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [subSchema, setSubSchema] = useState(null);
+  const [includeSchemas, setIncludeSchemas] = useState(null);
   const [fieldName, setFieldName] = useState("");
   const [title, setTitle] = useState("");
   const [currentSkip, setCurrentSkip] = useState(1);
@@ -140,12 +141,7 @@ function BaseTable({
       return (
         <Table.Row {...restProps}>
           <Table.Cell colSpan={columns.length + 1} className=" text-center">
-            <div className="loading-dots">
-              <span>{localization.loadData.loading}</span>
-              <span className="dot">.</span>
-              <span className="dot">.</span>
-              <span className="dot">.</span>
-            </div>
+            <DotsLoading />
           </Table.Cell>
         </Table.Row>
       );
@@ -193,6 +189,7 @@ function BaseTable({
                     parentSchemaParameters={
                       schema?.dashboardFormSchemaParameters
                     }
+                    includeSchemas={includeSchemas}
                     schema={subSchema}
                     fieldName={fieldName}
                     title={title}
@@ -207,8 +204,6 @@ function BaseTable({
   };
 
   const [columns, setColumns] = useState([]);
-
-  // e
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
     const dynamicColumns =
@@ -216,10 +211,15 @@ function BaseTable({
         .filter((column) => !column.isIDField)
         ?.map((param) => ({
           name: param.parameterField,
-          title: param.parameterTitel,
+          title: param.lookupID
+            ? param.lookupDisplayField
+            : param.parameterField,
           type: param.parameterType,
           lookupID: param.lookupID,
-          getCellValue: (row) => row[param.parameterField],
+          getCellValue: (row) =>
+            row[
+              param.lookupID ? param.lookupDisplayField : param.parameterField
+            ],
         })) || [];
 
     setColumns([...dynamicColumns]);
@@ -242,9 +242,16 @@ function BaseTable({
   };
   //e
 
-  useEffect(() =>
-    LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
-  );
+  // useEffect(() =>
+  //   LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
+  // );
+  useEffect(() => {
+    const findServerContainer = subSchemas?.filter(
+      (schema) => schema.schemaType === "ServerFilesContainer"
+    );
+
+    setIncludeSchemas(findServerContainer);
+  }, []);
   // useEffect(() => {
   //   loadData();
   //   console.log("refreshData", new Date().getTime());
@@ -289,8 +296,9 @@ function BaseTable({
       <Switch value={value} onValueChanged={(e) => onValueChange(e.value)} />
     );
   };
+
   const DetailsCell = (props) => {
-    if (props.column.type === "ItemsContainer") {
+    if (props.column.type === "detailsCell") {
       const findSubSchemas = subSchemas?.find(
         (schema) => schema.dashboardFormSchemaID === props.column.lookupID
       );

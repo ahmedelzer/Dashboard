@@ -5,9 +5,16 @@ import { GetInputComponent } from "./GetInputComponent";
 
 export default function DataCellRender({ data, errorResult, onChange, value }) {
   // Determine the key to use for input mapping
-  const inputKey = data.lookupID ? "lookup" : data.parameterType;
+  //todo make if detailsCell return FilesWithScrollPaging
+  const inputKey = () => {
+    if (data.parameterType === "detailsCell" || !data.lookupID) {
+      return data.parameterType;
+    } else {
+      return "lookup";
+    }
+  };
 
-  const InputComponentClass = GetInputComponent(inputKey);
+  const InputComponentClass = GetInputComponent(inputKey());
   // Optionally instantiate the class (if needed)
   return (
     <InputDisplay

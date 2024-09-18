@@ -58,15 +58,15 @@ class WebcamActions extends BaseAction {
             />
           </ModalBody>
           <ModalFooter>
+            <Button className="pop" onClick={this.toggleModal}>
+              {localization.webcam.modal.button.cancel}
+            </Button>
             <Button
-              color="pop"
+              className="pop"
               onClick={this.handleCapture}
               name={this.props.fieldName}
             >
               {localization.webcam.modal.button.capture}
-            </Button>
-            <Button color="pop" onClick={this.toggleModal}>
-              {localization.webcam.modal.button.cancel}
             </Button>
           </ModalFooter>
         </Modal>

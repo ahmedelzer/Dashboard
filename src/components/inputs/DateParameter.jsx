@@ -5,7 +5,10 @@ import BaseInput from "./BaseInput";
 class DateParameter extends BaseInput {
   render() {
     const { fieldName, value, Enable } = this.props;
-
+    this.props.onChange({
+      value: new Date(value ? value : Date.now()),
+      name: fieldName,
+    });
     return (
       <DateBox
         value={new Date(value ? value : Date.now())}

@@ -113,6 +113,7 @@ function DuringTransactionContainer({
   }, [automated]);
   const ReturnRow = (updatedRow) => {
     editedRow = { ...updatedRow(), ...initialRow };
+    console.log(editedRow);
   };
   return (
     <>

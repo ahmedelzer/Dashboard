@@ -13,6 +13,7 @@ const useFetch = (url, base_URL) => {
   const realurl = `${
     base_URL !== GetProjectUrl() ? defaultProjectProxyRoute : base_URL
   }${url}`;
+
   // console.log(base_URL, GetProjectUrl());
   return UseFetchWithoutBaseUrl(realurl);
 };

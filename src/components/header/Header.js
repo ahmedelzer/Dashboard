@@ -55,22 +55,16 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
           locateInMenu="auto"
         >
           <Button
-            width={open ? 100 : 30}
+            width={100}
             onClick={() => setopen(true)}
             height={"100%"}
             stylingMode={"text"}
             rtlEnabled={false}
             className={open ? "!cursor-auto" : "!cursor-pointer"}
           >
-            {open ? (
-              <div>
-                <LanguageSelector />
-              </div>
-            ) : (
-              <div className="flex justify-content-end align-items-center">
-                <BiWorld size={30} className="color" />
-              </div>
-            )}
+            <div>
+              <LanguageSelector open={open} />
+            </div>
           </Button>
         </Item>
         <Template name={"userPanelTemplate"}>

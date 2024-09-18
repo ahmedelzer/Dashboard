@@ -32,6 +32,7 @@ const UseFetchWithoutBaseUrl = (realurl) => {
       }
       setIsLoading(false);
     };
+
     fetchData();
   }, [realurl]);
 

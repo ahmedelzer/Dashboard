@@ -8,6 +8,7 @@ export default function SelectForm({
   schema,
   fieldName,
   title,
+  includeSchemas,
 }) {
   if (schema?.schemaType === "Table") {
     return (
@@ -23,6 +24,9 @@ export default function SelectForm({
       <FileContainer
         schema={schema}
         row={row}
+        serverSchema={includeSchemas.find(
+          (s) => s.schemaType === "ServerFilesContainer"
+        )}
         parentSchemaParameters={parentSchemaParameters}
         fieldName={fieldName}
         title={title}

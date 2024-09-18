@@ -46,7 +46,6 @@ export default function LoginForm() {
       const formJson = Object.fromEntries(formData.entries());
       setLoading(true);
       const apply = await onApply(formJson, "", true, postAction);
-      setResult(apply);
       if (apply && apply.success === true) {
         const decodedToken = jwtDecode(apply.data.token);
         const expiresInSeconds = decodedToken.exp;
@@ -64,6 +63,7 @@ export default function LoginForm() {
         setUser(user);
         navigate("/home");
       } else if (!apply.success) {
+        setResult(apply);
         // notify(apply.message, "error", 2000);
       }
       setLoading(false);

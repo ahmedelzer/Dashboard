@@ -5,15 +5,10 @@ import { json } from "react-router-dom";
 export const LanguageContext = createContext();
 
 const Language = ({ children }) => {
-  const [Lan, setLan] = useState(
-    window.localStorage.getItem("language") || "ENG_US"
-  );
-  const [Right, setRight] = useState(
-    window.localStorage.getItem("right") === "true" || false
-  );
+  const [Lan, setLan] = useState(window.localStorage.getItem("language"));
+  const [Right, setRight] = useState(window.localStorage.getItem("right"));
   const [fileBase64, setFileBase64] = useState(null);
-  const filet = {};
-  console.log("filet", typeof filet, filet);
+
   const [localization, setLocalization] = useState(
     JSON.parse(window.localStorage.getItem("localization")) || {
       shortName: "ENG_US",
@@ -68,6 +63,8 @@ const Language = ({ children }) => {
           of: "of",
         },
         textButtonUploadValue: "upload",
+        videoNotSupport: "Your browser does not support the video tag.",
+        fileNotSupport: "Unsupported file type",
       },
       footer: {
         footer: {
@@ -132,6 +129,38 @@ const Language = ({ children }) => {
         no: "No, cancel",
       },
       messages: {},
+      dateTime: {
+        dxDateBox: {
+          months: [
+            "يناير",
+            "فبراير",
+            "مارس",
+            "أبريل",
+            "مايو",
+            "يونيو",
+            "يوليو",
+            "أغسطس",
+            "سبتمبر",
+            "أكتوبر",
+            "نوفمبر",
+            "ديسمبر",
+          ],
+          days: [
+            "الأحد",
+            "الاثنين",
+            "الثلاثاء",
+            "الأربعاء",
+            "الخميس",
+            "الجمعة",
+            "السبت",
+          ],
+          am: "ص",
+          pm: "م",
+        },
+        applyButtonText: "تاكيد",
+        cancelButtonText: "الغاء",
+        todayButtonText: "اليوم",
+      },
     }
   );
   const [leftSelectionContext, setLeftSelectionContext] = useState([]);
