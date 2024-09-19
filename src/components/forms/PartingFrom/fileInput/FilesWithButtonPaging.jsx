@@ -135,7 +135,7 @@ function FilesWithButtonPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  });
+  }, [getAction]);
   const totalPages = Math.ceil(state.totalCount / itemsPerPage);
 
   const handlePageChange = (newPage) => {

@@ -80,7 +80,9 @@ export default function SideNavInnerToolbar({ title, children }) {
   const [direction, setDiction] = useState(Right ? "rtl" : "ltr");
   useEffect(() => {
     setDiction(Right ? "rtl" : "ltr");
+    window.document.dir = Right ? "rtl" : "ltr";
   }, [Right]);
+
   return (
     <div className={"side-nav-inner-toolbar"}>
       <Drawer

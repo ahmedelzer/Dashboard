@@ -23,8 +23,6 @@ function AuthProvider(props) {
           navigate("/login");
         }
       }
-      console.log(result);
-
       setLoading(false);
     })();
   }, []);

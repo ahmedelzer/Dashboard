@@ -1,51 +1,13 @@
-function zero(operation) {
-  return operation ? operation(0) : 0;
-}
-function one(operation) {
-  return operation ? operation(1) : 1;
-}
-function two(operation) {
-  return operation ? operation(2) : 2;
-}
-function three(operation) {
-  return operation ? operation(3) : 3;
-}
-function four(operation) {
-  return operation ? operation(4) : 4;
-}
-function five(operation) {
-  return operation ? operation(5) : 5;
-}
-function six(operation) {
-  return operation ? operation(6) : 6;
-}
-function seven(operation) {
-  return operation ? operation(7) : 7;
-}
-function eight(operation) {
-  return operation ? operation(8) : 8;
-}
-function nine(operation) {
-  return operation ? operation(9) : 9;
-}
+let url1 = "elzero.org";
+let url2 = "http://elzero.org";
+let url3 = "https://elzero.org";
+let url4 = "https://www.elzero.org";
+let url5 = "https://www.elzero.org:8080/articles.php?id=100&cat=topics";
 
-function plus(b) {
-  return function (a) {
-    return a + b;
-  };
-}
-function minus(b) {
-  return function (a) {
-    return a - b;
-  };
-}
-function times(b) {
-  return function (a) {
-    return a * b;
-  };
-}
-function dividedBy(b) {
-  return function (a) {
-    return Math.floor(a / b);
-  };
-}
+let re = /(https?)?(:\/\/)?(www.)?\w+.org(:\d+)?(\/\w+.\w+\?\w+=\d+&\w+=\w+)?/; // Write Your Pattern Here
+
+console.log(url1.match(re));
+console.log(url2.match(re));
+console.log(url3.match(re));
+console.log(url4.match(re));
+console.log(url5.match(re));

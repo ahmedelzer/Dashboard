@@ -242,9 +242,9 @@ function BaseTable({
   };
   //e
 
-  // useEffect(() =>
-  //   LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch)
-  // );
+  useEffect(() => {
+    LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
+  }, [getAction]);
   useEffect(() => {
     const findServerContainer = subSchemas?.filter(
       (schema) => schema.schemaType === "ServerFilesContainer"

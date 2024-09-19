@@ -7,13 +7,14 @@ import {
 } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import { LanguageContext } from "../../../contexts/Language";
-import { defaultProjectProxyRoute } from "../../../request";
+import { defaultProjectProxyRoute, SetReoute } from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import Table from "../DynamicTable/Table";
 import DuringTransactionContainer from "./DuringTransactionContainer";
 import { IsSecondListSubsetOfFirstList } from "./IsSecondListSubsetOfFirstList";
 import { styles } from "./styles";
+import { GetActionsFromSchemaAction } from "../../hooks/DashboardAPIs/GetActionsFromSchemaAction";
 // const TransFormSchema = [
 //   {
 //     dashboardFormSchemaID: "8d8f94a8-78a1-409f-b7cc-ae0e4f277d66",
@@ -207,21 +208,10 @@ const TableTransformer = ({ TransFormSchema }) => {
     GetSchemaActionsUrl(rightSchema.dashboardFormSchemaID),
     defaultProjectProxyRoute
   );
-  // const getAction =
-  //   schemaActions &&
-  //   schemaActions.find(
-  //     (action) => action.dashboardFormActionMethodType === "Get"
-  //   );
-  const postAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Post"
-    );
-  const deleteAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Delete"
-    );
+  SetReoute(schema.projectProxyRoute);
+
+  const { postAction, deleteAction } =
+    GetActionsFromSchemaAction(schemaActions);
   const [leftSelection, setLeftSelection] = useState([]);
   const [rightSelection, setRightSelection] = useState([]);
 

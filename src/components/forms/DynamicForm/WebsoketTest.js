@@ -20,6 +20,7 @@ import PopupEditing from "../DynamicPopup/PopupEditing";
 
 import { socket } from "../../hooks/APIsFunctions/WebsocketClient";
 import LoadData from "../../hooks/APIsFunctions/loadData";
+import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
 
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
@@ -82,26 +83,7 @@ const DynamicTable = ({
   // rowDoubleClick ,
 }) => {
   const getRowId = (row) => row[schema.idField];
-  const { data, error, isLoading } = useFetch(
-    `/Dashboard/GetDashboardSchemaActionsBySchemaID?DashboardSchemaID=${schema.dashboardFormSchemaID}`
-  );
-  const schemaActions = data;
-
-  const getAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
-    );
-  const postAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Post"
-    );
-  const putAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Put"
-    );
+  const { getAction, postAction, putAction } = GetActionsFromSchema(schema);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [columns, setColumns] = useState([]);
   const [result, setResult] = useState({});

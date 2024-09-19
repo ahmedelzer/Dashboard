@@ -105,7 +105,7 @@ function FilesWithScrollPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  });
+  }, [getAction]);
   const { rows, skip, totalCount, loading } = state;
 
   const observerCallback = useCallback(

@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormGroup, Label } from "reactstrap";
+import inputs from "../../../locals/EN/inputs.json";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
-import { LanguageContext } from "../../../contexts/Language";
 function InputDisplay({ props, BaseInput, errorResult }) {
-  const { localization } = useContext(LanguageContext);
-
-  const [inputErrorResult, setInputErrorResult] = useState(errorResult);
+  const [inputErrorResult, setInputErrorResult] = useState(null);
   const [title, setTitle] = useState(props.title);
   const [style, setStyle] = useState("");
   const [changed, setChanged] = useState(false);
   const handleChange = (e) => {
-    if (inputErrorResult !== errorResult) {
+    if (!inputErrorResult) {
       setChanged(true);
     }
     if (props.onChange) {
@@ -19,7 +17,7 @@ function InputDisplay({ props, BaseInput, errorResult }) {
     setStyle(" ");
   };
   useEffect(() => {
-    if (!changed && inputErrorResult !== errorResult) {
+    if (changed) {
       setStyle("is-invalid");
     } else {
       setStyle(" ");
@@ -30,15 +28,15 @@ function InputDisplay({ props, BaseInput, errorResult }) {
       <DisplayErorr
         dataError={errorResult}
         parameterField={props.fieldName}
-        setTitle={setTitle}
+        setTitle={setInputErrorResult}
         setStyle={setStyle}
       />
       <Label for={props.fieldName}>{props.title}</Label>
       <BaseInput
         {...props}
         onChange={handleChange}
-        title={props.title}
-        placeholder={localization.inputs.base.placeholder + props.title}
+        title={changed ? inputErrorResult : props.title}
+        placeholder={inputs.base.placeholder + props.title}
         className={style}
       />
       {/* {BaseInput.render()} */}

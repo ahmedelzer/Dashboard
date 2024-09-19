@@ -24,8 +24,7 @@ import { useScreenSizeClass } from "./utils/media-query";
 function App() {
   const { user, loading } = useAuth();
   // SetReoute(schemaLanguages.projectProxyRoute);
-  const { Right, Lan, setLocalization, localization } =
-    useContext(LanguageContext);
+  const { Right, localization } = useContext(LanguageContext);
 
   const [routes, setRoutes] = useState("");
   const [open, setopen] = useState(false);
@@ -48,6 +47,9 @@ function App() {
       document.title = localization.appInfo.title;
     }
   }, []);
+  useEffect(() => {
+    window.document.dir = Right ? "rtl" : "ltr";
+  }, [Right]);
 
   useEffect(() => {
     if (Right) {
@@ -60,22 +62,16 @@ function App() {
   }
   const languageComponent = (
     <Button
-      width={open ? 60 : 30}
+      width={100}
       onClick={() => setopen(true)}
       height={"100%"}
       stylingMode={"text"}
       rtlEnabled={false}
-      className={open ? "!cursor-auto" : "!cursor-pointer"}
+      className={`${open ? "!cursor-auto" : "!cursor-pointer"} mx-1 `}
     >
-      {open ? (
-        <div>
-          <LanguageSelector />
-        </div>
-      ) : (
-        <div className="flex justify-content-end align-items-center">
-          <BiWorld size={30} className="color" />
-        </div>
-      )}
+      <div>
+        <LanguageSelector open={open} />
+      </div>
     </Button>
   );
   return (

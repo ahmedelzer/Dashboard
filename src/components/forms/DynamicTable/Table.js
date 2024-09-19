@@ -7,6 +7,8 @@ import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import Popup from "../DynamicPopup/Popup";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import BaseTable from "./BaseTable";
+import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
+import { GetActionsFromSchemaAction } from "../../hooks/DashboardAPIs/GetActionsFromSchemaAction";
 const DynamicTable = ({
   schema,
   isSearchingTable,
@@ -27,6 +29,7 @@ const DynamicTable = ({
   subSchemas,
 }) => {
   const [result, setResult] = useState({});
+
   const {
     data: SchemaActions,
     error,
@@ -37,27 +40,9 @@ const DynamicTable = ({
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
   SetReoute(schema.projectProxyRoute);
+  const { getAction, postAction, putAction, deleteAction } =
+    GetActionsFromSchemaAction(schemaActions);
 
-  const getAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
-    );
-  const postAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Post"
-    );
-  const putAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Put"
-    );
-  const deleteAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Delete"
-    );
   const PopupComponentTable = ({ state }) => {
     return (
       <PopupEditing

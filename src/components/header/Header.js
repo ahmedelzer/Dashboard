@@ -10,7 +10,10 @@ import { LanguageContext } from "../../contexts/Language";
 
 export default function Header({ menuToggleEnabled, title, toggleMenu }) {
   const [open, setopen] = useState(false);
-  const { Right, setRight } = useContext(LanguageContext);
+  const { Right } = useContext(LanguageContext);
+  const direction = Right ? "after" : "before";
+  const oppositeDirection = Right ? "before" : "after";
+
   return (
     <header className={"header-component flex"}>
       <Toolbar
@@ -20,7 +23,7 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
       >
         <Item
           visible={menuToggleEnabled}
-          location={Right ? "after" : "before"}
+          location={direction}
           // location={"before"}
           widget={"dxButton"}
           cssClass={"menu-button"}
@@ -28,15 +31,15 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
           <Button icon="menu" stylingMode="text" onClick={toggleMenu} />
         </Item>
         <Item
-          location={Right ? "after" : "before"}
-          // location={"before"}
+          location={direction}
+          // location={"after"}
           cssClass={"header-title"}
           text={title}
           visible={!!title}
         />
         <Item
           // location={"after"}
-          location={Right ? "before" : "after"}
+          location={oppositeDirection}
           locateInMenu={"auto"}
           menuItemTemplate={"userPanelTemplate"}
         >
@@ -51,7 +54,7 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
         </Item>
         <Item
           // location={"after"}
-          location={Right ? "before" : "after"}
+          location={oppositeDirection}
           locateInMenu="auto"
         >
           <Button
@@ -60,7 +63,7 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
             height={"100%"}
             stylingMode={"text"}
             rtlEnabled={false}
-            className={open ? "!cursor-auto" : "!cursor-pointer"}
+            className={`${open ? "!cursor-auto" : "!cursor-pointer"} mx-1 `}
           >
             <div>
               <LanguageSelector open={open} />

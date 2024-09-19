@@ -20,12 +20,6 @@ function SideNavigationMenu(props) {
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
     defaultProjectProxyRoute
   );
-  console.log(
-    useFetch(
-      "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
-      defaultProjectProxyRoute
-    )
-  );
 
   const { localization } = useContext(LanguageContext);
 

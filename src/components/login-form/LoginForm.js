@@ -32,14 +32,14 @@ export default function LoginForm() {
       notify(location.state.message, "error", 2000);
     }
   }, [location.state]);
-  SetReoute(schema.projectProxyRoute);
-  const postAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Post"
-    );
   const onSubmit = useCallback(
     async (e) => {
+      SetReoute(schema.projectProxyRoute);
+      const postAction =
+        schemaActions &&
+        schemaActions.find(
+          (action) => action.dashboardFormActionMethodType === "Post"
+        );
       e.preventDefault();
       const form = e.target;
       const formData = new FormData(form);

@@ -6,7 +6,9 @@ export const LanguageContext = createContext();
 
 const Language = ({ children }) => {
   const [Lan, setLan] = useState(window.localStorage.getItem("language"));
-  const [Right, setRight] = useState(window.localStorage.getItem("right"));
+  const [Right, setRight] = useState(
+    window.localStorage.getItem("right") === "true"
+  );
   const [fileBase64, setFileBase64] = useState(null);
 
   const [localization, setLocalization] = useState(

@@ -46,7 +46,6 @@ export function SetHeaders() {
 
   return headers;
 }
-console.log(SetHeaders());
 
 export const request = axios.create({
   baseURL: baseURL,
