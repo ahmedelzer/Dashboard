@@ -15,7 +15,7 @@ const Language = ({ children }) => {
     JSON.parse(window.localStorage.getItem("localization")) || {
       shortName: "ENG_US",
       appInfo: {
-        title: "Ahmed Ashraf2",
+        title: "Branding Mart",
       },
       homePage: {
         id: 1,
