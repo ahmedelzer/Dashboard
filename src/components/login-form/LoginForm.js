@@ -45,7 +45,13 @@ export default function LoginForm() {
       const formData = new FormData(form);
       const formJson = Object.fromEntries(formData.entries());
       setLoading(true);
-      const apply = await onApply(formJson, "", true, postAction);
+      const apply = await onApply(
+        formJson,
+        "",
+        true,
+        postAction,
+        schema.projectProxyRoute
+      );
       if (apply && apply.success === true) {
         const decodedToken = jwtDecode(apply.data.token);
         const expiresInSeconds = decodedToken.exp;

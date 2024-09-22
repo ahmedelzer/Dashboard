@@ -52,6 +52,7 @@ const DynamicTable = ({
         state={state}
         setResult={setResult}
         result={result}
+        proxyRoute={schema.projectProxyRoute}
         schema={schema}
         addSelectedList={addSelectedList}
       />

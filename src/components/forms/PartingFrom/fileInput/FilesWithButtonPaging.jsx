@@ -1,31 +1,21 @@
+import { createRowCache } from "@devexpress/dx-react-grid";
 import React, {
-  useCallback,
   useContext,
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { CheckBox } from "devextreme-react/check-box";
-import { ImageParameterWithPanelActions } from "../../../inputs";
-import convertImageToBase64 from "../../../inputs/InputActions/ConvertImageToBase64";
+import { MdDelete } from "react-icons/md";
+import { Button } from "reactstrap";
 import { LanguageContext } from "../../../../contexts/Language";
+import { baseURL, SetReoute } from "../../../../request";
+import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
+import LoadData from "../../../hooks/APIsFunctions/loadData";
+import DeleteItem from "../DeleteItem";
 import { stylesFile } from "../styles";
 import TypeFile from "../TypeFile";
-import DeleteItem from "../DeleteItem";
-import { baseURLWithoutApi } from "../../../../request";
-import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
-import { createRowCache } from "@devexpress/dx-react-grid";
-import LoadData from "../../../hooks/APIsFunctions/loadData";
-import { listObserverStyle } from "../../DynamicTable/styles";
-import Loading from "../../../loading/Loading";
-import DotsLoading from "../../../loading/DotsLoading";
-import { MdDelete } from "react-icons/md";
 const VIRTUAL_PAGE_SIZE = 4;
-const MAX_ROWS = 50000;
 
 const initialState = {
   rows: [],
@@ -78,6 +68,7 @@ function FilesWithButtonPaging({
   deleteAction,
   handleToDelete,
   fileFieldName,
+  proxyRoute,
 }) {
   const { localization } = useContext(LanguageContext);
 
@@ -112,12 +103,15 @@ function FilesWithButtonPaging({
     // Load remote data logic here
   };
 
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
+  const dataSourceAPI = (query, skip, take) => {
+    SetReoute(proxyRoute);
+
+    return buildApiUrl(query, {
       pageIndex: currentPage,
       pageSize: itemsPerPage,
       ...row,
     });
+  };
 
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
 
@@ -135,7 +129,7 @@ function FilesWithButtonPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  }, [getAction]);
+  });
   const totalPages = Math.ceil(state.totalCount / itemsPerPage);
 
   const handlePageChange = (newPage) => {
@@ -155,16 +149,12 @@ function FilesWithButtonPaging({
           ?.map((row) => ({
             ...row,
 
-            displayFile: `${baseURLWithoutApi}/${row[fileFieldName]}`,
+            displayFile: `${baseURL}/${proxyRoute}/${row[fileFieldName]}`,
             fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
             id: row[idField],
           }))
           .map((photo, i) => (
-            <div
-              key={i}
-              title={title || "imf"}
-              className={stylesFile.validFile}
-            >
+            <div key={i} title={title} className={stylesFile.validFile}>
               {deleteAction && (
                 <div className={stylesFile.fileControls + " !justify-end"}>
                   <MdDelete
@@ -210,6 +200,7 @@ function FilesWithButtonPaging({
         DeleteItemCallback={handleToDelete}
         deleteWithApi={deleteWithApi}
         action={deleteAction}
+        proxyRoute={proxyRoute}
       />
     </div>
   );

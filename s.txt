@@ -1,0 +1,5 @@
+problems in check inputs error & body of ruqusts in FormContainer 
+make scroll when the DuringTransactionContainer open 
+make  DuringTransactionContainer do not make automated every time
+make loading when file container send ruqusts 
+make localiztion&&style to the fileContainer 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { defaultProjectProxyRoute } from "../../../request";
+import { defaultProjectProxyRoute, SetReoute } from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import WaringPop from "./WaringPop";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
@@ -11,9 +11,11 @@ export default function DeleteItem({
   DeleteItemCallback,
   deleteWithApi,
   action,
+  proxyRoute,
 }) {
   const confirmDelete = async () => {
     if (deleteWithApi) {
+      SetReoute(proxyRoute);
       const deleteRequest = await APIHandling(
         action.routeAdderss + "/" + id,
         action.dashboardFormActionMethodType,

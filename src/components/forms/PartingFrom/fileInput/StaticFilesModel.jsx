@@ -19,6 +19,7 @@ function StaticFilesModel({
   handleUpload,
   selectedFiles,
   postAction,
+  proxyRoute,
 }) {
   const { localization } = useContext(LanguageContext);
 
@@ -106,7 +107,7 @@ function StaticFilesModel({
     );
   };
   function handleAddMore() {
-    handleUpload(postAction);
+    handleUpload();
     setFiles([]);
     setModalFileIsOpen(false);
   }

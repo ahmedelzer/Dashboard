@@ -21,7 +21,7 @@ const PopupEditing = React.memo(
     setResult,
     result,
     schema,
-    addSelectedList,
+    proxyRoute,
   }) => {
     return (
       <Plugin>
@@ -67,7 +67,13 @@ const PopupEditing = React.memo(
               const iDField = schema.idField;
               const onApplyChanges = async () => {
                 const action = isNew ? postAction : putAction;
-                const apply = await onApply(editedRow, iDField, isNew, action);
+                const apply = await onApply(
+                  editedRow,
+                  iDField,
+                  isNew,
+                  action,
+                  proxyRoute
+                );
                 setResult(apply);
                 if (apply && apply.success === true) {
                   const newRow = { ...apply.data, ...editedRow };

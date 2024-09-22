@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-// import FileInput from "../PartingFrom/FileInput";
+import FileInput from "../PartingFrom/FileInput";
 import { Button } from "reactstrap";
 import DuringTransactionContainer from "../PartingFrom/DuringTransactionContainer";
 import { IsSecondListSubsetOfFirstList } from "../PartingFrom/IsSecondListSubsetOfFirstList";
@@ -12,7 +12,8 @@ import StaticFilesModel from "../PartingFrom/fileInput/StaticFilesModel";
 import FilesWithScrollPaging from "../PartingFrom/fileInput/FilesWithScrollPaging";
 import FilesWithButtonPaging from "../PartingFrom/fileInput/FilesWithButtonPaging";
 import { stylesFile } from "../PartingFrom/styles";
-
+import { FaFileCirclePlus } from "react-icons/fa6";
+import Loading from "../../loading/Loading";
 function FileContainer({
   parentSchemaParameters,
   schema,
@@ -22,12 +23,15 @@ function FileContainer({
   serverSchema,
 }) {
   const { localization } = useContext(LanguageContext);
+  console.log(fieldName, title);
+
   // const schema =
   //   schemas &&
   //   schemas?.find((schema) => schema.schemaType === "FilesContainer");
   // console.log(schema);
 
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [proxyRoute, setProxyRoute] = useState("");
   const [selectedServerFiles, setSelectedServerFiles] = useState([]);
   const [automated, setAutomated] = useState([]);
   const [trigger, setTrigger] = useState(0);
@@ -52,11 +56,11 @@ function FileContainer({
   );
   // const { getActionSchema, postActionSchema, deleteActionSchema } =
   //   GetActionsFromSchema(schema);
-  const {
-    getAction: getActionSchema,
-    postAction: postActionSchema,
-    deleteAction: deleteActionSchema,
-  } = GetActionsFromSchema(schema);
+  // const {
+  //   getAction: getActionSchema,
+  //   postAction: postActionSchema,
+  //   deleteAction: deleteActionSchema,
+  // } = GetActionsFromSchema(schema);
   const {
     getAction: getActionServerSchema,
     postAction: postActionServerSchema,
@@ -68,51 +72,64 @@ function FileContainer({
     ["parameterField"]
   );
 
-  const handleUpload = (postAction) => {
+  function handleUpload(postAction, containerSelectedFiles, route) {
     setSelectPostAction(postAction);
-
-    if (selectedFiles.length > 0) {
-      setSelectedFilesContext(selectedFiles);
-    } else if (selectedServerFiles.length > 0) {
-      setSelectedFilesContext(selectedServerFiles);
+    if (containerSelectedFiles.length > 0) {
+      setSelectedFilesContext(containerSelectedFiles);
+      setProxyRoute(route);
     }
     setOpen(!isSubset);
     setAutomated(isSubset);
     setSelectedFiles([]);
     setSelectedServerFiles([]);
-  };
+  }
   // subset checking
-
+  const {
+    getAction: getActionSchema,
+    postAction: postActionSchema,
+    deleteAction: deleteActionSchema,
+  } = GetActionsFromSchema(schema);
   return (
     <div>
-      {/* {postAction && (
-        <Button className={"pop my-2"} onClick={handleUpload}>
-          {localization.fileContainer.textButtonUploadValue}
-        </Button>
-      )} */}
-      <div className="border rounded mb-2">
-        <div className={stylesFile.container} key={trigger}>
+      <div className={stylesFile.parentFileContainer} key={trigger}>
+        <div className={stylesFile.container}>
+          {selectedFilesContext.length > 0 && <Loading />}
           <StaticFilesModel
             modalFileIsOpen={modalFileIsOpen}
             setModalFileIsOpen={setModalFileIsOpen}
             setSelectedFiles={setSelectedFiles}
             title={title}
-            fieldName={fieldName}
+            fieldName={fileFieldNameScrollPaging}
             row={row}
             postAction={postActionServerSchema}
-            handleUpload={handleUpload}
+            handleUpload={() =>
+              handleUpload(
+                postActionServerSchema,
+                selectedFiles,
+                serverSchema.projectProxyRoute
+              )
+            }
             selectedFiles={selectedFiles}
           />
-          <div className="flex justify-between my-2">
+          <div className={stylesFile.buttonsContainer}>
             {postActionServerSchema && (
-              <Button className="pop" onClick={() => setModalFileIsOpen(true)}>
-                add more
+              <Button
+                className="pop mx-2"
+                onClick={() => setModalFileIsOpen(true)}
+              >
+                <FaFileCirclePlus size={22} />
               </Button>
             )}
             {postActionSchema && (
               <Button
                 className={"pop"}
-                onClick={() => handleUpload(postActionSchema)}
+                onClick={() => {
+                  handleUpload(
+                    postActionSchema,
+                    selectedServerFiles,
+                    schema.projectProxyRoute
+                  );
+                }}
               >
                 {localization.fileContainer.textButtonUploadValue}
               </Button>
@@ -120,14 +137,16 @@ function FileContainer({
           </div>
           <FilesWithScrollPaging
             title={title}
-            idField={idField}
+            idField={serverSchema.idField}
             row={row}
+            proxyRoute={serverSchema.projectProxyRoute}
             getAction={getActionServerSchema}
             selectedServerFiles={selectedServerFiles}
             setSelectedServerFiles={setSelectedServerFiles}
             fileFieldName={fileFieldNameScrollPaging}
           />
           <FilesWithButtonPaging
+            proxyRoute={schema.projectProxyRoute}
             title={title}
             idField={idField}
             row={row}
@@ -137,20 +156,6 @@ function FileContainer({
             fileFieldName={fileFieldNameButtonPaging}
           />
         </div>
-        {/* <FileInput
-          key={trigger}
-          fieldName={fieldName}
-          row={row}
-          selectedFiles={selectedFiles}
-          setSelectedFiles={setSelectedFiles}
-          title={title}
-          getActionServerSchema={getActionServerSchema}
-          idField={schema.idField}
-          handleToDeleteWithAPI={RefreshFiles}
-          deleteActionServerSchema={deleteActionServerSchema}
-          handleUpload={handleUpload}
-          schema={schema}
-        /> */}
       </div>
       <DuringTransactionContainer
         tableSchema={schema.dashboardFormSchemaParameters}
@@ -159,6 +164,7 @@ function FileContainer({
         selectionContext={selectedFilesContext}
         open={open}
         setOpen={setOpen}
+        proxyRoute={proxyRoute}
         action={selectPostAction}
         setSelectionContext={setSelectedFilesContext}
       />

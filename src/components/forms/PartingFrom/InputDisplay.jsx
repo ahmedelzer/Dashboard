@@ -4,7 +4,6 @@ import inputs from "../../../locals/EN/inputs.json";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 function InputDisplay({ props, BaseInput, errorResult }) {
   const [inputErrorResult, setInputErrorResult] = useState(null);
-  const [title, setTitle] = useState(props.title);
   const [style, setStyle] = useState("");
   const [changed, setChanged] = useState(false);
   const handleChange = (e) => {
@@ -17,30 +16,34 @@ function InputDisplay({ props, BaseInput, errorResult }) {
     setStyle(" ");
   };
   useEffect(() => {
-    if (changed) {
+    if (!changed && inputErrorResult) {
       setStyle("is-invalid");
     } else {
       setStyle(" ");
     }
   }, [inputErrorResult, errorResult, changed]);
   return (
-    <FormGroup>
-      <DisplayErorr
-        dataError={errorResult}
-        parameterField={props.fieldName}
-        setTitle={setInputErrorResult}
-        setStyle={setStyle}
-      />
-      <Label for={props.fieldName}>{props.title}</Label>
-      <BaseInput
-        {...props}
-        onChange={handleChange}
-        title={changed ? inputErrorResult : props.title}
-        placeholder={inputs.base.placeholder + props.title}
-        className={style}
-      />
-      {/* {BaseInput.render()} */}
-    </FormGroup>
+    <div>
+      {props.type !== "detailsCell" && (
+        <FormGroup>
+          <DisplayErorr
+            dataError={errorResult}
+            parameterField={props.fieldName}
+            setTitle={setInputErrorResult}
+            setStyle={setStyle}
+          />
+          <Label for={props.fieldName}>{props.title}</Label>
+          <BaseInput
+            {...props}
+            onChange={handleChange}
+            title={inputErrorResult ? inputErrorResult : props.title}
+            placeholder={inputs.base.placeholder + props.title}
+            className={style}
+          />
+          {/* {BaseInput.render()} */}
+        </FormGroup>
+      )}
+    </div>
   );
 }
 

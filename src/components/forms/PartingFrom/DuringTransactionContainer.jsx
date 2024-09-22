@@ -13,6 +13,7 @@ function DuringTransactionContainer({
   setOpen,
   action,
   setSelectionContext,
+  proxyRoute,
 }) {
   const { localization } = useContext(LanguageContext);
 
@@ -62,6 +63,7 @@ function DuringTransactionContainer({
       iDField,
       true,
       action,
+      proxyRoute,
       tableSchema.dashboardFormSchemaParameters
     );
     setResult(apply);
@@ -72,23 +74,8 @@ function DuringTransactionContainer({
       TransformDone();
     }
   };
-  // const AutomatedTransform = async () => {
-  //   for (var i = 0; i < selectionContext.length; i++) {
-  //     const apply = async () =>
-  //       await onApply(
-  //         selectionContext[i],
-  //         iDField,
-  //         true,
-  //         action,
-  //         tableSchema.dashboardFormSchemaParameters
-  //       );
-  //     await apply();
-  //     MoveOn();
-  //   }
-  //   TransformDone();
-  // };
   const AutomatedTransform = async () => {
-    // Create an array of promises for all the tasks
+    // Create an array of promises for all the task
     const tasks = selectionContext.map(
       (item, index) =>
         onApply(
@@ -96,6 +83,7 @@ function DuringTransactionContainer({
           iDField,
           true,
           action,
+          proxyRoute,
           tableSchema.dashboardFormSchemaParameters
         ).then(() => MoveOn()) // Move on after each task
     );
@@ -106,14 +94,14 @@ function DuringTransactionContainer({
     // Invoke TransformDone once all tasks are finished
     TransformDone();
   };
+  //todo here the key of the solve
   useEffect(() => {
     if (automated) {
       AutomatedTransform();
     }
-  }, [automated]);
+  }, [automated, proxyRoute, iDField, action, tableSchema]);
   const ReturnRow = (updatedRow) => {
     editedRow = { ...updatedRow(), ...initialRow };
-    console.log(editedRow);
   };
   return (
     <>

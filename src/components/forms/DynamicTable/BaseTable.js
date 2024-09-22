@@ -50,40 +50,6 @@ const initialState = {
   loading: false,
   lastQuery: "",
 };
-function reducer(state, { type, payload }) {
-  switch (type) {
-    case "UPDATE_ROWS":
-      return {
-        ...state,
-        rows: [...state.rows, ...payload?.rows], // Append new rows to the existing rows
-        totalCount: payload.totalCount,
-        loading: false,
-      };
-    case "START_LOADING":
-      return {
-        ...state,
-        requestedSkip: payload.requestedSkip,
-        take: payload.take,
-      };
-    case "REQUEST_ERROR":
-      return {
-        ...state,
-        loading: false,
-      };
-    case "FETCH_INIT":
-      return {
-        ...state,
-        loading: true,
-      };
-    case "UPDATE_QUERY":
-      return {
-        ...state,
-        lastQuery: payload,
-      };
-    default:
-      return state;
-  }
-}
 function BaseTable({
   schema,
   isSearchingTable,
@@ -103,6 +69,48 @@ function BaseTable({
   rowDetails,
   subSchemas,
 }) {
+  function reducer(state, { type, payload }) {
+    switch (type) {
+      case "UPDATE_ROWS":
+        return {
+          ...state,
+          rows: Array.from(
+            new Map(
+              [...state.rows, ...payload?.rows].map((item) => [
+                item[schema.idField],
+                item,
+              ])
+            ).values()
+          ),
+          // [...state.rows, ...payload?.rows], // Append new rows to the existing rows
+          totalCount: payload.totalCount,
+          loading: false,
+        };
+      case "START_LOADING":
+        return {
+          ...state,
+          requestedSkip: payload.requestedSkip,
+          take: payload.take,
+        };
+      case "REQUEST_ERROR":
+        return {
+          ...state,
+          loading: false,
+        };
+      case "FETCH_INIT":
+        return {
+          ...state,
+          loading: true,
+        };
+      case "UPDATE_QUERY":
+        return {
+          ...state,
+          lastQuery: payload,
+        };
+      default:
+        return state;
+    }
+  }
   const [state, dispatch] = useReducer(reducer, initialState);
   const { localization } = useContext(LanguageContext);
 
@@ -240,11 +248,11 @@ function BaseTable({
   const getRemoteRows = (requestedSkip, take) => {
     dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
   };
-  //e
+  //load data every render
 
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  }, [getAction]);
+  });
   useEffect(() => {
     const findServerContainer = subSchemas?.filter(
       (schema) => schema.schemaType === "ServerFilesContainer"

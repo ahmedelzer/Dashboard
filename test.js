@@ -1,13 +1,27 @@
-let url1 = "elzero.org";
-let url2 = "http://elzero.org";
-let url3 = "https://elzero.org";
-let url4 = "https://www.elzero.org";
-let url5 = "https://www.elzero.org:8080/articles.php?id=100&cat=topics";
+const schema = { idField: "id" };
 
-let re = /(https?)?(:\/\/)?(www.)?\w+.org(:\d+)?(\/\w+.\w+\?\w+=\d+&\w+=\w+)?/; // Write Your Pattern Here
+const state = {
+  rows: [
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" },
+  ],
+};
 
-console.log(url1.match(re));
-console.log(url2.match(re));
-console.log(url3.match(re));
-console.log(url4.match(re));
-console.log(url5.match(re));
+const payload = {
+  rows: [
+    { id: 2, name: "Bob Jr." }, // Duplicate 'id', but different data
+    { id: 3, name: "Charlie" },
+  ],
+};
+
+const mergedRows = [
+  ...new Map(
+    [...payload?.rows].map((item) => [
+      item[schema.idField], // Using the 'id' field as the key
+      item, // The entire object is the value
+    ])
+  ).values(),
+];
+// );
+
+console.log(mergedRows);

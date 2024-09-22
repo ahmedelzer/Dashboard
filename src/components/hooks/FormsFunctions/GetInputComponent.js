@@ -1,4 +1,3 @@
-import FilesWithScrollPaging from "../../forms/PartingFrom/fileInput/FilesWithScrollPaging";
 import {
   BooleanParameter,
   DateParameter,
@@ -8,6 +7,8 @@ import {
   TextParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
+  // console.log(type);
+
   switch (type) {
     case "text" || "float" || "numeric":
       return TextParameter;

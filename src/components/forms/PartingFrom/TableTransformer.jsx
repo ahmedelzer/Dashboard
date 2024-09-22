@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   FaArrowAltCircleDown,
   FaArrowAltCircleLeft,
@@ -197,6 +197,7 @@ const TableTransformer = ({ TransFormSchema }) => {
   const [selectionContext, setSelectionContext] = useState([]);
   const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
   const leftSchema = TransFormSchema.find((schema) => !schema.isMainSchema); //Table
+  const scrollRef = useRef(null); // Ref for smooth scrolling
   const rightSchemaWithoutID = rightSchema.dashboardFormSchemaParameters.filter(
     (schema) => !schema.isIDField
   );
@@ -240,6 +241,15 @@ const TableTransformer = ({ TransFormSchema }) => {
       setAutomated(isSubset);
     }
   };
+  // Smooth scroll to the DuringTransactionContainer when it opens
+  useEffect(() => {
+    if (open && scrollRef.current) {
+      scrollRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [open]);
   return (
     <div>
       <div className={styles.container}>
@@ -325,16 +335,19 @@ const TableTransformer = ({ TransFormSchema }) => {
           />
         </div>
       </div>
-      <DuringTransactionContainer
-        setSelectionContext={setSelectionContext}
-        tableSchema={schema}
-        selectionContext={selectionContext}
-        automated={automated}
-        open={open}
-        TransformDone={RefreshTable}
-        action={action}
-        setOpen={setOpen}
-      />
+      <div ref={scrollRef}>
+        <DuringTransactionContainer
+          setSelectionContext={setSelectionContext}
+          tableSchema={schema}
+          selectionContext={selectionContext}
+          automated={automated}
+          open={open}
+          TransformDone={RefreshTable}
+          action={action}
+          proxyRoute={schema.projectProxyRoute}
+          setOpen={setOpen}
+        />
+      </div>
     </div>
   );
 };

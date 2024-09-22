@@ -1,29 +1,21 @@
+import { createRowCache } from "@devexpress/dx-react-grid";
+import { CheckBox } from "devextreme-react/check-box";
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useReducer,
   useRef,
   useState,
 } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { CheckBox } from "devextreme-react/check-box";
-import { ImageParameterWithPanelActions } from "../../../inputs";
-import convertImageToBase64 from "../../../inputs/InputActions/ConvertImageToBase64";
-import { LanguageContext } from "../../../../contexts/Language";
+import { baseURLWithoutApi, baseURL, SetReoute } from "../../../../request";
+import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
+import LoadData from "../../../hooks/APIsFunctions/loadData";
+import DotsLoading from "../../../loading/DotsLoading";
+import { listObserverStyle } from "../../DynamicTable/styles";
 import { stylesFile } from "../styles";
 import TypeFile from "../TypeFile";
-import DeleteItem from "../DeleteItem";
-import { baseURLWithoutApi } from "../../../../request";
-import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
-import { createRowCache } from "@devexpress/dx-react-grid";
-import LoadData from "../../../hooks/APIsFunctions/loadData";
-import { listObserverStyle } from "../../DynamicTable/styles";
-import Loading from "../../../loading/Loading";
-import DotsLoading from "../../../loading/DotsLoading";
-const VIRTUAL_PAGE_SIZE = 4;
+const VIRTUAL_PAGE_SIZE = 10;
 const initialState = {
   rows: [],
   skip: 0,
@@ -33,40 +25,7 @@ const initialState = {
   loading: false,
   lastQuery: "",
 };
-function reducer(state, { type, payload }) {
-  switch (type) {
-    case "UPDATE_ROWS":
-      return {
-        ...state,
-        rows: [...new Set([...state.rows, ...payload?.rows])], // Append new rows to the existing rows
-        totalCount: payload.totalCount,
-        loading: false,
-      };
-    case "START_LOADING":
-      return {
-        ...state,
-        requestedSkip: payload.requestedSkip,
-        take: payload.take,
-      };
-    case "REQUEST_ERROR":
-      return {
-        ...state,
-        loading: false,
-      };
-    case "FETCH_INIT":
-      return {
-        ...state,
-        loading: true,
-      };
-    case "UPDATE_QUERY":
-      return {
-        ...state,
-        lastQuery: payload,
-      };
-    default:
-      return state;
-  }
-}
+
 function FilesWithScrollPaging({
   title,
   idField,
@@ -75,20 +34,67 @@ function FilesWithScrollPaging({
   setSelectedServerFiles,
   getAction,
   fileFieldName,
+  proxyRoute,
 }) {
+  function reducer(state, { type, payload }) {
+    switch (type) {
+      case "UPDATE_ROWS":
+        return {
+          ...state,
+          rows: Array.from(
+            new Map(
+              [...state.rows, ...payload?.rows].map((item) => [
+                item[idField],
+                item,
+              ])
+            ).values()
+          ), // Append new rows to the existing rows
+          totalCount: payload.totalCount,
+          loading: false,
+        };
+      case "START_LOADING":
+        return {
+          ...state,
+          requestedSkip: payload.requestedSkip,
+          take: payload.take,
+        };
+      case "REQUEST_ERROR":
+        return {
+          ...state,
+          loading: false,
+        };
+      case "FETCH_INIT":
+        return {
+          ...state,
+          loading: true,
+        };
+      case "UPDATE_QUERY":
+        return {
+          ...state,
+          lastQuery: payload,
+        };
+      default:
+        return state;
+    }
+  }
   const [state, dispatch] = useReducer(reducer, initialState);
+
   const [currentSkip, setCurrentSkip] = useState(1);
   const observerRef = useRef();
+  const { [fileFieldName]: _, ...rowWithoutFieldName } = row;
+
   const getRemoteRows = (requestedSkip, take) => {
     dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
     // Load remote data logic here
   };
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
+  const dataSourceAPI = (query, skip, take) => {
+    SetReoute(proxyRoute);
+    return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
       ...row,
     });
+  };
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
 
   const updateRows = (skip, count, newTotalCount) => {
@@ -127,6 +133,8 @@ function FilesWithScrollPaging({
     });
 
     if (observerRef.current) {
+      console.log(12);
+
       observer.observe(observerRef.current);
     }
 
@@ -140,23 +148,25 @@ function FilesWithScrollPaging({
     setSelectedServerFiles((prevSelected) =>
       prevSelected.includes(file)
         ? prevSelected.filter((i) => i !== file)
-        : [...prevSelected, file]
+        : [...prevSelected, { ...file, ...row }]
     );
   };
+
   return (
     <div className={stylesFile.fileListContainer}>
       {state.rows
         ?.map((row) => ({
           ...row,
 
-          displayFile: `${baseURLWithoutApi}/${row[fileFieldName]}`,
+          displayFile: `${row[fileFieldName]}`,
+          file: `${baseURL}/${proxyRoute}/${row[fileFieldName]}`,
           fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
           id: row[idField],
         }))
         .map((photo, i) => (
           <div
             key={i}
-            title={title || "imf"}
+            title={title}
             className={stylesFile.validFile + stylesFile.fileScroll}
           >
             <div className={stylesFile.fileControls + " mb-1"}>
@@ -173,7 +183,7 @@ function FilesWithScrollPaging({
                 )} */}
             </div>
             <TypeFile
-              file={photo.displayFile}
+              file={photo.file}
               title={title}
               type={photo.fileCodeNumber}
             />
