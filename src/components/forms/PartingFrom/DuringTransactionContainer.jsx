@@ -19,6 +19,7 @@ function DuringTransactionContainer({
 
   const iDField = tableSchema.idField;
   const [result, setResult] = useState(false);
+  const [automatic, setAutomatic] = useState(automated);
   const [initialRow, setInitialRow] = useState({});
   const [textButton, setTextButton] = useState("");
   const [index, setIndex] = useState(0);
@@ -76,30 +77,36 @@ function DuringTransactionContainer({
   };
   const AutomatedTransform = async () => {
     // Create an array of promises for all the task
-    const tasks = selectionContext.map(
-      (item, index) =>
-        onApply(
-          item,
-          iDField,
-          true,
-          action,
-          proxyRoute,
-          tableSchema.dashboardFormSchemaParameters
-        ).then(() => MoveOn()) // Move on after each task
-    );
+    if (selectionContext.length > 0) {
+      setSelectionContext([]);
+      const tasks = selectionContext.map(
+        (item, index) =>
+          onApply(
+            item,
+            iDField,
+            true,
+            action,
+            proxyRoute,
+            tableSchema.dashboardFormSchemaParameters
+          ).then(() => MoveOn()) // Move on after each task
+      );
 
-    // Wait for all tasks to complete concurrently
-    await Promise.all(tasks);
-    setSelectionContext([]);
-    // Invoke TransformDone once all tasks are finished
-    TransformDone();
+      // Wait for all tasks to complete concurrently
+      await Promise.all(tasks);
+      // setSelectionContext([]);
+      // Invoke TransformDone once all tasks are finished
+      TransformDone();
+      setAutomatic(false);
+    }
   };
   //todo here the key of the solve
   useEffect(() => {
+    console.log("automatic", automatic);
     if (automated) {
+      console.log("fire autometed");
       AutomatedTransform();
     }
-  }, [automated, proxyRoute, iDField, action, tableSchema]);
+  });
   const ReturnRow = (updatedRow) => {
     editedRow = { ...updatedRow(), ...initialRow };
   };

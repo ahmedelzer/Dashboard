@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BiWorld } from "react-icons/bi";
 import { LanguageContext } from "../../contexts/Language";
-import { GetProjectUrl, SetReoute } from "../../request";
+import { GetProjectUrl, SetHeaders, SetReoute } from "../../request";
 import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
 import useFetch from "../hooks/APIsFunctions/useFetch";
 import UseFetchWithoutBaseUrl from "../hooks/APIsFunctions/UseFetchWithoutBaseUrl";
@@ -53,8 +53,9 @@ const LanguageSelector = ({ open }) => {
       (language) => language.shortName === shortName
     );
     SetSelectedLanguage(shortName);
-    window.localStorage.setItem("language", shortName);
 
+    window.localStorage.setItem("language", shortName);
+    SetHeaders();
     PrepareLanguage(shortName, language);
   };
   function PrepareLanguage(shortName, language) {

@@ -16,12 +16,15 @@ const payload = {
 
 const mergedRows = [
   ...new Map(
-    [...payload?.rows].map((item) => [
+    [...state.rows, ...payload?.rows].map((item) => [
       item[schema.idField], // Using the 'id' field as the key
       item, // The entire object is the value
     ])
   ).values(),
 ];
 // );
-
-console.log(mergedRows);
+let map = new Map([
+  ["a", 12],
+  ["a", 13],
+]);
+console.log(map);

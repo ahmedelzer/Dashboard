@@ -16,10 +16,13 @@ import "./SideNavigationMenu.scss";
 import { LanguageContext } from "../../contexts/Language";
 let [id, setId] = "";
 function SideNavigationMenu(props) {
-  let { data } = useFetch(
+  let { data, error } = useFetch(
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
     defaultProjectProxyRoute
   );
+  console.log("====================================");
+  console.log(error);
+  console.log("====================================");
 
   const { localization } = useContext(LanguageContext);
 

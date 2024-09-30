@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import { Input } from "reactstrap";
 export default function FieldGroup({ value, onChange, ...props }) {
   // const style = () => {
   //   if (props.title) {
@@ -10,7 +11,7 @@ export default function FieldGroup({ value, onChange, ...props }) {
   // };
 
   return (
-    <input
+    <Input
       {...props}
       onChange={onChange}
       onFocus={props.onFocus}

@@ -24,6 +24,7 @@ export const fetchData = async (url, base_URL, options = {}) => {
       "Content-Type": "application/json",
       ...SetHeaders(),
     },
+    // credentials: "include",
   };
 
   const realurl = `${

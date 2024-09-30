@@ -23,7 +23,6 @@ function FileContainer({
   serverSchema,
 }) {
   const { localization } = useContext(LanguageContext);
-  console.log(fieldName, title);
 
   // const schema =
   //   schemas &&

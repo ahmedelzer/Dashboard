@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import defaultUser from "../utils/default-user";
 import Cookies from "js-cookie";
-const token = Cookies.get("token");
+const token = Cookies.get("user");
 const user = token
   ? {
       avatarUrl:

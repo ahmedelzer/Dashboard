@@ -15,7 +15,7 @@ import DotsLoading from "../../../loading/DotsLoading";
 import { listObserverStyle } from "../../DynamicTable/styles";
 import { stylesFile } from "../styles";
 import TypeFile from "../TypeFile";
-const VIRTUAL_PAGE_SIZE = 10;
+const VIRTUAL_PAGE_SIZE = 4;
 const initialState = {
   rows: [],
   skip: 0,
@@ -111,7 +111,7 @@ function FilesWithScrollPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  }, [getAction]);
+  });
   const { rows, skip, totalCount, loading } = state;
 
   const observerCallback = useCallback(
@@ -133,8 +133,6 @@ function FilesWithScrollPaging({
     });
 
     if (observerRef.current) {
-      console.log(12);
-
       observer.observe(observerRef.current);
     }
 

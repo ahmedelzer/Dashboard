@@ -57,9 +57,9 @@ export default function LoginForm() {
         const expiresInSeconds = decodedToken.exp;
         const expirationDate = new Date(expiresInSeconds * 1000);
         if (formJson.rememberMe) {
-          Cookies.set("token", apply.data.token, { expires: expirationDate });
+          Cookies.set("user", apply.data.token, { expires: expirationDate });
         } else {
-          Cookies.set("token", apply.data.token);
+          Cookies.set("user", apply.data.token);
         }
         const user = {
           avatarUrl:

@@ -7,8 +7,9 @@ import {
 } from "../../../request";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
-  // const navigate = useNavigate();
-  myHeaders.append("Content-Type", "application/json");
+  for (const [key, value] of Object.entries(SetHeaders())) {
+    myHeaders.append(key, value);
+  }
 
   // myHeaders.append("languageName", "ARABIC");
   var raw = JSON.stringify(sendBody);
@@ -16,9 +17,9 @@ export default async function APIHandling(url, methodType, sendBody) {
   var requestOptions = {
     method: methodType,
     headers: myHeaders,
-    ...SetHeaders(),
     body: raw,
     redirect: "follow",
+    // credentials: "include",
   };
 
   try {

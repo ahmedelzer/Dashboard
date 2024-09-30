@@ -39,7 +39,7 @@ function AuthProvider(props) {
   const signOut = useCallback(() => {
     navigate("/login");
     setUser(undefined);
-    Cookies.remove("token");
+    Cookies.remove("user");
   }, []);
 
   function CheckPortalMenuItem(menuItemID) {
