@@ -56,6 +56,9 @@ export default function LoginForm() {
         const decodedToken = jwtDecode(apply.data.token);
         const expiresInSeconds = decodedToken.exp;
         const expirationDate = new Date(expiresInSeconds * 1000);
+        console.log("====================================");
+        console.log(expiresInSeconds, expirationDate, typeof expirationDate);
+        console.log("====================================");
         if (formJson.rememberMe) {
           Cookies.set("user", apply.data.token, { expires: expirationDate });
         } else {

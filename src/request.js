@@ -34,6 +34,7 @@ export function SetHeaders() {
     "Content-Type": "application/json",
     // "Access-Control-Allow-Credentials": "true",
     // "Access-Control-Allow-Origin": "*",
+    token: token,
     languageID: window.localStorage.getItem("languageID"),
   };
 
