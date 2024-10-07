@@ -13,7 +13,6 @@ const payload = {
     { id: 3, name: "Charlie" },
   ],
 };
-
 const mergedRows = [
   ...new Map(
     [...state.rows, ...payload?.rows].map((item) => [
@@ -27,4 +26,4 @@ let map = new Map([
   ["a", 12],
   ["a", 13],
 ]);
-console.log(map);
+console.log(mergedRows);

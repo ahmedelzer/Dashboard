@@ -4,13 +4,25 @@ import {
   defaultProjectProxyRoute,
   GetProjectUrl,
   request,
+  SetHeaders,
 } from "../../../request";
 import RedirectToLogin from "./RedirectToLogin";
 
 const UseFetchWithoutBaseUrl = (realurl) => {
   // console.log(base_URL, GetProjectUrl());
   const navigate = useNavigate();
-
+  request.interceptors.request.use(
+    (config) => {
+      config.headers = {
+        ...config.headers,
+        ...SetHeaders(), // Update headers before sending the request
+      };
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
   //base_URL = "";
 
   const [data, setData] = useState(null);

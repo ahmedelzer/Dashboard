@@ -20,9 +20,6 @@ function SideNavigationMenu(props) {
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
     defaultProjectProxyRoute
   );
-  console.log("====================================");
-  console.log(error);
-  console.log("====================================");
 
   const { localization } = useContext(LanguageContext);
 
@@ -124,6 +121,7 @@ function SideNavigationMenu(props) {
 
   // console.log(id)
   // const Categories=
+  console.log(items, data?.dataSource[0]?.dashboardCategoryName);
   return (
     <div
       className={"dx-swatch-additional side-navigation-menu"}

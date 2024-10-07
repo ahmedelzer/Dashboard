@@ -78,16 +78,24 @@ export default function SideNavInnerToolbar({ title, children }) {
     [navigate, menuStatus, isLarge]
   );
   const [direction, setDiction] = useState(Right ? "rtl" : "ltr");
+  const [position, setPosition] = useState(Right ? "right" : "left");
+  const [trigger, setTrigger] = useState(1);
   useEffect(() => {
     setDiction(Right ? "rtl" : "ltr");
+    if (isLarge) {
+      setPosition("left");
+      setTrigger((prv) => prv + 1);
+    } else {
+      setPosition(Right ? "right" : "left");
+    }
     window.document.dir = Right ? "rtl" : "ltr";
-  }, [Right]);
+  }, [Right, isLarge]);
 
   return (
     <div className={"side-nav-inner-toolbar"}>
       <Drawer
         className={["drawer", patchCssClass].join(" ")}
-        position={Right ? "right" : "left"}
+        position={position}
         closeOnOutsideClick={onOutsideClick}
         openedStateMode={isLarge ? "shrink" : "overlap"}
         revealMode={isXSmall ? "slide" : "expand"}
@@ -114,6 +122,7 @@ export default function SideNavInnerToolbar({ title, children }) {
         </div>
         <Template name={"menu"}>
           <SideNavigationMenu
+            key={trigger}
             compactMode={menuStatus === MenuStatus.Closed}
             selectedItemChanged={onNavigationChanged}
             openMenu={temporaryOpenMenu}

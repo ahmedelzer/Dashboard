@@ -50,9 +50,9 @@ export function SetHeaders() {
 
 export const request = axios.create({
   baseURL: baseURL,
-  headers: {
-    ...SetHeaders(),
-  },
+  // headers: {
+  //   ...SetHeaders(),
+  // },
 
   // withCredentials: true,
 });
