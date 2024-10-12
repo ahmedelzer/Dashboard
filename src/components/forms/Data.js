@@ -1,186 +1,144 @@
-//todo look for scroll
-import React, { useState, useReducer, useEffect, useMemo } from "react";
-import { VirtualTableState, createRowCache } from "@devexpress/dx-react-grid";
-import {
-  Grid,
-  VirtualTable,
-  TableHeaderRow,
-} from "@devexpress/dx-react-grid-bootstrap4";
-import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import LoadData from "../hooks/APIsFunctions/loadData";
-import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
-import { SetReoute } from "../../request";
+import React, { useCallback, useState } from "react";
+import { CheckBox } from "devextreme-react/check-box";
+import FormContainer from "./DynamicPopup/FormContainer";
+import { Button } from "reactstrap";
 
-const VIRTUAL_PAGE_SIZE = 10;
-const MAX_ROWS = 50000;
-const URL =
-  "https://js.devexpress.com/Demos/WidgetsGalleryDataService/api/Sales";
-const buildQueryString = (skip, take) =>
-  `${URL}?requireTotalCount=true&skip=${skip}&take=${take}`;
-const getRowId = (row) => row.Id;
+const checkedLabel = { "aria-label": "Checked" };
+const uncheckedLabel = { "aria-label": "Unchecked" };
+const indeterminateLabel = { "aria-label": "Indeterminate" };
+const threeStateModeLabel = { "aria-label": "Three state mode" };
+const handleValueChangeLabel = { "aria-label": "Handle value change" };
+const disabledLabel = { "aria-label": "Disabled" };
+const customSizeLabel = { "aria-label": "Custom size" };
+const schema = {
+  dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
+  schemaType: "Login",
+  idField: "id",
+  dashboardFormSchemaParameters: [
+    {
+      dashboardFormSchemaParameterID: "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
+      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
+      isEnable: true,
+      parameterType: "password",
+      parameterField: "gender",
+      parameterTitel: "Gender",
+      values: ["female", "Male"],
+      isIDField: false,
+      lookupID: null,
+      lookupReturnField: null,
+      lookupDisplayField: null,
+      indexNumber: 0,
+    },
+    {
+      dashboardFormSchemaParameterID: "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
+      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f899",
+      isEnable: true,
+      parameterType: "image",
+      parameterField: "image",
+      parameterTitel: "Image",
+      values: ["female", "Male"],
+      isIDField: false,
+      lookupID: null,
+      lookupReturnField: null,
+      lookupDisplayField: null,
+      indexNumber: 0,
+    },
+  ],
 
-const initialState = {
-  rows: [],
-  skip: 0,
-  requestedSkip: 0,
-  take: VIRTUAL_PAGE_SIZE * 2,
-  totalCount: 0,
-  loading: false,
-  lastQuery: "",
+  isMainSchema: true,
+  dataSourceName: null,
+  projectProxyRoute: "BrandingMartSecurity",
+  propertyName: null,
+  indexNumber: 0,
 };
 
-function reducer(state, { type, payload }) {
-  switch (type) {
-    case "UPDATE_ROWS":
-      return {
-        ...state,
-        ...payload,
-        loading: false,
-      };
-    case "START_LOADING":
-      return {
-        ...state,
-        requestedSkip: payload.requestedSkip,
-        take: payload.take,
-      };
-    case "REQUEST_ERROR":
-      return {
-        ...state,
-        loading: false,
-      };
-    case "FETCH_INIT":
-      return {
-        ...state,
-        loading: true,
-      };
-    case "UPDATE_QUERY":
-      return {
-        ...state,
-        lastQuery: payload,
-      };
-    default:
-      return state;
-  }
-}
-
-const Data = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [columns] = useState([
-    { name: "Id", title: "Id", getCellValue: (row) => row.Id },
-    {
-      name: "Category",
-      title: "Category",
-      getCellValue: (row) => row.ProductCategoryName,
-    },
-    { name: "Store", title: "Store", getCellValue: (row) => row.StoreName },
-    {
-      name: "Product",
-      title: "Product",
-      getCellValue: (row) => row.ProductName,
-    },
-    { name: "Amount", title: "Amount", getCellValue: (row) => row.SalesAmount },
-  ]);
-  const [tableColumnExtensions] = useState([
-    { columnName: "Id", width: 80 },
-    { columnName: "Category", width: 220 },
-    { columnName: "Store", width: 220 },
-    { columnName: "Amount", width: 120 },
-  ]);
-
-  const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
-  const updateRows = (skip, count, newTotalCount) => {
-    dispatch({
-      type: "UPDATE_ROWS",
-      payload: {
-        skip,
-        rows: cache.getRows(skip, count),
-        totalCount: newTotalCount < MAX_ROWS ? newTotalCount : MAX_ROWS,
-      },
-    });
+function Test() {
+  const [checkBoxValue, setCheckBoxValue] = useState(null);
+  const onValueChanged = useCallback((args) => {
+    setCheckBoxValue(args.value);
+  }, []);
+  const onApplyChanges = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const formJson = Object.fromEntries(formData.entries());
+    console.log("====================================");
+    console.log(formJson);
+    console.log("====================================");
   };
-
-  const getRemoteRows = (requestedSkip, take) => {
-    dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
-  };
-
-  // const loadData = () => {
-  //   const { requestedSkip, take, lastQuery, loading } = state;
-  //   const query = buildQueryString(requestedSkip, take);
-  //   if (query !== lastQuery && !loading) {
-  //     const cached = cache.getRows(requestedSkip, take);
-  //     if (cached.length === take) {
-  //       updateRows(requestedSkip, take);
-  //     } else {
-  //       dispatch({ type: "FETCH_INIT" });
-  //       fetch(query)
-  //         .then((response) => response.json())
-  //         .then(({ data, totalCount: newTotalCount }) => {
-  //           cache.setRows(requestedSkip, data);
-  //           updateRows(requestedSkip, take, newTotalCount);
-  //         })
-  //         .catch(() => dispatch({ type: "REQUEST_ERROR" }));
-  //     }
-  //     dispatch({ type: "UPDATE_QUERY", payload: query });
-  //   }
-  // };
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
-      pageIndex: skip / take + 1,
-      pageSize: take,
-    });
-  SetReoute("Centralization");
-  useEffect(() =>
-    LoadData(
-      state,
-      dataSourceAPI,
-      {
-        dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
-        dashboardFormActionMethodType: "Get",
-        routeAdderss: "Dashboard/GetDashboardMenuCategories",
-        body: null,
-        returnPropertyName: "dataSource",
-        dashboardFormSchemaActionQueryParams: [
-          {
-            dashboardFormSchemaActionQueryParameterID:
-              "5c060feb-679d-45fe-b48a-4ebce6fec77f",
-            dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
-            parameterName: "Pagination.PageSize",
-            dashboardFormParameterField: "pageSize",
-          },
-          {
-            dashboardFormSchemaActionQueryParameterID:
-              "bc7e84f0-42d6-4124-a7e8-587b8ea1d480",
-            dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
-            parameterName: "Pagination.PageNumber",
-            dashboardFormParameterField: "pageIndex",
-          },
-        ],
-      },
-      cache,
-      updateRows,
-      dispatch
-    )
-  );
-
-  const { rows, skip, totalCount, loading } = state;
-  console.log(rows);
-
   return (
-    <div className="card">
-      <Grid rows={rows} columns={columns} getRowId={getRowId}>
-        <VirtualTableState
-          infiniteScrolling
-          loading={loading}
-          totalRowCount={totalCount}
-          pageSize={VIRTUAL_PAGE_SIZE}
-          skip={skip}
-          getRows={getRemoteRows}
-        />
-        <VirtualTable columnExtensions={tableColumnExtensions} />
-        {/* <Table /> */}
-        <TableHeaderRow />
-      </Grid>
-    </div>
+    // <div className="form">
+    //   <div className="dx-fieldset">
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Checked</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox defaultValue={true} elementAttr={checkedLabel} />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Unchecked</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox defaultValue={false} elementAttr={uncheckedLabel} />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Indeterminate</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox defaultValue={null} elementAttr={indeterminateLabel} />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Three state mode</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox
+    //           enableThreeStateBehavior={true}
+    //           defaultValue={null}
+    //           elementAttr={threeStateModeLabel}
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Handle value change</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox
+    //           value={checkBoxValue}
+    //           elementAttr={handleValueChangeLabel}
+    //           onValueChanged={onValueChanged}
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Disabled</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox
+    //           disabled={true}
+    //           value={checkBoxValue}
+    //           elementAttr={disabledLabel}
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">Custom size</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox
+    //           defaultValue={null}
+    //           iconSize={30}
+    //           elementAttr={customSizeLabel}
+    //         />
+    //       </div>
+    //     </div>
+    //     <div className="dx-field">
+    //       <div className="dx-field-label">With label</div>
+    //       <div className="dx-field-value">
+    //         <CheckBox defaultValue={true} text="Label" />
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+    <form onSubmit={onApplyChanges} action="">
+      <FormContainer tableSchema={schema} row={{}} returnRow={() => {}} />
+      <Button type="submit">click</Button>
+    </form>
   );
-};
-export default Data;
+}
+export default Test;

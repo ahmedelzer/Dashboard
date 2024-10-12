@@ -21,10 +21,10 @@ class BooleanParameter extends BaseInput {
         <RadioGroup
           items={localization.inputs.boolean}
           value={value}
-          onValueChanged={this.handleChange}
+          // onValueChanged={this.handleChange}
           onKeyPress={onKeyPress}
-          readOnly={!Enable}
-          {...this.props}
+          // readOnly={!Enable}
+          // {...this.props}
           name={fieldName}
         />
       </div>

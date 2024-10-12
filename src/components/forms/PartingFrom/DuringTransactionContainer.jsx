@@ -58,9 +58,16 @@ function DuringTransactionContainer({
     MoveOn();
   }
 
-  const handleButtonClick = async () => {
+  const handleButtonClick = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const formJson = Object.fromEntries(formData.entries());
+    console.log("====================================");
+    console.log(formJson);
+    console.log("====================================");
     const apply = await onApply(
-      editedRow,
+      formJson,
       iDField,
       true,
       action,
@@ -111,7 +118,7 @@ function DuringTransactionContainer({
     editedRow = { ...updatedRow(), ...initialRow };
   };
   return (
-    <>
+    <form onSubmit={handleButtonClick} action="">
       {open && (
         <div>
           <FormContainer
@@ -125,7 +132,8 @@ function DuringTransactionContainer({
               {localization.tableTransform.textButtonSkipValue}
             </Button>
             <Button
-              onClick={handleButtonClick}
+              // onClick={handleButtonClick}
+              type="submit"
               className={buttonContainerStyle.lastButton}
             >
               {textButton}
@@ -133,7 +141,7 @@ function DuringTransactionContainer({
           </div>
         </div>
       )}
-    </>
+    </form>
   );
 }
 

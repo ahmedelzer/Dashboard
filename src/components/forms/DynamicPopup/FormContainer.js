@@ -24,10 +24,15 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   return (
     <div>
       {" "}
-      <Container onBlur={() => returnRow(onChange.ReturnRow)}>
+      <Container
+        onBlur={() => {
+          console.log("ahmed");
+          returnRow(onChange.ReturnRow);
+        }}
+      >
         <Row>
           {tableSchema?.dashboardFormSchemaParameters
-            ?.filter((column) => !column.isIDField)
+            ?.filter((column) => !column.isIDField || column.lookupID)
             .map((param) => (
               <Col sm={Sm(param)} className="px-2" key={param.parameterField}>
                 <DataCellRender

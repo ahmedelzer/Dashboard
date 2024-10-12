@@ -160,11 +160,6 @@ function BaseTable({
           {...restProps}
           onClick={() => onRowClick(row)}
           className={`${customRowStyle.row} ${customRowStyle.selectedRow}`}
-          style={{
-            backgroundColor: restProps.selected
-              ? "var(--main-color2)"
-              : "white",
-          }}
         >
           {React.Children.map(restProps.children, (child) =>
             React.cloneElement(child, {
@@ -174,6 +169,7 @@ function BaseTable({
                   restProps.selected ? "var(--main-color2)" : "white"
                 }`,
               },
+              class: "hover:!bg-[--main-color2]",
             })
           )}
         </Table.Row>
@@ -219,9 +215,7 @@ function BaseTable({
         .filter((column) => !column.isIDField)
         ?.map((param) => ({
           name: param.parameterField,
-          title: param.lookupID
-            ? param.lookupDisplayField
-            : param.parameterField,
+          title: param.parameterTitel,
           type: param.parameterType,
           lookupID: param.lookupID,
           getCellValue: (row) =>

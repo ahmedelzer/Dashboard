@@ -16,17 +16,17 @@ const Popup = ({
   const { localization } = useContext(LanguageContext);
 
   return (
-    <form>
-      <Modal
-        isOpen={open}
-        onClose={() => (open = false)}
-        aria-labelledby="form-dialog-title"
-      >
-        <ModalHeader id="form-dialog-title">
-          {isNewRow
-            ? tableSchema.dashboardFormSchemaInfoDTOView.addingHeader
-            : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
-        </ModalHeader>
+    <Modal
+      isOpen={open}
+      onClose={() => (open = false)}
+      aria-labelledby="form-dialog-title"
+    >
+      <ModalHeader id="form-dialog-title">
+        {isNewRow
+          ? tableSchema.dashboardFormSchemaInfoDTOView.addingHeader
+          : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
+      </ModalHeader>
+      <form onSubmit={onApplyChanges} action="">
         <ModalBody>
           <FormContainer
             tableSchema={tableSchema}
@@ -39,12 +39,12 @@ const Popup = ({
           <Button onClick={onCancelChanges} className="pop">
             {localization.popup.cancelButton}
           </Button>{" "}
-          <Button type="submit" onClick={onApplyChanges} className="pop">
+          <Button type="submit" className="pop">
             {localization.popup.submitButton}
           </Button>
         </ModalFooter>
-      </Modal>
-    </form>
+      </form>
+    </Modal>
   );
 };
 

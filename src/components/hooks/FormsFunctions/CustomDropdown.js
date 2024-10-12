@@ -40,15 +40,15 @@ const CustomDropdown = ({
   return (
     <FormGroup className={customDropdownStyle.formGroup}>
       <input
-        name={props.fieldName}
+        // name={props.fieldName}
         className={`${props.className} ${customDropdownStyle.inputField}`}
         readOnly
         ref={inputRef}
         value={displayField}
         placeholder={displayField}
-        title={props.title}
+        // title={props.title}
       />
-
+      <input type="hidden" name={props.fieldName} value={returnField} />
       <div
         className={customDropdownStyle.togglePanelButton}
         onClick={handleTogglePanel}

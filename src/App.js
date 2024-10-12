@@ -21,6 +21,7 @@ import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
+import { Test } from "./pages";
 function App() {
   const { user, loading } = useAuth();
   // SetReoute(schemaLanguages.projectProxyRoute);
@@ -49,11 +50,11 @@ function App() {
   }, []);
   useEffect(() => {
     window.document.dir = Right ? "rtl" : "ltr";
-  }, [Right]);
 
-  useEffect(() => {
     if (Right) {
       import("./themes/generated/Right.css");
+    } else {
+      import("./themes/generated/left.css");
     }
   }, [Right]);
 
@@ -83,6 +84,7 @@ function App() {
           <SideNavBarLayout title={localization.appInfo.title}>
             <Routes>
               <Route path="/home" element={<Home />} />
+              <Route path="/test" element={<Test />} />
               {ApiRoutes(routes).map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />
               ))}

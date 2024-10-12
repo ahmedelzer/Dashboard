@@ -59,7 +59,6 @@ const LanguageSelector = ({ open }) => {
       window.localStorage.setItem("language", shortName);
       SetHeaders();
       window.localStorage.setItem("right", language.rightDirectionEnable);
-      console.log("change direction");
       setRight(language.rightDirectionEnable);
     }
   }

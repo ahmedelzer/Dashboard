@@ -88,7 +88,6 @@ export default function SideNavInnerToolbar({ title, children }) {
     } else {
       setPosition(Right ? "right" : "left");
     }
-    window.document.dir = Right ? "rtl" : "ltr";
   }, [Right, isLarge]);
 
   return (

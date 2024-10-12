@@ -85,7 +85,8 @@ export default function LoginForm() {
   });
   const rememberMeEditorOptions = {
     text: localization.login.rememberMeEditorOptions.text,
-    elementAttr: { class: "form-text" },
+    elementAttr: { class: "form-text " },
+    "aria-label": "Checked",
   };
   return (
     <form className={"login-form"} onSubmit={onSubmit}>
@@ -100,6 +101,7 @@ export default function LoginForm() {
         <Item
           dataField={"rememberMe"}
           editorType={"dxCheckBox"}
+          dir="rtl"
           editorOptions={rememberMeEditorOptions}
         >
           <Label visible={false} />

@@ -62,13 +62,24 @@ const PopupEditing = React.memo(
               }
 
               const ReturnRow = (updatedRow) => {
+                console.log("====================================");
+                console.log(updatedRow);
+                console.log("====================================");
                 editedRow = updatedRow();
               };
               const iDField = schema.idField;
-              const onApplyChanges = async () => {
-                const action = isNew ? postAction : putAction;
+              const onApplyChanges = async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                const formJson = Object.fromEntries(formData.entries());
+                console.log("====================================");
+                console.log(formJson);
+                console.log("====================================");
+                {
+                  /* const action = isNew ? postAction : putAction;
                 const apply = await onApply(
-                  editedRow,
+                  formJson,
                   iDField,
                   isNew,
                   action,
@@ -76,13 +87,13 @@ const PopupEditing = React.memo(
                 );
                 setResult(apply);
                 if (apply && apply.success === true) {
-                  const newRow = { ...apply.data, ...editedRow };
+                  const newRow = { ...apply.data, ...formJson };
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
                     cancelAddedRows({ rowIds });
                   } else {
                     const updatedRows = state.rows.map((row) => {
-                      if (row[iDField] === editedRow[iDField]) {
+                      if (row[iDField] === formJson[iDField]) {
                         return newRow; // Replace the existing row with the updated newRow
                       }
                       return row;
@@ -95,6 +106,7 @@ const PopupEditing = React.memo(
                   stopEditRows({ rowIds });
                   setResult({});
                   cancelChangedRows({ rowIds });
+                } */
                 }
               };
               const cancelChanges = () => {
