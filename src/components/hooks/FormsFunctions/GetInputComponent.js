@@ -6,10 +6,10 @@ import {
   LookupInput,
   TextParameter,
   PasswordParameter,
+  LocationMapParameter,
+  TimeDuringParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
-  // console.log(type);
-
   switch (type) {
     case "text" || "float" || "numeric":
       return TextParameter;
@@ -23,6 +23,10 @@ export function GetInputComponent(type) {
       return ImageParameterWithPanelActions;
     case "password":
       return PasswordParameter;
+    case "areaMapLongitudePoint":
+      return LocationMapParameter;
+    case "timeDuring": //input for days and hours amd minutes then send total minutes
+      return TimeDuringParameter;
     case "lookup":
       return LookupInput;
     //detailsCell

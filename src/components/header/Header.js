@@ -4,16 +4,16 @@ import Button from "devextreme-react/button";
 import UserPanel from "../user-panel/UserPanel";
 import "./Header.scss";
 import { Template } from "devextreme-react/core/template";
-import { BiWorld } from "react-icons/bi";
+import { BiBell, BiWorld } from "react-icons/bi";
 import LanguageSelector from "./LanguageSelector";
 import { LanguageContext } from "../../contexts/Language";
+import Notification from "./Notification";
 
 export default function Header({ menuToggleEnabled, title, toggleMenu }) {
   const [open, setopen] = useState(false);
   const { Right } = useContext(LanguageContext);
   const direction = Right ? "after" : "before";
   const oppositeDirection = Right ? "before" : "after";
-
   return (
     <header className={"header-component flex"}>
       <Toolbar
@@ -37,21 +37,15 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
           text={title}
           visible={!!title}
         />
-        <Item
-          // location={"after"}
-          location={oppositeDirection}
-          locateInMenu={"auto"}
-          menuItemTemplate={"userPanelTemplate"}
-        >
-          <Button
-            className={"user-button authorization"}
-            width={210}
-            height={"100%"}
-            stylingMode={"text"}
-          >
-            <UserPanel menuMode={"context"} />
+        {/* notifications */}
+        <Item location={oppositeDirection}>
+          <Button stylingMode="text" className="relative notifications-button">
+            <BiBell className="text-2xl" />
+            <Notification />
           </Button>
         </Item>
+
+        {/* LanguageSelector */}
         <Item
           // location={"after"}
           location={oppositeDirection}
@@ -63,11 +57,27 @@ export default function Header({ menuToggleEnabled, title, toggleMenu }) {
             height={"100%"}
             stylingMode={"text"}
             rtlEnabled={false}
-            className={`${open ? "!cursor-auto" : "!cursor-pointer"} mx-1 `}
+            className={`${open ? "!cursor-auto" : "!cursor-pointer"} lg:mx-1 `}
           >
             <div>
               <LanguageSelector open={open} />
             </div>
+          </Button>
+        </Item>
+        {/* UserPanel */}
+        <Item
+          // location={"after"}
+          location={oppositeDirection}
+          locateInMenu={"auto"}
+          menuItemTemplate={"userPanelTemplate"}
+        >
+          <Button
+            className={"user-button authorization"}
+            // width={150}
+            height={"100%"}
+            stylingMode={"text"}
+          >
+            <UserPanel menuMode={"context"} />
           </Button>
         </Item>
         <Template name={"userPanelTemplate"}>

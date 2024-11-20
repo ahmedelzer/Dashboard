@@ -5,3 +5,5 @@ export { default as TextParameter } from "./TextParameter";
 export { default as LookupInput } from "./LookupInput";
 export { default as PasswordParameter } from "./PasswordParameter";
 export { default as ImageParameterWithPanelActions } from "./InputActions/ImageParameterWithPanelActions";
+export { default as LocationMapParameter } from "./LocationMapParameter";
+export { default as TimeDuringParameter } from "./TimeDuringParameter";

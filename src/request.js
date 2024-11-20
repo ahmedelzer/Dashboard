@@ -5,7 +5,8 @@ export const baseURL = "http://maingatewayapi.ihs-solutions.com:8000";
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
 export const token = Cookies.get("user");
-export const websoketBaseURI = "ws://ihs.ddnsking.com:8002/Chanels";
+export const websocketBaseURI =
+  "ws://maingatewayapi.ihs-solutions.com:8000/Chanels";
 export const defaultProjectProxyRoute =
   "http://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
 
@@ -33,7 +34,7 @@ export function SetHeaders() {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
     // "Access-Control-Allow-Credentials": "true",
-    // "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": "*",
     token: token,
     languageID: window.localStorage.getItem("languageID"),
   };
@@ -49,10 +50,9 @@ export function SetHeaders() {
 }
 
 export const request = axios.create({
-  baseURL: baseURL,
+  // baseURL: baseURL,
   // headers: {
   //   ...SetHeaders(),
   // },
-
   // withCredentials: true,
 });

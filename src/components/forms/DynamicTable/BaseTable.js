@@ -5,12 +5,20 @@ import {
   IntegratedSelection,
   PagingState,
   SelectionState,
+  FilteringState,
+  GroupingState,
+  IntegratedFiltering,
+  IntegratedGrouping,
+  IntegratedSorting,
+  SortingState,
+  DataTypeProvider,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   PagingPanel,
   Table,
   TableEditColumn,
+  TableFilterRow,
   TableHeaderRow,
 } from "@devexpress/dx-react-grid-bootstrap4";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
@@ -39,6 +47,11 @@ import {
 } from "./styles";
 import { TypeProvider } from "./TypeProvider";
 import DotsLoading from "../../loading/DotsLoading";
+import { onApply } from "../DynamicPopup/OnApplay";
+import { Card, Modal, ModalBody } from "reactstrap";
+import { SetReoute } from "../../../request";
+import LocationMap from "../../inputs/LocationMap";
+import avoidColsTypes from "./avoidColsTypes.json";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const initialState = {
@@ -68,6 +81,7 @@ function BaseTable({
   refreshData,
   rowDetails,
   subSchemas,
+  selectedRow,
 }) {
   function reducer(state, { type, payload }) {
     switch (type) {
@@ -113,7 +127,7 @@ function BaseTable({
   }
   const [state, dispatch] = useReducer(reducer, initialState);
   const { localization } = useContext(LanguageContext);
-
+  const [filters, setFilters] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
@@ -131,12 +145,18 @@ function BaseTable({
         : [...prevExpandedRows, row]
     );
   };
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
+  const dataSourceAPI = (query, skip, take) => {
+    SetReoute(schema.projectProxyRoute);
+    return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
       ...rowDetails,
     });
+  };
+  // Function to handle filter change and update state
+  const handleFiltersChange = (newFilters) => {
+    setFilters(newFilters); // Update filters state with new values
+  };
 
   const rowDoubleClick = (row) => {
     if (setSelectedRow) {
@@ -145,6 +165,7 @@ function BaseTable({
     }
   };
   const CustomRow = ({ row, onRowClick, ...restProps }) => {
+    // import("./selection.css");
     if (row.isLoading) {
       return (
         <Table.Row {...restProps}>
@@ -155,12 +176,19 @@ function BaseTable({
       );
     }
     if (selection) {
+      // import("./style.css");
+      //todo the problem of why the bg color is do not edit because that .table > :not(caption) > * > * {
+      //background-color: #fff !important;
+      //}
+
       return (
         <Table.Row
           {...restProps}
           onClick={() => onRowClick(row)}
           className={`${customRowStyle.row} ${customRowStyle.selectedRow}`}
+          // className="custom-row"
         >
+          {/* <div className=" absolute top-0 left-0 hover:!bg-[--main-color2] !w-0 !h-0 hover:!w-full hover:!h-full" /> */}
           {React.Children.map(restProps.children, (child) =>
             React.cloneElement(child, {
               style: {
@@ -169,7 +197,6 @@ function BaseTable({
                   restProps.selected ? "var(--main-color2)" : "white"
                 }`,
               },
-              class: "hover:!bg-[--main-color2]",
             })
           )}
         </Table.Row>
@@ -212,7 +239,14 @@ function BaseTable({
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
     const dynamicColumns =
       schema?.dashboardFormSchemaParameters
-        .filter((column) => !column.isIDField)
+        .filter((column) => {
+          return (
+            !column.isIDField &&
+            !avoidColsTypes.find(
+              (columnType) => column.parameterType === columnType
+            )
+          );
+        })
         ?.map((param) => ({
           name: param.parameterField,
           title: param.parameterTitel,
@@ -223,10 +257,12 @@ function BaseTable({
               param.lookupID ? param.lookupDisplayField : param.parameterField
             ],
         })) || [];
-
-    setColumns([...dynamicColumns]);
+    setColumns([
+      ...dynamicColumns,
+      // haveAreaMap && areaMap,
+      { name: "switchAction", title: "switch" },
+    ]);
   }, [schema]);
-
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
   const updateRows = (skip, count, newTotalCount) => {
     dispatch({
@@ -254,6 +290,11 @@ function BaseTable({
 
     setIncludeSchemas(findServerContainer);
   }, []);
+  // useEffect(() => {
+  //   if (selectedRow === null && state.rows.length > 0) {
+  //     setSelectedRow(state.rows[0]);
+  //   }
+  // }, [state.rows, setSelectedRow]);
   // useEffect(() => {
   //   loadData();
   //   console.log("refreshData", new Date().getTime());
@@ -293,13 +334,21 @@ function BaseTable({
       </div>
     );
   };
-  const SwitchCell = ({ value, onValueChange }) => {
+  const SwitchCell = ({ value }) => {
+    async function onValueChange(newValue) {
+      // const requst = await onApply(newValue);
+    }
     return (
-      <Switch value={value} onValueChanged={(e) => onValueChange(e.value)} />
+      <Switch
+        value={value}
+        onValueChanged={(e) => onValueChange(e.value)}
+        style={{ direction: "ltr" }}
+      />
     );
   };
 
   const DetailsCell = (props) => {
+    const [modalOpen, setModalOpen] = useState(false);
     if (props.column.type === "detailsCell") {
       const findSubSchemas = subSchemas?.find(
         (schema) => schema.dashboardFormSchemaID === props.column.lookupID
@@ -314,10 +363,43 @@ function BaseTable({
           />
         </Table.Cell>
       );
-    } else if (props.column.name === "switch") {
+    } else if (props.column.name === "switchAction") {
       return (
         <Table.Cell {...props}>
-          <SwitchCell row={props.row} onValueChange={(newValue) => {}} />
+          <SwitchCell
+            value={props.row.switchAction}
+            // onValueChange={(newValue) => {
+            //   console.log(newValue);
+            // }}
+          />
+        </Table.Cell>
+      );
+    } else if (
+      props.column.type === "areaMapLongitudePoint" ||
+      props.column.type === "mapLongitudePoint"
+    ) {
+      const toggleModal = () => {
+        setModalOpen(!modalOpen);
+      };
+      return (
+        <Table.Cell {...props}>
+          <Modal isOpen={modalOpen} toggle={toggleModal}>
+            <ModalBody>
+              <LocationMap
+                // location={{
+                //   latitude: 30,
+                //   longitude: 22,
+                //   // radius: +props.row.radius,
+                // }}
+                location={props.row}
+                fields={schema?.dashboardFormSchemaParameters}
+                clickable={false}
+              />
+            </ModalBody>
+          </Modal>
+          <button className={detailsButtonStyle.button} onClick={toggleModal}>
+            {localization.table.areaColumnTitle}
+          </button>
         </Table.Cell>
       );
     }
@@ -373,8 +455,89 @@ function BaseTable({
       }
     };
   }, [observerCallback]);
+  let initialRows = [
+    {
+      postID: "1a6dca80-4216-429b-a0a0-75047a1f3588",
+      creationDate: "2024-08-14T20:20:35.007",
+      postTitle: "Vision",
+      switchAction: true,
+    },
+  ];
+  console.log(filters);
+  ///filter custom filters
+  // Custom editor component for switch values in the grid
+  const SwitchEditor = ({ onValueChange, value }) => {
+    const handleChange = (value) => {
+      // Update the value when the switch is toggled
+      onValueChange(value);
+    };
+
+    return (
+      <Switch
+        value={value}
+        onValueChanged={(e) => handleChange(e.value)}
+        style={{ direction: "ltr" }}
+      />
+    );
+  };
+  // Custom editor component for currency values in the grid
+  const DateEditor = ({ onValueChange, value }) => {
+    const handleChange = (event) => {
+      const { value: targetValue } = event.target;
+      // If the input is empty, set value to undefined
+      if (targetValue.trim() === "") {
+        onValueChange(undefined);
+        return;
+      }
+      // Parse the input value as an integer and update
+      onValueChange(parseInt(targetValue, 10));
+    };
+
+    return (
+      <input
+        type="number" // Input type set to number for currency entry
+        className="form-control"
+        placeholder="Filter..." // Placeholder text for the input field
+        value={value} // Get the current value for the input
+        min={0} // Minimum value allowed
+        onChange={handleChange} // Handle value changes
+      />
+    );
+  };
+
+  // Custom formatter component for displaying currency values
+  const DateFormatter = ({ value }) => (
+    <i>
+      {value.toLocaleString("en-US", { style: "currency", currency: "USD" })}{" "}
+      {/* Format value as currency */}
+    </i>
+  );
+  // DataTypeProvider for currency column, specifying formatter and editor
+  const CurrencyTypeProvider = (props) => (
+    <DataTypeProvider
+      formatterComponent={DateFormatter} // Formatter for displaying currency
+      editorComponent={DateEditor} // Editor for inputting currency values
+      // availableFilterOperations={availableFilterOperations} // Operations for filtering
+      {...props} // Spread any additional props
+    />
+  );
+  // Custom formatter component for displaying switch values
+  const SwitchFormatter = ({ value }) => (
+    <span>{value ? "On" : "Off"}</span> // Display "On" or "Off" based on the boolean value
+  );
+
+  // DataTypeProvider for switch column, specifying formatter and editor
+  const SwitchTypeProvider = (props) => (
+    <DataTypeProvider
+      formatterComponent={SwitchFormatter} // Formatter for displaying switch values
+      editorComponent={SwitchEditor} // Editor for inputting switch values
+      availableFilterOperations={[]}
+      {...props} // Spread any additional props
+    />
+  );
+
   return (
-    <div className="card">
+    <Card>
       <Grid
         // rows={initialRows}
         // columns={initialColumns}
@@ -384,8 +547,19 @@ function BaseTable({
         getRowId={getRowId}
         i18nIsDynamicList={true}
       >
+        {/*start filter and search*/}
+        <FilteringState onFiltersChange={handleFiltersChange} />
+        <SortingState />
+        {/*end filter and search*/}
         {paging ? <PagingState defaultCurrentPage={0} pageSize={5} /> : null}
         {paging ? <IntegratedPaging /> : null}
+        {/*start filter and search*/}
+        <IntegratedFiltering />
+        <IntegratedSorting />
+        <SwitchTypeProvider for={["switchAction"]} /> {/* Switch column */}
+        <CurrencyTypeProvider for={["Date"]} />
+        {/* Date column */}
+        {/*end filter and search*/}
         <TypeProvider for={columnsFormat} />
         <EditingState onCommitChanges={commitChanges} />
         {/* {selectionRow && (
@@ -434,7 +608,11 @@ function BaseTable({
           showEditCommand={editMessage}
           showDeleteCommand={deleteMessage}
         />
-        <TableHeaderRow />
+        {/*start filter and search*/}
+        <TableFilterRow showFilterSelector={true} />{" "}
+        {/* Render filter row with filter options */}
+        {/*end filter and search*/}
+        <TableHeaderRow showSortingControls={true} />
         {/* <VirtualTable /> can you make lazy loading work without this */}
         {!isSearchingTable ? popupComponent({ state }) : <></>}
         {paging ? <PagingPanel /> : null}
@@ -447,7 +625,7 @@ function BaseTable({
       {state.rows && (
         <div ref={observerRef} className={listObserverStyle.container} />
       )}
-    </div>
+    </Card>
   );
 }
 export default BaseTable;

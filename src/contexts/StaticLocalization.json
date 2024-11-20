@@ -70,7 +70,16 @@
       "UrlPlaceholder": "Enter image URL",
       "defaultImage": "https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"
     },
-    "base": { "placeholder": "Enter " }
+    "base": { "placeholder": "Enter " },
+    "locationMap": {
+      "popupTitle": "Your selected location",
+      "radius": "Circle Radius: {radius} meters"
+    },
+    "timeDuring": {
+      "labelDays": "Days:",
+      "labelHours": "Hours:",
+      "labelMinutes": "Minutes:"
+    }
   },
   "loadData": {
     "loading": "Loading"
@@ -145,5 +154,11 @@
     "applyButtonText": "تاكيد",
     "cancelButtonText": "الغاء",
     "todayButtonText": "اليوم"
+  },
+  "table": {
+    "areaColumnTitle": "show area"
+  },
+  "notification": {
+    "buttonClick": "Click me!"
   }
 }

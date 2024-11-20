@@ -7,7 +7,7 @@ import "./UserPanel.scss";
 import { BiWorld } from "react-icons/bi";
 import { LanguageContext } from "../../contexts/Language";
 import { FaExchangeAlt } from "react-icons/fa";
-
+//!update localization from login to UserPanel
 export default function UserPanel({ menuMode }) {
   const { user, signOut } = useAuth();
   const { localization } = useContext(LanguageContext);

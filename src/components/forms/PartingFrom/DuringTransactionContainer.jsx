@@ -63,9 +63,6 @@ function DuringTransactionContainer({
     const form = e.target;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
-    console.log("====================================");
-    console.log(formJson);
-    console.log("====================================");
     const apply = await onApply(
       formJson,
       iDField,

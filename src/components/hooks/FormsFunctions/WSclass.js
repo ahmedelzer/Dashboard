@@ -1,10 +1,8 @@
-import { useEffect } from "react";
+import { websocketBaseURI } from "../../../request";
 
 export class WSclass {
   constructor(url) {
-    this.url = url;
-    this.socket = null;
-    this.socket = new WebSocket(this.url);
+    this.socket = new WebSocket(url); //! retuen it with websocketBaseURI
   }
 
   connect() {
@@ -21,6 +19,11 @@ export class WSclass {
     this.socket.onerror = (error) => {
       // You can handle WebSocket errors here
     };
+  }
+  reconnect(url) {
+    this.disconnect();
+    this.socket = new WebSocket(websocketBaseURI + url);
+    this.connect();
   }
   ReciveMessages(messageCallback) {
     this.socket.addEventListener("message", (event) => {

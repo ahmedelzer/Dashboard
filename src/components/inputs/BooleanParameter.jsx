@@ -1,7 +1,6 @@
 import React from "react";
 import { RadioGroup } from "devextreme-react";
 import BaseInput from "./BaseInput";
-// import inputs from "../../locals/EN/inputs.json";
 import { LanguageContext } from "../../contexts/Language";
 
 class BooleanParameter extends BaseInput {

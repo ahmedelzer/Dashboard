@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
+import { websocketBaseURI } from "../../request";
 
 const WebSocketComponent = () => {
   useEffect(() => {
-    const uri =
-      "ws://ihs.ddnsking.com:8002/Chanels/Ftr:PurchaseInvoice:d8d7bae7-951a-4d17-8dd9-db563513e0f7:e2b6bd4f-a30b-4d70-ae80-f510479a45eb";
+    const uri = `${websocketBaseURI}/Ftr:PushNotification:d8d7bae7-951a-4d17-8dd9-db563513e0f7:e2b6bd4f-a30b-4d70-ae80-f510479a45eb`;
+    // "ws://ihs.ddnsking.com:8002/Chanels/Ftr:PurchaseInvoice:d8d7bae7-951a-4d17-8dd9-db563513e0f7:e2b6bd4f-a30b-4d70-ae80-f510479a45eb";
     const socket = new WebSocket(uri);
-
     socket.onopen = () => {
       console.log("Connected to the WebSocket server.");
     };

@@ -2,7 +2,6 @@ import Button from "devextreme-react/button";
 import LoadPanel from "devextreme-react/load-panel";
 import "devextreme/dist/css/dx.common.css";
 import React, { useContext, useEffect, useState } from "react";
-import { BiWorld } from "react-icons/bi";
 import {
   Navigate,
   Route,
@@ -17,11 +16,12 @@ import { AuthProvider, useAuth } from "./contexts/auth";
 import { NavigationProvider } from "./contexts/navigation";
 import "./dx-styles.scss";
 import { SideNavInnerToolbar as SideNavBarLayout, SingleCard } from "./layouts";
+import { Test } from "./pages";
 import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
-import { Test } from "./pages";
+import DynamicTree from "./pages/dynamicTree/DynamicTree";
 function App() {
   const { user, loading } = useAuth();
   // SetReoute(schemaLanguages.projectProxyRoute);
@@ -53,8 +53,6 @@ function App() {
 
     if (Right) {
       import("./themes/generated/Right.css");
-    } else {
-      import("./themes/generated/left.css");
     }
   }, [Right]);
 
@@ -85,6 +83,7 @@ function App() {
             <Routes>
               <Route path="/home" element={<Home />} />
               <Route path="/test" element={<Test />} />
+              <Route path="/tree/:id" element={<DynamicTree />} />
               {ApiRoutes(routes).map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />
               ))}

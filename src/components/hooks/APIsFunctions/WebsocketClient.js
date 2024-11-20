@@ -1,2 +1,2 @@
-import { websoketBaseURI } from "../../../request";
-export const socket = (path) => new WebSocket(websoketBaseURI + path);
+import { websocketBaseURI } from "../../../request";
+export const socket = (path) => new WebSocket(websocketBaseURI + path);

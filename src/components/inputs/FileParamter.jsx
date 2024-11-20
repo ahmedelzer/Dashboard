@@ -1,9 +1,9 @@
 import React, { Component, createRef } from "react";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import inputs from "../../locals/EN/inputs.json";
 import { Image } from "react-bootstrap";
 import defaultImage from "../../assets/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg";
+import { LanguageContext } from "../../contexts/Language";
 class FileParameter extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +26,9 @@ class FileParameter extends Component {
   render() {
     const { fieldName, value } = this.props;
     const { isHovered } = this.state;
-    const imageAltValue = inputs.image.imageAltValue;
+    const { localization } = this.context;
+
+    const imageAltValue = localization.inputs.image.imageAltValue;
     return (
       <div
         className="relative cursor-pointer"
@@ -56,5 +58,6 @@ class FileParameter extends Component {
     );
   }
 }
+FileParameter.contextType = LanguageContext;
 
 export default FileParameter;

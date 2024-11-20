@@ -1,4 +1,4 @@
-import { websoketBaseURI } from "../../../request";
+import { websocketBaseURI } from "../../../request";
 export function BuildWSURL(wSRequest, mainSchemaIDValue) {
   const languageID = window.localStorage.getItem("languageID");
   //   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
@@ -15,5 +15,5 @@ export function BuildWSURL(wSRequest, mainSchemaIDValue) {
 
   //   const apiUrl = `${GetProjectUrl()}/${apiRequest.routeAdderss}?${queryParam}`;
   //   console.log("apiRequest", apiRequest);
-  return `${websoketBaseURI}/${wSRequest.routeAdderss}:${mainSchemaIDValue}:${languageID}`;
+  return `${websocketBaseURI}/${wSRequest.routeAdderss}:${mainSchemaIDValue}:${languageID}`;
 }

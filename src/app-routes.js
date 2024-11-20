@@ -5,6 +5,7 @@ import {
   DynamicTable,
   DynamicTransform,
   Form,
+  DynamicDependForm,
 } from "./pages/index";
 // const routes = [
 //   {
@@ -32,6 +33,8 @@ function SwitchElement(element) {
   switch (element) {
     case "dynamicTable":
       return DynamicTable;
+    case "dynamicFormDependencies":
+      return DynamicDependForm;
     case "dynamicTransformForm":
       return DynamicTransform;
     case "dynamicForm":

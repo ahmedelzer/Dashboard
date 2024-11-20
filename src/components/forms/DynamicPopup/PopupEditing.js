@@ -62,9 +62,6 @@ const PopupEditing = React.memo(
               }
 
               const ReturnRow = (updatedRow) => {
-                console.log("====================================");
-                console.log(updatedRow);
-                console.log("====================================");
                 editedRow = updatedRow();
               };
               const iDField = schema.idField;
@@ -73,12 +70,12 @@ const PopupEditing = React.memo(
                 const form = e.target;
                 const formData = new FormData(form);
                 const formJson = Object.fromEntries(formData.entries());
+                const action = isNew ? postAction : putAction;
                 console.log("====================================");
                 console.log(formJson);
                 console.log("====================================");
                 {
-                  /* const action = isNew ? postAction : putAction;
-                const apply = await onApply(
+                  /* const apply = await onApply(
                   formJson,
                   iDField,
                   isNew,
@@ -87,7 +84,7 @@ const PopupEditing = React.memo(
                 );
                 setResult(apply);
                 if (apply && apply.success === true) {
-                  const newRow = { ...apply.data, ...formJson };
+                  const newRow = { ...formJson, ...apply.data };
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
                     cancelAddedRows({ rowIds });

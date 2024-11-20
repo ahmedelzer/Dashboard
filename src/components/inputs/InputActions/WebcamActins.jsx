@@ -2,7 +2,6 @@ import React, { createRef } from "react";
 import { FaCamera } from "react-icons/fa";
 import Webcam from "react-webcam";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-// import localization from "../../../locals/EN/imageActions/webcam.json";
 import BaseAction from "./BaseAction";
 import { LanguageContext } from "../../../contexts/Language";
 class WebcamActions extends BaseAction {

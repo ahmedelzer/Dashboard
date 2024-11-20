@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FormGroup, Label } from "reactstrap";
-import inputs from "../../../locals/EN/inputs.json";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
+import { LanguageContext } from "../../../contexts/Language";
 function InputDisplay({ props, BaseInput, errorResult }) {
   const [inputErrorResult, setInputErrorResult] = useState(null);
   const [style, setStyle] = useState("");
   const [changed, setChanged] = useState(false);
+  const { localization } = useContext(LanguageContext);
+
   const handleChange = (e) => {
     if (!inputErrorResult) {
       setChanged(true);
@@ -37,7 +39,7 @@ function InputDisplay({ props, BaseInput, errorResult }) {
             {...props}
             onChange={handleChange}
             title={inputErrorResult ? inputErrorResult : props.title}
-            placeholder={inputs.base.placeholder + props.title}
+            placeholder={localization.inputs.base.placeholder + props.title}
             className={style}
           />
           {/* {BaseInput.render()} */}

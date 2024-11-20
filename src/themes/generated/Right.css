@@ -3,12 +3,6 @@
 .dx-drawer-panel {
   direction: ltr !important;
 }
-/* Default (non-right) */
-.dx-checkbox-icon::before {
-  left: 0%; /* Default value */
-}
-
-/* When Right is true */
-.right-checked .dx-checkbox-icon::before {
-  left: 50% !important;
+.dx-checkbox-icon {
+  direction: ltr !important;
 }

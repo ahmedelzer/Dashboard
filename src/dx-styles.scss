@@ -13,9 +13,9 @@
   .grad {
     @apply bg-gradient-to-t from-[#1F2126] to-[#33363D] drop-shadow-2xl;
   }
-  .btn {
-    @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
-  }
+  // .btn {
+  //   @apply h-[50px] flex justify-center items-center rounded-[8px] px-10 py-[10px] text-sm uppercase font-bold;
+  // }
   .btn-accent {
     @apply bg transition-all;
   }
@@ -168,4 +168,7 @@ body {
 
 * {
   box-sizing: border-box;
+}
+.clickable-notification {
+  cursor: pointer;
 }

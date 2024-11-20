@@ -1,0 +1,7 @@
+create notifaction icon near the user profile // ws url/notfaction in header token , languageID
+event click for ntify onopen save collecation context 
+onRecived {operation = "insert","mesage:{link:"dynamictable/itemID",message , row }"} in context notfication popup
+click for notfication popop open link with select data
+open nofication icon call notfication schema draw notfication form diplay notfication context 
+when click on any row redirect to link
+

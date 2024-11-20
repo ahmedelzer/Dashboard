@@ -53,7 +53,7 @@ const LanguageSelector = ({ open }) => {
   };
   function PrepareLanguage(shortName, language) {
     SetSelectedLanguage(shortName);
-    // setLan(shortName);
+    setLan(shortName);
     if (language) {
       window.localStorage.setItem("languageID", language.languageID);
       window.localStorage.setItem("language", shortName);

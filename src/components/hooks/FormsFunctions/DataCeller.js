@@ -3,7 +3,13 @@ import InputDisplay from "../../forms/PartingFrom/InputDisplay";
 import { CreateInputProps } from "./CreateInputProps";
 import { GetInputComponent } from "./GetInputComponent";
 
-export default function DataCellRender({ data, errorResult, onChange, value }) {
+export default function DataCellRender({
+  data,
+  errorResult,
+  onChange,
+  value,
+  ...props
+}) {
   // Determine the key to use for input mapping
   //todo make if detailsCell return FilesWithScrollPaging
   const inputKey = () => {
@@ -21,6 +27,7 @@ export default function DataCellRender({ data, errorResult, onChange, value }) {
       props={{
         ...CreateInputProps(data, value),
         onChange: onChange,
+        ...props,
       }}
       errorResult={errorResult}
       BaseInput={InputComponentClass}

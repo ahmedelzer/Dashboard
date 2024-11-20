@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { defaultProjectProxyRoute } from "../../../request";
 import { BuildWSURL } from "../../hooks/APIsFunctions/BuildWSURL";
@@ -8,51 +8,21 @@ import { WSclass } from "../../hooks/FormsFunctions/WSclass";
 import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
 import BaseTable from "../DynamicTable/BaseTable";
 import PanelActions from "./PanelActions";
+import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
+import { FormContext } from "../../../contexts/Form";
+import { DependenciesCategory } from "./DependenciesCategory";
+import { useSearchParams } from "react-router-dom";
 
-function PartionFrom({ Schemas }) {
-  const mainSchema = Schemas
-    ? Schemas.find((item) => item?.isMainSchema === true)
-    : null;
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [searchAction, setSearchAction] = useState(null);
-  const [getAction, setGetAction] = useState(null);
-  const [postAction, setPostAction] = useState(null);
-  const [putAction, setPutAction] = useState(null);
+function PartionFrom({ Schemas, AdditionForm }) {
+  const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =
+    useContext(FormContext);
+
   // const [data, setData] = useState([{ invoice: {}, invoiceItems: [] }]);
   const [data, setData] = useState(null);
   const [mainID, setMainID] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   var WSClient;
-  const { data: actionsData } = useFetch(
-    GetSchemaActionsUrl(mainSchema?.dashboardFormSchemaID),
-    defaultProjectProxyRoute
-  );
 
-  useEffect(() => {
-    const FetchData = async () => {
-      if (actionsData) {
-        const search = actionsData.find(
-          (action) => action?.dashboardFormActionMethodType === "Search"
-        );
-        const get = actionsData.find(
-          (action) => action?.dashboardFormActionMethodType === "Get"
-        );
-        const post = actionsData.find(
-          (action) => action?.dashboardFormActionMethodType === "Post"
-        );
-        const put = actionsData.find(
-          (action) => action?.dashboardFormActionMethodType === "Put"
-        );
-        setGetAction(get);
-        setSearchAction(search);
-        setPostAction(post);
-        setPutAction(put);
-      }
-    };
-    FetchData();
-
-    // Cleanup function to close WebSocket connection
-  }, [actionsData, Schemas]);
   const CreateActionBody = (isNew, isMainSchema, schema, editedRow) => {
     if (isNew && isMainSchema) {
       return {
@@ -139,13 +109,17 @@ function PartionFrom({ Schemas }) {
   }, [panelOpen]);
   return (
     <div>
-      {Schemas &&
-        Schemas.map((Schema) => (
+      {mainSchema && (
+        <DrawPartionFrom
+          mainID={mainID}
+          Schema={mainSchema}
+          updatedData={data}
+        />
+      )}
+      {subSchemas.length > 0 &&
+        subSchemas.map((Schema) => (
           <div key={Schema?.dashboardFormSchemaID}>
             <DrawPartionFrom
-              postAction={postAction}
-              putAction={putAction}
-              mainSchema={mainSchema}
               mainID={mainID}
               Schema={Schema}
               updatedData={data}
@@ -157,6 +131,7 @@ function PartionFrom({ Schemas }) {
             {/* <LiveTable dataSource={Schema} updateRow={data[index]} /> */}
           </div>
         ))}
+      {AdditionForm && <AdditionForm />}
       <PanelActions
         panelOpen={panelOpen}
         setPanelOpen={setPanelOpen}
@@ -165,7 +140,9 @@ function PartionFrom({ Schemas }) {
             setPanelOpen={setPanelOpen}
             setSelectedRow={setSelectedRow}
             schema={mainSchema}
-            getAction={searchAction}
+            selectedRow={selectedRow}
+            // getAction={searchAction}
+            getAction={getAction}
             isSearchingTable={true}
           />
         }

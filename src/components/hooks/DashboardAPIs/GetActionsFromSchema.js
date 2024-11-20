@@ -11,7 +11,6 @@ export function GetActionsFromSchema(schema) {
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
     defaultProjectProxyRoute
   );
-
   SetReoute(schema.projectProxyRoute);
 
   const getAction = schemaActions?.find(
@@ -23,9 +22,28 @@ export function GetActionsFromSchema(schema) {
   const putAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Put"
   );
+  const searchAction = schemaActions?.find(
+    (action) => action.dashboardFormActionMethodType === "Search"
+  );
+  const getDependenciesAction = schemaActions?.find(
+    (action) => action.dashboardFormActionMethodType === "GetDependencies"
+  );
+  const getActionByID = schemaActions?.find(
+    (action) => action.dashboardFormActionMethodType === "GetByID"
+  );
   const deleteAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Delete"
   );
 
-  return { getAction, postAction, putAction, deleteAction, error, isLoading };
+  return {
+    getAction,
+    postAction,
+    putAction,
+    deleteAction,
+    searchAction,
+    getDependenciesAction,
+    getActionByID,
+    error,
+    isLoading,
+  };
 }

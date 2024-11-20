@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import BaseAction from "./BaseAction";
 import { FaLink } from "react-icons/fa";
-import input from "../../../locals/EN/inputs.json";
-// import localization from "../../../locals/EN/imageActions/browser.json";
 import { LanguageContext } from "../../../contexts/Language";
 
 import { browserActionsStyle } from "./styles";
@@ -87,7 +85,7 @@ class BrowserUrlAction extends BaseAction {
           <ModalBody>
             <input
               type="text"
-              placeholder={input.image.placeholder}
+              placeholder={localization.inputs.image.UrlPlaceholder}
               onChange={this.Change}
               className={`${browserActionsStyle.formControl} ${
                 error ? browserActionsStyle.isInvalid : ""
