@@ -8,7 +8,7 @@ import { useAuth } from "../../contexts/auth";
 import { useNavigate } from "react-router-dom";
 import useNetworkStatus from "../hooks/APIsFunctions/useNetworkStatus";
 import { WSclass } from "../hooks/FormsFunctions/WSclass";
-import { token } from "../../request";
+import { languageID, token } from "../../request";
 import { WSOperation } from "../hooks/FormsFunctions/WSOperation";
 import { LanguageContext } from "../../contexts/Language";
 function Notification() {
@@ -23,8 +23,11 @@ function Notification() {
   useEffect(() => {
     // Early return if token is missing or offline
     if (!token || !isOnline) return;
-    const WS = new WSclass(`ws://localhost:8080`);
+    // const WS = new WSclass(`ws://localhost:8080`);
     // const WS = new WSclass(`/PushNotification?token=${token}`);
+    const WS = new WSclass(
+      `/Notifications?token=${token}&languageID=${languageID}`
+    );
 
     WS.connect();
     console.log("WebSocket connected");
@@ -47,49 +50,53 @@ function Notification() {
   // },[isOnline])
   // Custom notification handler to display with click support
   const showNotification = (notificationencode) => {
-    const decodedString = decodeURIComponent(notificationencode);
+    // const decodedString = decodeURIComponent(notificationencode);
     function handleNotifyClick(notification) {
       return redirect(
         `/${notification.notificationLink}?notificationLinkID=${notification.notificationPortalItemID}`
       );
     }
     // If the JSON inside is double-encoded (with escaped quotes), parse it again
-    const parsedData = JSON.parse(decodedString);
-    const notifications = JSON.parse(parsedData.notifications);
+    // const parsedData = JSON.parse(decodedString);
+    // const notifications = JSON.parse(parsedData.notifications);
+    // const notificationencode = "%7B%22ope%22%3A%22Context%22%2C%22notifications%22%3A%22%5B%5D%22%7D";
+
     console.log("====================================");
-    console.log(parsedData, notifications);
+    console.log(
+      decodeURIComponent(notificationencode) // Decoding the encoded string
+    );
     console.log("====================================");
-    notifications.forEach((notification) => {
-      notify(
-        {
-          message: notification.message,
-          type: "info",
-          displayTime: 3500,
-          width: 250,
-          animation: {
-            show: {
-              type: "slide",
-              duration: 400,
-              from: { position: { my: "top", at: "top", of: window } },
-              to: { position: { my: "top", at: "top", of: window } },
-            },
-            hide: { type: "fade", duration: 200 },
-          },
-          contentTemplate: (element) => {
-            const content = document.createElement("div");
-            content.textContent = localization.notification.buttonClick;
-            content.style.cursor = "pointer";
-            content.className = "!p-2 !m-1 color btn text-md font-bold";
-            content.onclick = () => handleNotifyClick(notification);
-            element.appendChild(content);
-          },
-        },
-        {
-          direction: "down-push",
-          position: "top right",
-        }
-      );
-    });
+    // notifications.forEach((notification) => {
+    //   notify(
+    //     {
+    //       message: notification.message,
+    //       type: "info",
+    //       displayTime: 3500,
+    //       width: 250,
+    //       animation: {
+    //         show: {
+    //           type: "slide",
+    //           duration: 400,
+    //           from: { position: { my: "top", at: "top", of: window } },
+    //           to: { position: { my: "top", at: "top", of: window } },
+    //         },
+    //         hide: { type: "fade", duration: 200 },
+    //       },
+    //       contentTemplate: (element) => {
+    //         const content = document.createElement("div");
+    //         content.textContent = localization.notification.buttonClick;
+    //         content.style.cursor = "pointer";
+    //         content.className = "!p-2 !m-1 color btn text-md font-bold";
+    //         content.onclick = () => handleNotifyClick(notification);
+    //         element.appendChild(content);
+    //       },
+    //     },
+    //     {
+    //       direction: "down-push",
+    //       position: "top right",
+    //     }
+    //   );
+    // });
 
     // WSOperation(notification, notifications, setNotifications);
   };

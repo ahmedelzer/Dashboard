@@ -2,7 +2,7 @@ import { websocketBaseURI } from "../../../request";
 
 export class WSclass {
   constructor(url) {
-    this.socket = new WebSocket(url); //! retuen it with websocketBaseURI
+    this.socket = new WebSocket(websocketBaseURI + url); //! retuen it with websocketBaseURI
   }
 
   connect() {
@@ -29,7 +29,11 @@ export class WSclass {
     this.socket.addEventListener("message", (event) => {
       const blob = event.data;
       // const reader = new FileReader();
-      messageCallback(JSON.parse(blob));
+      if (typeof blob === "string") {
+        messageCallback(JSON.parse(blob));
+      } else {
+        messageCallback(blob);
+      }
       // reader.onload = () => {
       //   try {
       //     const jsonData = JSON.parse(reader.result);
