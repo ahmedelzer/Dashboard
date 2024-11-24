@@ -11,14 +11,19 @@ export default function DataCellRender({
   ...props
 }) {
   // Determine the key to use for input mapping
-  //todo make if detailsCell return FilesWithScrollPaging
+  //todo make lookup in data.parameterType
   const inputKey = () => {
-    if (data.parameterType === "detailsCell" || !data.lookupID) {
+    if (
+      data.parameterType === "detailsCell" ||
+      !data.lookupID ||
+      data.parameterType === "addingLookup"
+    ) {
       return data.parameterType;
     } else {
       return "lookup";
     }
   };
+  console.log(inputKey(), data.parameterType);
 
   const InputComponentClass = GetInputComponent(inputKey());
   // Optionally instantiate the class (if needed)

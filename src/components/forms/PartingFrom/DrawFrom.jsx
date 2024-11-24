@@ -6,13 +6,13 @@ import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSc
 import DotsLoading from "../../loading/DotsLoading";
 import FormComponent from "./FormComponent";
 // }
-function DrawFrom({ serviceRegistration, result }) {
+function DrawFrom({ addDashboardItemID, result }) {
   const {
     data: addDashboardItem,
     error,
     isLoading,
   } = useFetch(
-    `/Dashboard/GetDashboardForm?DashboardMenuItemID=${serviceRegistration.dataSource[0].addDashboardItemID}`,
+    `/Dashboard/GetDashboardForm?DashboardMenuItemID=${addDashboardItemID}`,
     defaultProjectProxyRoute
   );
 

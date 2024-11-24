@@ -2,14 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import LocationMap from "./LocationMap";
 import { LanguageContext } from "../../contexts/Language";
 function LocationMapParameter({ ...props }) {
-  const [location, setLocation] = useState(
-    Object.keys(props.value).length > 0
-      ? props.value
-      : {
-          centerLatitudePoint: 30.036271730628933,
-          centerLongitudePoint: 31.26169967625174,
-        }
-  );
+  const [location, setLocation] = useState(props.value);
   useEffect(() => {
     if (navigator.geolocation && !props.value) {
       navigator.geolocation.getCurrentPosition((pos) => {
@@ -28,9 +21,14 @@ function LocationMapParameter({ ...props }) {
         onLocationChange={handleLocationChange}
         clickable={true}
         fields={props.formSchemaParameters}
+        haveRadius={props.type === "areaMapLongitudePoint"}
       />
       {props.formSchemaParameters
-        .filter((i) => i.parameterType.startsWith("areaMap"))
+        .filter(
+          (i) =>
+            i.parameterType.startsWith("areaMap") ||
+            i.parameterType.startsWith("map")
+        )
         .map((pram) => (
           <input
             type="hidden"
@@ -41,5 +39,4 @@ function LocationMapParameter({ ...props }) {
     </div>
   );
 }
-
 export default LocationMapParameter;

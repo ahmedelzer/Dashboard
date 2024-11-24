@@ -13,24 +13,7 @@ function AuthProvider(props) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState([
-    {
-      ope: "Insert",
-      notifications: {
-        NotificationType: 0,
-        NotificationPortalItemCodeNumber: 0,
-        NotificationSearchID: "2e60bbd6-5a4f-455e-bc04-0241122316f6",
-        MessageTemplateID: "eeec0f5f-6ac9-4eeb-9f70-8a6e68a141d9",
-        NotificationID: "53161ee7-7f09-442d-b1ce-18c12dce7d46",
-        DashboardItemName: "Customer Requests",
-        NotificationPortalItemID: "02f35826-3a7e-4ffd-acc6-af20d3c72918",
-        NotificationLink:
-          "dynamicFormDependencies/502c37b3-0fde-4024-a11b-295960a8b1c9",
-        MessageTemplate: "",
-        Message: "test",
-      },
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     (async function () {

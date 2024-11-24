@@ -20,24 +20,37 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-const LocationMap = ({ location, onLocationChange, clickable, fields }) => {
+const LocationMap = ({
+  location,
+  onLocationChange,
+  clickable,
+  fields,
+  haveRadius,
+}) => {
   const { localization } = useContext(LanguageContext);
 
   const latitudeField = fields.find(
-    (param) => param.parameterType === "areaMapLatitudePoint"
-  ).parameterField;
-  const longitudeField = fields.find(
-    (param) => param.parameterType === "areaMapLongitudePoint"
-  ).parameterField;
-  const radiusField = fields.find(
-    (param) => param.parameterType === "areaMapRadius"
-  ).parameterField;
-  const [radius, setRadius] = useState(location[radiusField] || 100); // Initial radius
-  const lat = +location[latitudeField];
-  const lng = +location[longitudeField];
+    (param) =>
+      param.parameterType ===
+      (haveRadius ? "areaMapLatitudePoint" : "mapLatitudePoint")
+  )?.parameterField;
 
-  //const lat = 20;
-  //const lng = 20;
+  const longitudeField = fields.find(
+    (param) =>
+      param.parameterType ===
+      (haveRadius ? "areaMapLongitudePoint" : "mapLongitudePoint")
+  )?.parameterField;
+
+  const radiusField = haveRadius
+    ? fields.find((param) => param.parameterType === "areaMapRadius")
+        ?.parameterField
+    : null;
+
+  const [radius, setRadius] = useState(location[radiusField] || 100);
+
+  const lat = +location[latitudeField] || 20; // Default latitude
+  const lng = +location[longitudeField] || 24; // Default longitude
+
   const MapClickHandler = () => {
     useMapEvents({
       click(e) {
@@ -45,28 +58,37 @@ const LocationMap = ({ location, onLocationChange, clickable, fields }) => {
         onLocationChange({
           [latitudeField]: lat,
           [longitudeField]: lng,
-          [radiusField]: radius,
+          ...(radiusField && { [radiusField]: radius }),
         });
       },
     });
     return null;
   };
+
   const handleRadiusChange = (e) => {
     setRadius(Number(e.target.value));
   };
-  // Effect to update location whenever radius changes
+
+  useEffect(() => {
+    if (radiusField) {
+      onLocationChange({
+        [latitudeField]: lat,
+        [longitudeField]: lng,
+        [radiusField]: radius,
+      });
+    }
+  }, []);
   useEffect(() => {
     onLocationChange({
       [latitudeField]: lat,
       [longitudeField]: lng,
-      [radiusField]: radius,
+      // [radiusField]: radius,
     });
-  }, [radius]);
+  }, []);
   return (
     <div className={locationMap.container}>
-      {/* Map with position: relative for layering controls on top */}
       <MapContainer
-        center={location ? [lat, lng] : [30.032957707631663, 31.2599301782983]}
+        center={[lat, lng]}
         zoom={13}
         className={locationMap.mapContainer}
         attributionControl={false}
@@ -91,10 +113,7 @@ const LocationMap = ({ location, onLocationChange, clickable, fields }) => {
         )}
       </MapContainer>
 
-      {/* Overlay the slider at the top of the map */}
-      {/* Button at the bottom of the map, taking full width */}
-
-      {radiusField && clickable && (
+      {radiusField && clickable && haveRadius && (
         <div className={locationMap.radiusContainer}>
           <label>
             {localization.inputs.locationMap.radius.replace("{radius}", radius)}

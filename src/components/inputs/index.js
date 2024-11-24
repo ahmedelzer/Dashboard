@@ -7,3 +7,5 @@ export { default as PasswordParameter } from "./PasswordParameter";
 export { default as ImageParameterWithPanelActions } from "./InputActions/ImageParameterWithPanelActions";
 export { default as LocationMapParameter } from "./LocationMapParameter";
 export { default as TimeDuringParameter } from "./TimeDuringParameter";
+export { default as AddingLookupParameter } from "./AddingLookupParameter";
+export { default as SelectParameter } from "./SelectParameter";

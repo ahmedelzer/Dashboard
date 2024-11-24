@@ -8,6 +8,7 @@ import {
   PasswordParameter,
   LocationMapParameter,
   TimeDuringParameter,
+  AddingLookupParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   switch (type) {
@@ -25,10 +26,14 @@ export function GetInputComponent(type) {
       return PasswordParameter;
     case "areaMapLongitudePoint":
       return LocationMapParameter;
+    case "mapLongitudePoint":
+      return LocationMapParameter;
     case "timeDuring": //input for days and hours amd minutes then send total minutes
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;
+    case "addingLookup":
+      return AddingLookupParameter; ///addingLookup
     //detailsCell
 
     default:

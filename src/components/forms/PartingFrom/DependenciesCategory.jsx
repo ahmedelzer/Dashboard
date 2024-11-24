@@ -25,6 +25,7 @@ export const DependenciesCategory = () => {
   const [searchParams] = useSearchParams();
   const notificationLinkID = searchParams.get("notificationLinkID");
   const [route, setRoute] = useState(null);
+  const [addDashboardItemID, setAddDashboardItemID] = useState(null);
 
   useEffect(() => {
     if (notificationLinkID && getActionByID) {
@@ -91,7 +92,10 @@ export const DependenciesCategory = () => {
               <Card
                 key={index}
                 tag={"p"}
-                className="shadow-lg border-0 rounded-lg overflow-hidden"
+                className="shadow-lg border-0 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() =>
+                  setAddDashboardItemID(category.addDashboardItemID)
+                }
               >
                 <CardBody
                 // className="bg-white p-4"
@@ -118,7 +122,7 @@ export const DependenciesCategory = () => {
               )
             } // The form will only submit when Save button is clicked
           >
-            <DrawFrom serviceRegistration={data} />
+            <DrawFrom addDashboardItemID={addDashboardItemID} />
           </form>
         </div>
       )}

@@ -30,7 +30,7 @@ export class WSclass {
       const blob = event.data;
       // const reader = new FileReader();
       if (typeof blob === "string") {
-        messageCallback(JSON.parse(blob));
+        messageCallback(blob);
       } else {
         messageCallback(blob);
       }

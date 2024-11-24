@@ -15,7 +15,11 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   //todo).parameterField;
   const onChange = new Onchange(row);
   function SetValue(param) {
-    if (param.lookupID || param.parameterType === "areaMapLongitudePoint") {
+    if (
+      param.lookupID ||
+      param.parameterType === "areaMapLongitudePoint" ||
+      param.parameterType === "mapLongitudePoint"
+    ) {
       return row;
     } else {
       return row[param.parameterField];

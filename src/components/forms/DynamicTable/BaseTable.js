@@ -260,7 +260,7 @@ function BaseTable({
     setColumns([
       ...dynamicColumns,
       // haveAreaMap && areaMap,
-      { name: "switchAction", title: "switch" },
+      // { name: "switchAction", title: "switch" },
     ]);
   }, [schema]);
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));

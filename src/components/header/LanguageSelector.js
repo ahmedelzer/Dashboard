@@ -27,7 +27,7 @@ const LanguageSelector = ({ open }) => {
     );
   const query = dataSourceAPI(getAction);
   const { data } = UseFetchWithoutBaseUrl(query);
-  const { setRight, setLocalization, setLan, Right, Lan } =
+  const { setRight, setLocalization, setLan, Right, Lan, setLanguageID } =
     useContext(LanguageContext);
 
   useEffect(() => {
@@ -56,6 +56,7 @@ const LanguageSelector = ({ open }) => {
     setLan(shortName);
     if (language) {
       window.localStorage.setItem("languageID", language.languageID);
+      setLanguageID(language.languageID);
       window.localStorage.setItem("language", shortName);
       SetHeaders();
       window.localStorage.setItem("right", language.rightDirectionEnable);

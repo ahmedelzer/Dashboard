@@ -6,6 +6,9 @@ export const LanguageContext = createContext();
 
 const Language = ({ children }) => {
   const [Lan, setLan] = useState(window.localStorage.getItem("language"));
+  const [languageID, setLanguageID] = useState(
+    window.localStorage.getItem("languageID")
+  );
   const [Right, setRight] = useState(
     window.localStorage.getItem("right") === "true"
   );
@@ -20,6 +23,8 @@ const Language = ({ children }) => {
         setRight,
         localization,
         setLocalization,
+        languageID,
+        setLanguageID,
       }}
     >
       {children}
