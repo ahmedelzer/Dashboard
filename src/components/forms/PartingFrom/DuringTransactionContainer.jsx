@@ -4,6 +4,7 @@ import FormContainer from "../DynamicPopup/FormContainer";
 import { onApply } from "../DynamicPopup/OnApplay";
 import { buttonContainerStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
+import ProgressFilesLoading from "./ProgressFilesLoading";
 function DuringTransactionContainer({
   tableSchema,
   TransformDone,
@@ -23,13 +24,22 @@ function DuringTransactionContainer({
   const [initialRow, setInitialRow] = useState({});
   const [textButton, setTextButton] = useState("");
   const [index, setIndex] = useState(0);
+  const [uploadedFiles, setUploadedFiles] = useState(0); // Number of uploaded files
+  const [totalFiles, setTotalFiles] = useState(0); // Total files to upload
   let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
       setInitialRow(selectionContext[0]);
       setIndex(0);
+      setTotalFiles(selectionContext.length);
+      // Calculate total size in MB
+      // const totalSizeMB = selectionContext.reduce(
+      //   (acc, file) => acc + (file.size || 0) / (1024 * 1024),
+      //   0
+      // );
     }
   }, [selectionContext]);
+
   useEffect(() => {
     ChangeNextButton();
   }, [index, selectionContext]);
@@ -43,6 +53,8 @@ function DuringTransactionContainer({
     } else {
       setOpen(false);
     }
+    // Update progress
+    setUploadedFiles((prev) => prev + 1);
   }
   function IndexIncreasing(currentIndex) {
     setIndex(currentIndex + 1);
@@ -94,13 +106,14 @@ function DuringTransactionContainer({
             tableSchema.dashboardFormSchemaParameters
           ).then(() => MoveOn()) // Move on after each task
       );
-
       // Wait for all tasks to complete concurrently
       await Promise.all(tasks);
       // setSelectionContext([]);
       // Invoke TransformDone once all tasks are finished
       TransformDone();
       setAutomatic(false);
+      setTotalFiles(0);
+      setUploadedFiles(0);
     }
   };
   //todo here the key of the solve
@@ -138,6 +151,11 @@ function DuringTransactionContainer({
           </div>
         </div>
       )}
+      <ProgressFilesLoading
+        modalOpen={automated}
+        totalFiles={totalFiles}
+        uploadedFiles={uploadedFiles}
+      />
     </form>
   );
 }

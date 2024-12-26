@@ -1,14 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const baseURL = "http://maingatewayapi.ihs-solutions.com:8000";
+export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
 export const token = Cookies.get("user");
 export const websocketBaseURI =
-  "ws://maingatewayapi.ihs-solutions.com:8000/Chanels";
+  "wss://maingatewayapi.ihs-solutions.com:8000/Chanels";
 export const defaultProjectProxyRoute =
-  "http://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
+  "https://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
 
 // Get projectProxyRoute
 export const projectProxyRoute =

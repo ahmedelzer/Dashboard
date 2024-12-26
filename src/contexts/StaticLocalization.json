@@ -160,5 +160,10 @@
   },
   "notification": {
     "buttonClick": "Click me!"
+  },
+  "filesLoading": {
+    "itemsUploaded": "items Uploaded",
+    "note": "note: please do not close the browser or reload the page until theitems uploaded",
+    "ok": "OK"
   }
 }

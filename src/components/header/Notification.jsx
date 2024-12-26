@@ -13,12 +13,10 @@ import { WSOperation } from "../hooks/FormsFunctions/WSOperation";
 import { LanguageContext } from "../../contexts/Language";
 function Notification() {
   const { notifications, setNotifications } = useAuth();
-  const { localization, languageID } = useContext(LanguageContext);
+  const { localization, languageID, Right } = useContext(LanguageContext);
   //todo when get message add it in notifications and then run function that displays notify and make the header behaver as he do
   const navigate = useNavigate();
-  const [notificationsNewNum, setNotificationsNewNum] = useState(
-    notifications?.length
-  );
+  const [notificationsNewNum, setNotificationsNewNum] = useState(0);
   const { isOnline } = useNetworkStatus();
   useEffect(() => {
     // Early return if token is missing or offline
@@ -89,14 +87,17 @@ function Notification() {
         ...RecivedNotifications, // New notifications
         ...prevNotifications, // Existing notifications
       ]);
-      setNotificationsNewNum(margeNotifications.length);
 
       function handleNotifyClick(notification) {
         return redirect(
-          `/${notification.notificationLink}?notificationLinkID=${notification.notificationSearchID}`
+          `/${notification.notificationlink}?notificationLinkID=${notification.notificationsearchid}`
         );
       }
-      if (RecivedNotifications.length > 0) {
+      console.log("====================================");
+      console.log(parsedData.ope);
+      console.log("====================================");
+      if (RecivedNotifications.length > 0 && parsedData.ope !== "Context") {
+        setNotificationsNewNum(RecivedNotifications.length);
         RecivedNotifications.forEach((notification) => {
           notify(
             {
@@ -124,7 +125,7 @@ function Notification() {
             },
             {
               direction: "down-push",
-              position: "top right",
+              position: Right ? "top left" : "top right",
             }
           );
         });
