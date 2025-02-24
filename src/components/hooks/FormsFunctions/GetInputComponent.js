@@ -9,6 +9,8 @@ import {
   LocationMapParameter,
   TimeDuringParameter,
   AddingLookupParameter,
+  ListOfKeywordsParameter,
+  RateParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   switch (type) {
@@ -19,6 +21,7 @@ export function GetInputComponent(type) {
     case "date":
       return DateParameter;
     case "boolean":
+      // case "radio button":
       return BooleanParameter;
     case "image":
       return ImageParameterWithPanelActions;
@@ -35,7 +38,15 @@ export function GetInputComponent(type) {
     case "addingLookup":
       return AddingLookupParameter; ///addingLookup
     //detailsCell
-
+    case "listOfKeywords":
+      return ListOfKeywordsParameter;
+    case "rate":
+    case "orders":
+    case "reviews":
+    case "likes":
+    case "dislikes":
+      // todo: ActiveInputInde is the first item of these parmters that only appear ignore the others
+      return RateParameter;
     default:
       return TextParameter;
   }

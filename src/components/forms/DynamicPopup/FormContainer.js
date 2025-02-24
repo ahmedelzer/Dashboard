@@ -5,6 +5,7 @@ import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 import { Sm } from "./Sm";
 import { LanguageContext } from "../../../contexts/Language";
 import avoidColsTypes from "../DynamicTable/avoidColsTypes.json";
+import firstColsFound from "./firstColsFound.json";
 function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
@@ -18,14 +19,19 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
     if (
       param.lookupID ||
       param.parameterType === "areaMapLongitudePoint" ||
-      param.parameterType === "mapLongitudePoint"
+      param.parameterType === "mapLongitudePoint" ||
+      param.parameterType === "rate"
     ) {
       return row;
     } else {
       return row[param.parameterField];
     }
   }
-
+  function GetActiveIndexInput() {
+    return tableSchema?.dashboardFormSchemaParameters.find((pram) =>
+      firstColsFound.includes(pram.parameterType)
+    ).parameterType;
+  }
   //useEffect
   return (
     <div>
@@ -55,6 +61,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
                   value={SetValue(param)}
                   onChange={onChange.UpdateRow}
                   errorResult={errorResult}
+                  activeIndexInput={GetActiveIndexInput()}
                   formSchemaParameters={
                     tableSchema?.dashboardFormSchemaParameters
                   }

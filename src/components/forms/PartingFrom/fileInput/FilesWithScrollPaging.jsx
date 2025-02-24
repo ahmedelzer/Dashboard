@@ -143,6 +143,9 @@ function FilesWithScrollPaging({
     };
   }, [observerCallback]);
   const handleCheckboxChange = (file) => {
+    // file.fileCodeNumber === "image"
+    //   ? (file.fileCodeNumber = 0)
+    //   : (file.fileCodeNumber = 1);
     setSelectedServerFiles((prevSelected) =>
       prevSelected.includes(file)
         ? prevSelected.filter((i) => i !== file)

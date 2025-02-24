@@ -52,6 +52,8 @@ import { Card, Modal, ModalBody } from "reactstrap";
 import { SetReoute } from "../../../request";
 import LocationMap from "../../inputs/LocationMap";
 import avoidColsTypes from "./avoidColsTypes.json";
+import firstColsFound from "../DynamicPopup/firstColsFound.json";
+import { GetIconByName } from "../../../utils/GetIconByName";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const initialState = {
@@ -402,6 +404,21 @@ function BaseTable({
           </button>
         </Table.Cell>
       );
+    } else if (firstColsFound.includes(props.column.type)) {
+      // TODO:here make the popup of rate
+
+      return (
+        <Table.Cell {...props}>
+          <div className="flex items-center">
+            <p className="!mx-1 m-0 !p-0 text-md">
+              {props.row[props.column.type]}
+            </p>
+            <div className="text-accent">
+              {GetIconByName(props.column.type, 22)}
+            </div>
+          </div>
+        </Table.Cell>
+      );
     }
     return <Table.Cell {...props} />;
   };
@@ -457,8 +474,8 @@ function BaseTable({
   }, [observerCallback]);
   let initialRows = [
     {
-      postID: "1a6dca80-4216-429b-a0a0-75047a1f3588",
-      creationDate: "2024-08-14T20:20:35.007",
+      rate: "9",
+      likes: "10",
       postTitle: "Vision",
       switchAction: true,
     },
@@ -541,8 +558,8 @@ function BaseTable({
       <Grid
         // rows={initialRows}
         // columns={initialColumns}
-        // rows={rows}
-        rows={rows.concat(loading ? [{ isLoading: true }] : [])}
+        rows={rows}
+        // rows={rows.concat(loading ? [{ isLoading: true }] : [])}
         columns={columns}
         getRowId={getRowId}
         i18nIsDynamicList={true}

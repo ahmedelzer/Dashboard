@@ -2,7 +2,6 @@ import React from "react";
 import InputDisplay from "../../forms/PartingFrom/InputDisplay";
 import { CreateInputProps } from "./CreateInputProps";
 import { GetInputComponent } from "./GetInputComponent";
-
 export default function DataCellRender({
   data,
   errorResult,
@@ -11,6 +10,7 @@ export default function DataCellRender({
   ...props
 }) {
   // Determine the key to use for input mapping
+
   //todo make lookup in data.parameterType
   const inputKey = () => {
     if (

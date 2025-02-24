@@ -9,3 +9,5 @@ export { default as LocationMapParameter } from "./LocationMapParameter";
 export { default as TimeDuringParameter } from "./TimeDuringParameter";
 export { default as AddingLookupParameter } from "./AddingLookupParameter";
 export { default as SelectParameter } from "./SelectParameter";
+export { default as ListOfKeywordsParameter } from "./ListOfKeywordsParameter";
+export { default as RateParameter } from "./RateParameter";

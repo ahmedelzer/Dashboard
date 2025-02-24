@@ -14,5 +14,6 @@ export function CreateInputProps(param, value) {
     };
     props = { ...props, ...additionProps };
   }
+
   return props;
 }

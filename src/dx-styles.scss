@@ -5,6 +5,11 @@
 :root {
   --main-color: $base-accent;
   --main-color2: #ff5722;
+  --base-accent: #ff5722;
+  --base-text-color: #000000de;
+  --base-bg: #ffffff;
+  --base-border-color: #e0e0e0;
+  --base-border-radius: 4px;
 }
 @layer base {
   .h2 {

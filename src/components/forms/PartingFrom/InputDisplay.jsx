@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { FormGroup, Label } from "reactstrap";
 import DisplayErorr from "../../hooks/FormsFunctions/DisplayError";
 import { LanguageContext } from "../../../contexts/Language";
+import firstColsFound from "../DynamicPopup/firstColsFound.json";
+
 function InputDisplay({ props, BaseInput, errorResult }) {
   const [inputErrorResult, setInputErrorResult] = useState(null);
   const [style, setStyle] = useState("");
@@ -24,9 +26,21 @@ function InputDisplay({ props, BaseInput, errorResult }) {
       setStyle(" ");
     }
   }, [inputErrorResult, errorResult, changed]);
+  function BreaksPoints() {
+    if (props.activeIndexInput) {
+      if (firstColsFound.includes(props.type)) {
+        console.log(props.type, "enter3");
+        return (
+          props.type !== "detailsCell" && props.type === props.activeIndexInput
+        );
+      }
+      return props.type !== "detailsCell";
+    }
+    return props.type !== "detailsCell";
+  }
   return (
     <div>
-      {props.type !== "detailsCell" && (
+      {BreaksPoints() && (
         <FormGroup>
           <DisplayErorr
             dataError={errorResult}
