@@ -29,3 +29,20 @@ export const onApply = async (
 
   return res;
 };
+export const onApplyWithSpecialAction = async (
+  editedRow,
+  action,
+  methodType,
+  routeAdderss,
+  proxyRoute,
+  schemaParameters = false
+) => {
+  let row = schemaParameters
+    ? SharedLists(editedRow, schemaParameters, "parameterField")
+    : null;
+  if (row) editedRow = row;
+  SetReoute(proxyRoute);
+  const res = await APIHandling(routeAdderss, methodType, editedRow);
+
+  return res;
+};

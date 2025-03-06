@@ -2,11 +2,11 @@ import React, { useState, createContext } from "react";
 import { GetActionsFromSchema } from "../components/hooks/DashboardAPIs/GetActionsFromSchema";
 import { useSearchParams } from "react-router-dom";
 //context
-export const FormContext = createContext();
+export const TableContext = createContext();
 
-const Form = ({ children, schemas }) => {
-  const mainSchema = schemas?.find((item) => item?.isMainSchema === true);
-  const subSchemas = schemas?.filter((item) => item.isMainSchema !== true);
+const TableProvider = ({ children, schemas }) => {
+  const mainSchema = schemas?.find((item) => item.isMainSchema);
+  const subSchemas = schemas?.filter((item) => !item.isMainSchema);
   const [selectedRow, setSelectedRow] = useState(null);
   const [actionsForm, setActionsForm] = useState(null);
   const {
@@ -19,7 +19,7 @@ const Form = ({ children, schemas }) => {
   } = GetActionsFromSchema(mainSchema);
 
   return (
-    <FormContext.Provider
+    <TableContext.Provider
       value={{
         getAction,
         postAction,
@@ -36,8 +36,8 @@ const Form = ({ children, schemas }) => {
       }}
     >
       {children}
-    </FormContext.Provider>
+    </TableContext.Provider>
   );
 };
 
-export default Form;
+export default TableProvider;

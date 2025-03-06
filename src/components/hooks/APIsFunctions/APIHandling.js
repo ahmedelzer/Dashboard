@@ -49,7 +49,7 @@ export default async function APIHandling(url, methodType, sendBody) {
     // If there's an exception, return an error response
     const exceptionResponse = {
       success: false,
-      error: "An error occurred during the API call.",
+      error: `An error occurred during the API call.error: ${error}`,
     };
     return exceptionResponse;
   }

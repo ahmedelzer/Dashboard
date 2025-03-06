@@ -34,6 +34,11 @@ export function GetActionsFromSchema(schema) {
   const deleteAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Delete"
   );
+  const specialActions = schemaActions?.filter((action) =>
+    ["Put", "Post", "Delete"].some((method) =>
+      action.dashboardFormActionMethodType.startsWith(`${method}:`)
+    )
+  );
 
   return {
     getAction,
@@ -43,6 +48,7 @@ export function GetActionsFromSchema(schema) {
     searchAction,
     getDependenciesAction,
     getActionByID,
+    specialActions,
     error,
     isLoading,
   };

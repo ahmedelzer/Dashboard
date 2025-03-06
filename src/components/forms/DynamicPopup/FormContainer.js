@@ -6,6 +6,8 @@ import { Sm } from "./Sm";
 import { LanguageContext } from "../../../contexts/Language";
 import avoidColsTypes from "../DynamicTable/avoidColsTypes.json";
 import firstColsFound from "./firstColsFound.json";
+import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
+import { SetReoute } from "../../../request";
 function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
@@ -14,7 +16,12 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
   //todo).parameterField;
-  const onChange = new Onchange(row);
+  const { specialActions } = GetActionsFromSchema(tableSchema);
+  const onChange = new Onchange(
+    specialActions,
+    tableSchema.projectProxyRoute,
+    row
+  );
   function SetValue(param) {
     if (
       param.lookupID ||
@@ -28,9 +35,11 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
     }
   }
   function GetActiveIndexInput() {
-    return tableSchema?.dashboardFormSchemaParameters.find((pram) =>
-      firstColsFound.includes(pram.parameterType)
-    ).parameterType;
+    return (
+      tableSchema?.dashboardFormSchemaParameters.find((pram) =>
+        firstColsFound.includes(pram.parameterType)
+      )?.parameterType || null
+    );
   }
   //useEffect
   return (

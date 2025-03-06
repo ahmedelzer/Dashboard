@@ -15,6 +15,10 @@ export function GetActionsFromSchemaAction(schemaActions) {
   const deleteAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Delete"
   );
-
-  return { getAction, postAction, putAction, deleteAction };
+  const specialActions = schemaActions?.filter((action) =>
+    ["Put", "Post", "Delete"].some((method) =>
+      action.dashboardFormActionMethodType.startsWith(`${method}:`)
+    )
+  );
+  return { getAction, postAction, putAction, deleteAction, specialActions };
 }

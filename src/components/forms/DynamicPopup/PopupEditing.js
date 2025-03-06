@@ -22,6 +22,7 @@ const PopupEditing = React.memo(
     result,
     schema,
     proxyRoute,
+    specialActions,
   }) => {
     return (
       <Plugin>
@@ -74,6 +75,7 @@ const PopupEditing = React.memo(
                 console.log("====================================");
                 console.log(formJson);
                 console.log("====================================");
+                //todo: make event on inputs of specialActions to url/id of row and in body set the value
                 {
                   /* const apply = await onApply(
                   formJson,

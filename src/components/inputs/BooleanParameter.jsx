@@ -1,51 +1,34 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { RadioGroup } from "devextreme-react";
-import BaseInput from "./BaseInput";
 import { LanguageContext } from "../../contexts/Language";
 
-class BooleanParameter extends BaseInput {
-  handleChange = (e) => {
-    const { onChange } = this.props;
+const BooleanParameter = ({
+  value,
+  fieldName,
+  Enable,
+  onKeyPress,
+  onChange,
+}) => {
+  const { localization } = useContext(LanguageContext);
+  const [newValue, setNewValue] = useState();
+
+  const handleChange = (value) => {
+    setNewValue(setNewValue.value);
     if (onChange) {
-      onChange(e.value);
+      onChange({ target: { value: value.value, name: fieldName } });
     }
   };
 
-  render() {
-    const { localization } = this.context;
-    const { value, fieldName, Enable, onKeyPress } = this.props;
-
-    return (
-      <div>
-        <RadioGroup
-          items={localization.inputs.boolean}
-          value={value}
-          // onValueChanged={this.handleChange}
-          onKeyPress={onKeyPress}
-          // readOnly={!Enable}
-          // {...this.props}
-          name={fieldName}
-        />
-      </div>
-    );
-  }
-}
-BooleanParameter.contextType = LanguageContext;
+  return (
+    <div>
+      <RadioGroup
+        items={localization.inputs.boolean}
+        onValueChange={handleChange}
+        onKeyPress={onKeyPress}
+      />
+      <input type="hidden" name={fieldName} value={newValue} />
+    </div>
+  );
+};
 
 export default BooleanParameter;
-
-// import { RadioGroup } from "devextreme-react";
-
-// const BooleanParameter = ({ value, onChange, Enable, onKeyPress }) => (
-//   <RadioGroup
-//     items={[
-//       { text: "Yes", value: true },
-//       { text: "No", value: false },
-//     ]}
-//     value={value}
-//     onValueChanged={onChange}
-//     onKeyPress={onKeyPress}
-//     readOnly={!Enable}
-//   />
-// );
-// export default BooleanParameter;
