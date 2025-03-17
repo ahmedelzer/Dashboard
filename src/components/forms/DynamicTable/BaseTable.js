@@ -1,17 +1,15 @@
 import {
   createRowCache,
+  DataTypeProvider,
   EditingState,
+  FilteringState,
+  IntegratedFiltering,
   IntegratedPaging,
   IntegratedSelection,
+  IntegratedSorting,
   PagingState,
   SelectionState,
-  FilteringState,
-  GroupingState,
-  IntegratedFiltering,
-  IntegratedGrouping,
-  IntegratedSorting,
   SortingState,
-  DataTypeProvider,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -34,26 +32,26 @@ import React, {
 } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { TbListDetails } from "react-icons/tb";
+import { Card, Modal, ModalBody } from "reactstrap";
 import { LanguageContext } from "../../../contexts/Language";
+import { SetReoute } from "../../../request";
+import { GetIconByName } from "../../../utils/GetIconByName";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../hooks/APIsFunctions/loadData";
+import LocationMap from "../../inputs/LocationMap";
+import DotsLoading from "../../loading/DotsLoading";
 import Loading from "../../loading/Loading";
+import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import WaringPop from "../PartingFrom/WaringPop";
 import SelectForm from "../SelectForm";
+import avoidColsTypes from "./avoidColsTypes.json";
 import {
   customRowStyle,
   detailsButtonStyle,
   listObserverStyle,
 } from "./styles";
 import { TypeProvider } from "./TypeProvider";
-import DotsLoading from "../../loading/DotsLoading";
-import { onApply } from "../DynamicPopup/OnApplay";
-import { Card, Modal, ModalBody } from "reactstrap";
-import { SetReoute } from "../../../request";
-import LocationMap from "../../inputs/LocationMap";
-import avoidColsTypes from "./avoidColsTypes.json";
-import firstColsFound from "../DynamicPopup/firstColsFound.json";
-import { GetIconByName } from "../../../utils/GetIconByName";
+import { Scrolling } from "devextreme-react/data-grid";
 const VIRTUAL_PAGE_SIZE = 50;
 const MAX_ROWS = 50000;
 const initialState = {

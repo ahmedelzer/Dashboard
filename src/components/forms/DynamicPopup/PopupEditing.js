@@ -70,14 +70,13 @@ const PopupEditing = React.memo(
                 e.preventDefault();
                 const form = e.target;
                 const formData = new FormData(form);
-                const formJson = Object.fromEntries(formData.entries());
+                const formJson = {
+                  ...editedRow,
+                  ...Object.fromEntries(formData.entries()),
+                };
                 const action = isNew ? postAction : putAction;
-                console.log("====================================");
-                console.log(formJson);
-                console.log("====================================");
                 //todo: make event on inputs of specialActions to url/id of row and in body set the value
-                {
-                  /* const apply = await onApply(
+                const apply = await onApply(
                   formJson,
                   iDField,
                   isNew,
@@ -105,7 +104,6 @@ const PopupEditing = React.memo(
                   stopEditRows({ rowIds });
                   setResult({});
                   cancelChangedRows({ rowIds });
-                } */
                 }
               };
               const cancelChanges = () => {

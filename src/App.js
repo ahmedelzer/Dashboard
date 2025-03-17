@@ -17,11 +17,11 @@ import { NavigationProvider } from "./contexts/navigation";
 import "./dx-styles.scss";
 import { SideNavInnerToolbar as SideNavBarLayout, SingleCard } from "./layouts";
 import { Test } from "./pages";
+import DynamicTree from "./pages/dynamicTree/DynamicTree";
 import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
-import DynamicTree from "./pages/dynamicTree/DynamicTree";
 function App() {
   const { user, loading } = useAuth();
   // SetReoute(schemaLanguages.projectProxyRoute);

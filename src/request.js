@@ -30,6 +30,7 @@ export function GetProjectUrl() {
   return `${baseURL}/${window.sessionStorage.getItem("projectProxyRoute")}/api`;
 }
 export function SetHeaders() {
+  const token = Cookies.get("user");
   const headers = {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",

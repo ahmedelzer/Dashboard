@@ -40,7 +40,6 @@ function SideNavigationMenu(props) {
   //     }
   // ]
   const { selectedItemChanged } = props;
-  [id, setId] = useState("");
 
   // let navigation = [];
   let navigation = [
@@ -118,10 +117,8 @@ function SideNavigationMenu(props) {
   const handleItemClick = (e) => {
     selectedItemChanged(e);
   };
-
   // console.log(id)
   // const Categories=
-  console.log(items, data?.dataSource[0]?.dashboardCategoryName);
   return (
     <div
       className={"dx-swatch-additional side-navigation-menu"}
@@ -137,15 +134,14 @@ function SideNavigationMenu(props) {
           selectionMode={"single"}
           focusStateEnabled={false}
           expandEvent={"click"}
-          onItemClick={handleItemClick}
+          onItemClick={selectedItemChanged}
           onContentReady={onMenuReady}
           width={"100%"}
-          selectByClick={selectedItemChanged}
+          // selectByClick={selectedItemChanged} //!here the make sleeted item apers
         ></TreeView>
       </div>
       {/* </Link> */}
     </div>
   );
 }
-export { id, setId };
 export default SideNavigationMenu;

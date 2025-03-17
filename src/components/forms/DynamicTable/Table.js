@@ -28,7 +28,7 @@ const DynamicTable = ({
   rowDetails = false,
   subSchemas,
 }) => {
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState({}); //that is make re-render to the rows
 
   const {
     data: SchemaActions,

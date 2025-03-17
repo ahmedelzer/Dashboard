@@ -79,13 +79,12 @@ export default function SideNavInnerToolbar({ title, children }) {
   // );
   const onNavigationChanged = useCallback(
     ({ itemData, event, node }) => {
-      if (menuStatus === MenuStatus.Closed || !itemData.path || node.selected) {
+      if (menuStatus === MenuStatus.Closed || !itemData.path) {
         event.preventDefault();
         return;
       }
       navigate(itemData.path);
       scrollViewRef.current.instance.scrollTo(0);
-
       if (!isLarge || menuStatus === MenuStatus.TemporaryOpened) {
         setMenuStatus(MenuStatus.Closed);
         event.stopPropagation();
