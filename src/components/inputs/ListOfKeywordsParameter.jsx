@@ -3,8 +3,8 @@ import { Button } from "reactstrap";
 import { LanguageContext } from "../../contexts/Language";
 import TextParameter from "./TextParameter";
 
-function ListOfKeywordsParameter({ ...props }) {
-  const [keywords, setKeywords] = useState([]);
+function ListOfKeywordsParameter({ value, ...props }) {
+  const [keywords, setKeywords] = useState((value && value.split(",")) || []);
   const { localization } = useContext(LanguageContext);
 
   const sendRequest = (e) => {

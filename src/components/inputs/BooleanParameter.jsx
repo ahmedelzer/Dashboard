@@ -10,7 +10,15 @@ const BooleanParameter = ({
   onChange,
 }) => {
   const { localization } = useContext(LanguageContext);
-  const [newValue, setNewValue] = useState();
+  // Find the matching object from localization.inputs.boolean
+  const getDefaultValue = () => {
+    return (
+      localization.inputs.boolean.find((item) => item.value === value) ||
+      localization.inputs.boolean[0]
+    );
+  };
+
+  const [newValue, setNewValue] = useState(getDefaultValue());
 
   const handleChange = (value) => {
     setNewValue(setNewValue.value);
@@ -24,9 +32,10 @@ const BooleanParameter = ({
       <RadioGroup
         items={localization.inputs.boolean}
         onValueChange={handleChange}
+        value={newValue}
         onKeyPress={onKeyPress}
       />
-      <input type="hidden" name={fieldName} value={newValue} />
+      <input type="hidden" name={fieldName} value={newValue?.value} />
     </div>
   );
 };

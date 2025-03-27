@@ -17,3 +17,9 @@ make cookie for expaire time //Done
 6-DashboardMenuItemID do not read from browser //Done
 7-the localzation data do not have languges only have EN and do not add functionaitty of change lan by local data //Done
 8-logs delete && verables,files and fun do not use //Done
+
+
+/////////////////
+1- the problem of overloping is nodeMenuItemID is not found in the schema
+2-make boolean inputs hide and make switch in the table and he can modify items
+3-why in put in table loop in all prams can we make marge

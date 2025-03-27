@@ -27,6 +27,7 @@ const DynamicTable = ({
   refreshData,
   rowDetails = false,
   subSchemas,
+  selectedRow,
 }) => {
   const [result, setResult] = useState({}); //that is make re-render to the rows
 
@@ -82,6 +83,7 @@ const DynamicTable = ({
         refreshData={refreshData}
         rowDetails={rowDetails}
         subSchemas={subSchemas}
+        selectedRow={selectedRow}
       />
     </div>
   );

@@ -91,7 +91,7 @@ function BaseTable({
           rows: Array.from(
             new Map(
               [...state.rows, ...payload?.rows].map((item) => [
-                item[schema.idField],
+                item[schema.idField], //item[schema.idField]//menuItemID
                 item,
               ])
             ).values()
@@ -169,7 +169,7 @@ function BaseTable({
     if (row.isLoading) {
       return (
         <Table.Row {...restProps}>
-          <Table.Cell colSpan={columns.length + 1} className=" text-center">
+          <Table.Cell colSpan={columns.length + 1} className="text-center">
             <DotsLoading />
           </Table.Cell>
         </Table.Row>
@@ -188,7 +188,7 @@ function BaseTable({
           className={`${customRowStyle.row} ${customRowStyle.selectedRow}`}
           // className="custom-row"
         >
-          {/* <div className=" absolute top-0 left-0 hover:!bg-[--main-color2] !w-0 !h-0 hover:!w-full hover:!h-full" /> */}
+          {/* <div className="!h-0 !w-0 absolute hover:!bg-[--main-color2] hover:!h-full hover:!w-full left-0 top-0" /> */}
           {React.Children.map(restProps.children, (child) =>
             React.cloneElement(child, {
               style: {
@@ -201,15 +201,51 @@ function BaseTable({
           )}
         </Table.Row>
       );
-    } else {
+    } else if (setSelectedRow) {
       return (
         <>
           <Table.Row
             {...restProps}
             onDoubleClick={() => rowDoubleClick(row)}
-            // onClick={() => toggleRowExpanded(getRowId(row))}
-            className={customRowStyle.tableRow}
-          />
+            className={`${customRowStyle.row} group transition-all duration-300`}
+          >
+            {React.Children.map(restProps.children, (child) =>
+              React.cloneElement(child, {
+                className: `${
+                  child.props.className || ""
+                } group-hover:!bg-accent transition-all duration-300 ${
+                  selectedRow &&
+                  row[schema.idField] === selectedRow[schema.idField]
+                    ? "!bg-accent"
+                    : ""
+                }`,
+              })
+            )}
+          </Table.Row>
+          {expandedRows.includes(row) && (
+            <tr className="w-full">
+              <td colSpan={columns.length + 1}>
+                <div className={customRowStyle.expandedRow}>
+                  <SelectForm
+                    row={row}
+                    parentSchemaParameters={
+                      schema?.dashboardFormSchemaParameters
+                    }
+                    includeSchemas={includeSchemas}
+                    schema={subSchema}
+                    fieldName={fieldName}
+                    title={title}
+                  />
+                </div>
+              </td>
+            </tr>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Table.Row {...restProps} className={customRowStyle.tableRow} />
           {expandedRows.includes(row) && (
             //make this take the width of the row
             <tr>
@@ -363,7 +399,10 @@ function BaseTable({
           />
         </Table.Cell>
       );
-    } else if (props.column.name === "switchAction") {
+    } else if (
+      props.column.name === "switchAction" ||
+      props.column.type === "boolean"
+    ) {
       return (
         <Table.Cell {...props}>
           <SwitchCell
@@ -408,7 +447,7 @@ function BaseTable({
       return (
         <Table.Cell {...props}>
           <div className="flex items-center">
-            <p className="!mx-1 m-0 !p-0 text-md">
+            <p className="m-0 text-md !mx-1 !p-0">
               {props.row[props.column.type]}
             </p>
             <div className="text-accent">
@@ -446,6 +485,9 @@ function BaseTable({
     (entries) => {
       const [entry] = entries;
       if (entry.isIntersecting && rows.length < totalCount && !loading) {
+        console.log("====================================");
+        console.log(rows.length, totalCount, schema.idField);
+        console.log("====================================");
         getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2);
         setCurrentSkip(currentSkip + 1);
       }

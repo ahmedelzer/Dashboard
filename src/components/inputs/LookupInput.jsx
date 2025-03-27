@@ -48,6 +48,8 @@ class LookupInput extends BaseInput {
   render() {
     const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
     const { data, selectedRow, isPanelOpen } = this.state;
+    console.log(selectedRow);
+
     const panelContent = (
       <div className="drop-list">
         {data && (
@@ -59,6 +61,7 @@ class LookupInput extends BaseInput {
             deleteMessage={false}
             isSearchingTable={true}
             key={lookupID}
+            selectedRow={this.state.selectedRow}
             setSelectedRow={this.setSelectedRow}
           />
         )}

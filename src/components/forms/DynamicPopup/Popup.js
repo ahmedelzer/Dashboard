@@ -14,7 +14,6 @@ const Popup = ({
   tableSchema,
   errorResult,
   isNewRow,
-  returnRow,
 }) => {
   const { localization } = useContext(LanguageContext);
   const [doneButtonText, setDoneButtonText] = useState(
@@ -34,13 +33,13 @@ const Popup = ({
           : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
       </ModalHeader>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
           setDoneButtonText(
             <LoadIndicator width={"24px"} height={"24px"} visible={true} />
           );
           setDoneButtonDisable(true);
-          onApplyChanges(e);
+          await onApplyChanges(e);
           setDoneButtonText(localization.popup.submitButton);
           setDoneButtonDisable(false);
         }}
@@ -50,12 +49,16 @@ const Popup = ({
           <FormContainer
             tableSchema={tableSchema}
             row={row}
+            returnRow={() => {}}
             errorResult={errorResult}
-            returnRow={returnRow}
           />
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onCancelChanges} className="pop">
+          <Button
+            onClick={onCancelChanges}
+            className="pop"
+            disabled={doneButtonDisable}
+          >
             {localization.popup.cancelButton}
           </Button>{" "}
           <Button type="submit" className="pop" disabled={doneButtonDisable}>

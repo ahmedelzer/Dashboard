@@ -11,6 +11,7 @@ import {
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 
 import { onApply } from "./OnApplay";
+import { getUniqueValues } from "../../../utils/objectsUtils";
 
 const PopupEditing = React.memo(
   ({
@@ -74,6 +75,14 @@ const PopupEditing = React.memo(
                   ...editedRow,
                   ...Object.fromEntries(formData.entries()),
                 };
+                {
+                  /* const filteredData = editedRow.entries
+                  ? getUniqueValues(editedRow, formJson)
+                  : formJson;
+                console.log("====================================");
+                console.log(editedRow, formJson, filteredData);
+                console.log("===================================="); */
+                }
                 const action = isNew ? postAction : putAction;
                 //todo: make event on inputs of specialActions to url/id of row and in body set the value
                 const apply = await onApply(
@@ -127,7 +136,6 @@ const PopupEditing = React.memo(
                   tableSchema={schema}
                   errorResult={result}
                   isNewRow={isNew}
-                  returnRow={ReturnRow}
                 />
               );
             }}
