@@ -21,7 +21,7 @@ const BooleanParameter = ({
   const [newValue, setNewValue] = useState(getDefaultValue());
 
   const handleChange = (value) => {
-    setNewValue(setNewValue.value);
+    setNewValue(value);
     if (onChange) {
       onChange({ target: { value: value.value, name: fieldName } });
     }

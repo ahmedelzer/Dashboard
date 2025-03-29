@@ -17,7 +17,7 @@ export class Onchange {
   };
   UpdateRow = async (e) => {
     const { name, value } = e?.target;
-    console.log(this.proxyRoute);
+    console.log(this.proxyRoute, this.specialActions);
     const specialAction = this.specialActions?.find((action) =>
       action.dashboardFormActionMethodType.endsWith(name)
     );

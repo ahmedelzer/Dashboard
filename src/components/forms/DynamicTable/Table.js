@@ -70,6 +70,7 @@ const DynamicTable = ({
         addMessage={addMessage && postAction}
         editMessage={editMessage && putAction}
         deleteMessage={deleteMessage && deleteAction}
+        specialActions={specialActions}
         isSearchingTable={isSearchingTable}
         setSelectedRow={setSelectedRow}
         paging={paging}

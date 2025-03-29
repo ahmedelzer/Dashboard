@@ -82,6 +82,7 @@ function BaseTable({
   rowDetails,
   subSchemas,
   selectedRow,
+  specialActions,
 }) {
   function reducer(state, { type, payload }) {
     switch (type) {
@@ -370,7 +371,7 @@ function BaseTable({
       </div>
     );
   };
-  const SwitchCell = ({ value }) => {
+  const SwitchCell = ({ value, specialActions }) => {
     async function onValueChange(newValue) {
       // const requst = await onApply(newValue);
     }
@@ -403,10 +404,14 @@ function BaseTable({
       props.column.name === "switchAction" ||
       props.column.type === "boolean"
     ) {
+      console.log("====================================");
+      console.log(specialActions);
+      console.log("====================================");
       return (
         <Table.Cell {...props}>
           <SwitchCell
-            value={props.row.switchAction}
+            value={props.row[props.column.name]}
+            specialActions={specialActions}
             // onValueChange={(newValue) => {
             //   console.log(newValue);
             // }}

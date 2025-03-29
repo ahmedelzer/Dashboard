@@ -75,18 +75,17 @@ const PopupEditing = React.memo(
                   ...editedRow,
                   ...Object.fromEntries(formData.entries()),
                 };
-                {
-                  /* const filteredData = editedRow.entries
-                  ? getUniqueValues(editedRow, formJson)
-                  : formJson;
-                console.log("====================================");
-                console.log(editedRow, formJson, filteredData);
-                console.log("===================================="); */
-                }
+                const filteredData =
+                  editedRow && Object.keys(editedRow).length > 0
+                    ? {
+                        ...getUniqueValues(editedRow, formJson),
+                        [iDField]: editedRow[iDField],
+                      }
+                    : formJson;
                 const action = isNew ? postAction : putAction;
                 //todo: make event on inputs of specialActions to url/id of row and in body set the value
                 const apply = await onApply(
-                  formJson,
+                  filteredData,
                   iDField,
                   isNew,
                   action,
