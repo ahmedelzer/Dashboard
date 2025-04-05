@@ -13,6 +13,7 @@ function TypeFile({ file, title, type = false }) {
   const [fileSrc, setFileSrc] = useState(null);
 
   useEffect(() => {
+    //todo:here if publicImage do not make fetch and set http://41.196.0.25:5004/value to get the image
     fetch(fileUrl)
       .then((response) => {
         if (!response.ok) {

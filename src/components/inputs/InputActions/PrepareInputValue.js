@@ -1,7 +1,7 @@
 import ConvertImageToBase64 from "./ConvertImageToBase64";
 
 export async function PrepareInputValue(type, value) {
-  if (type !== "image" || type === "imagePath") {
+  if (type !== "image" || type === "imagePath" || type !== "publicImage") {
     return value;
   } else {
     try {

@@ -6,15 +6,16 @@ export default function LoadData(
   getAction,
   cache,
   updateRows,
-  dispatch
+  dispatch,
+  filters
 ) {
   const { requestedSkip, take, lastQuery, loading } = state;
   // const navigate = useNavigate(); seen error dom hooks
   const query = dataSourceAPI(getAction, requestedSkip, take);
   if (!getAction) return;
-  if (query !== lastQuery && !loading) {
+  if ((query !== lastQuery || filters) && !loading) {
     const cached = cache.getRows(requestedSkip, take);
-    if (cached.length === take) {
+    if (cached.length === take && !filters) {
       updateRows(requestedSkip, take);
     } else {
       dispatch({ type: "FETCH_INIT" });
@@ -23,6 +24,7 @@ export default function LoadData(
         headers: {
           "Content-Type": "application/json",
           ...SetHeaders(),
+          filterRow: filters && JSON.stringify(filters),
         },
       })
         .then((response) => response.json())

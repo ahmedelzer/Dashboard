@@ -24,6 +24,7 @@ export function GetInputComponent(type) {
       // case "radio button":
       return BooleanParameter;
     case "image":
+    case "publicImage":
       return ImageParameterWithPanelActions;
     case "password":
       return PasswordParameter;
@@ -32,6 +33,7 @@ export function GetInputComponent(type) {
     case "mapLongitudePoint":
       return LocationMapParameter;
     case "timeDuring": //input for days and hours amd minutes then send total minutes
+    case "theDurationPerMinuites":
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;

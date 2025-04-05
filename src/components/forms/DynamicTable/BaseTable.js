@@ -1,6 +1,5 @@
 import {
   createRowCache,
-  DataTypeProvider,
   EditingState,
   FilteringState,
   IntegratedFiltering,
@@ -20,7 +19,6 @@ import {
   TableHeaderRow,
 } from "@devexpress/dx-react-grid-bootstrap4";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import Switch from "devextreme-react/switch";
 import React, {
   useCallback,
   useContext,
@@ -31,38 +29,29 @@ import React, {
   useState,
 } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { TbListDetails } from "react-icons/tb";
-import { Card, Modal, ModalBody } from "reactstrap";
+import { Card } from "reactstrap";
 import { LanguageContext } from "../../../contexts/Language";
 import { SetReoute } from "../../../request";
-import { GetIconByName } from "../../../utils/GetIconByName";
+import {
+  getRemoteRows,
+  initialState,
+  reducer,
+  updateRows,
+} from "../../../utils/Pagination";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../hooks/APIsFunctions/loadData";
-import LocationMap from "../../inputs/LocationMap";
-import DotsLoading from "../../loading/DotsLoading";
 import Loading from "../../loading/Loading";
-import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import WaringPop from "../PartingFrom/WaringPop";
-import SelectForm from "../SelectForm";
 import avoidColsTypes from "./avoidColsTypes.json";
+import CustomRow from "./CustomRow";
 import {
-  customRowStyle,
-  detailsButtonStyle,
-  listObserverStyle,
-} from "./styles";
+  CurrencyTypeProvider,
+  SwitchTypeProvider,
+} from "./CustomTypeProviders";
+import { DetailsCell as CustomDetailsCell } from "./DetailsCell";
+import { listObserverStyle } from "./styles";
 import { TypeProvider } from "./TypeProvider";
-import { Scrolling } from "devextreme-react/data-grid";
 const VIRTUAL_PAGE_SIZE = 50;
-const MAX_ROWS = 50000;
-const initialState = {
-  rows: [],
-  skip: 0,
-  requestedSkip: 0,
-  take: VIRTUAL_PAGE_SIZE * 2,
-  totalCount: 0,
-  loading: false,
-  lastQuery: "",
-};
 function BaseTable({
   schema,
   isSearchingTable,
@@ -84,51 +73,12 @@ function BaseTable({
   selectedRow,
   specialActions,
 }) {
-  function reducer(state, { type, payload }) {
-    switch (type) {
-      case "UPDATE_ROWS":
-        return {
-          ...state,
-          rows: Array.from(
-            new Map(
-              [...state.rows, ...payload?.rows].map((item) => [
-                item[schema.idField], //item[schema.idField]//menuItemID
-                item,
-              ])
-            ).values()
-          ),
-          // [...state.rows, ...payload?.rows], // Append new rows to the existing rows
-          totalCount: payload.totalCount,
-          loading: false,
-        };
-      case "START_LOADING":
-        return {
-          ...state,
-          requestedSkip: payload.requestedSkip,
-          take: payload.take,
-        };
-      case "REQUEST_ERROR":
-        return {
-          ...state,
-          loading: false,
-        };
-      case "FETCH_INIT":
-        return {
-          ...state,
-          loading: true,
-        };
-      case "UPDATE_QUERY":
-        return {
-          ...state,
-          lastQuery: payload,
-        };
-      default:
-        return state;
-    }
-  }
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    reducer,
+    initialState(VIRTUAL_PAGE_SIZE, schema.idField)
+  );
   const { localization } = useContext(LanguageContext);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState(null);
   const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
@@ -165,112 +115,6 @@ function BaseTable({
       setPanelOpen(false);
     }
   };
-  const CustomRow = ({ row, onRowClick, ...restProps }) => {
-    // import("./selection.css");
-    if (row.isLoading) {
-      return (
-        <Table.Row {...restProps}>
-          <Table.Cell colSpan={columns.length + 1} className="text-center">
-            <DotsLoading />
-          </Table.Cell>
-        </Table.Row>
-      );
-    }
-    if (selection) {
-      // import("./style.css");
-      //todo the problem of why the bg color is do not edit because that .table > :not(caption) > * > * {
-      //background-color: #fff !important;
-      //}
-
-      return (
-        <Table.Row
-          {...restProps}
-          onClick={() => onRowClick(row)}
-          className={`${customRowStyle.row} ${customRowStyle.selectedRow}`}
-          // className="custom-row"
-        >
-          {/* <div className="!h-0 !w-0 absolute hover:!bg-[--main-color2] hover:!h-full hover:!w-full left-0 top-0" /> */}
-          {React.Children.map(restProps.children, (child) =>
-            React.cloneElement(child, {
-              style: {
-                ...child.props.style,
-                backgroundColor: `${
-                  restProps.selected ? "var(--main-color2)" : "white"
-                }`,
-              },
-            })
-          )}
-        </Table.Row>
-      );
-    } else if (setSelectedRow) {
-      return (
-        <>
-          <Table.Row
-            {...restProps}
-            onDoubleClick={() => rowDoubleClick(row)}
-            className={`${customRowStyle.row} group transition-all duration-300`}
-          >
-            {React.Children.map(restProps.children, (child) =>
-              React.cloneElement(child, {
-                className: `${
-                  child.props.className || ""
-                } group-hover:!bg-accent transition-all duration-300 ${
-                  selectedRow &&
-                  row[schema.idField] === selectedRow[schema.idField]
-                    ? "!bg-accent"
-                    : ""
-                }`,
-              })
-            )}
-          </Table.Row>
-          {expandedRows.includes(row) && (
-            <tr className="w-full">
-              <td colSpan={columns.length + 1}>
-                <div className={customRowStyle.expandedRow}>
-                  <SelectForm
-                    row={row}
-                    parentSchemaParameters={
-                      schema?.dashboardFormSchemaParameters
-                    }
-                    includeSchemas={includeSchemas}
-                    schema={subSchema}
-                    fieldName={fieldName}
-                    title={title}
-                  />
-                </div>
-              </td>
-            </tr>
-          )}
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Table.Row {...restProps} className={customRowStyle.tableRow} />
-          {expandedRows.includes(row) && (
-            //make this take the width of the row
-            <tr>
-              <td colSpan={columns.length + 1}>
-                <div className={customRowStyle.expandedRow}>
-                  <SelectForm
-                    row={row}
-                    parentSchemaParameters={
-                      schema?.dashboardFormSchemaParameters
-                    }
-                    includeSchemas={includeSchemas}
-                    schema={subSchema}
-                    fieldName={fieldName}
-                    title={title}
-                  />
-                </div>
-              </td>
-            </tr>
-          )}
-        </>
-      );
-    }
-  };
-
   const [columns, setColumns] = useState([]);
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
@@ -301,25 +145,30 @@ function BaseTable({
     ]);
   }, [schema]);
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
-  const updateRows = (skip, count, newTotalCount) => {
-    dispatch({
-      type: "UPDATE_ROWS",
-      payload: {
-        skip,
-        rows: cache.getRows(skip, count),
-        totalCount: newTotalCount < MAX_ROWS ? newTotalCount : MAX_ROWS,
-      },
-    });
-  };
   //e
-  const getRemoteRows = (requestedSkip, take) => {
-    dispatch({ type: "START_LOADING", payload: { requestedSkip, take } });
-  };
   //load data every render
 
   useEffect(() => {
-    LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
+    LoadData(
+      state,
+      dataSourceAPI,
+      getAction,
+      cache,
+      updateRows(dispatch, cache, state),
+      dispatch
+    );
   });
+  useEffect(() => {
+    LoadData(
+      state,
+      dataSourceAPI,
+      getAction,
+      cache,
+      updateRows(dispatch, cache, state),
+      dispatch,
+      filters
+    );
+  }, [filters]);
   useEffect(() => {
     const findServerContainer = subSchemas?.filter(
       (schema) => schema.schemaType === "ServerFilesContainer"
@@ -327,16 +176,6 @@ function BaseTable({
 
     setIncludeSchemas(findServerContainer);
   }, []);
-  // useEffect(() => {
-  //   if (selectedRow === null && state.rows.length > 0) {
-  //     setSelectedRow(state.rows[0]);
-  //   }
-  // }, [state.rows, setSelectedRow]);
-  // useEffect(() => {
-  //   loadData();
-  //   console.log("refreshData", new Date().getTime());
-  // }, [refreshData]);
-  //e
   const { rows, skip, totalCount, loading } = state;
 
   // end e
@@ -356,113 +195,6 @@ function BaseTable({
     );
     setModalIsOpen(false);
     setRowToDelete(null);
-  };
-  const DetailsButton = ({ row, fieldName, title }) => {
-    const handleClick = () => {
-      setFieldName(fieldName);
-      setTitle(title);
-      toggleRowExpanded(row);
-    };
-    return (
-      <div>
-        <button className={detailsButtonStyle.button} onClick={handleClick}>
-          <TbListDetails size={18} />
-        </button>
-      </div>
-    );
-  };
-  const SwitchCell = ({ value, specialActions }) => {
-    async function onValueChange(newValue) {
-      // const requst = await onApply(newValue);
-    }
-    return (
-      <Switch
-        value={value}
-        onValueChanged={(e) => onValueChange(e.value)}
-        style={{ direction: "ltr" }}
-      />
-    );
-  };
-
-  const DetailsCell = (props) => {
-    const [modalOpen, setModalOpen] = useState(false);
-    if (props.column.type === "detailsCell") {
-      const findSubSchemas = subSchemas?.find(
-        (schema) => schema.dashboardFormSchemaID === props.column.lookupID
-      );
-      setSubSchema(findSubSchemas);
-      return (
-        <Table.Cell {...props}>
-          <DetailsButton
-            row={props.row}
-            fieldName={props.column.name}
-            title={props.column.title}
-          />
-        </Table.Cell>
-      );
-    } else if (
-      props.column.name === "switchAction" ||
-      props.column.type === "boolean"
-    ) {
-      console.log("====================================");
-      console.log(specialActions);
-      console.log("====================================");
-      return (
-        <Table.Cell {...props}>
-          <SwitchCell
-            value={props.row[props.column.name]}
-            specialActions={specialActions}
-            // onValueChange={(newValue) => {
-            //   console.log(newValue);
-            // }}
-          />
-        </Table.Cell>
-      );
-    } else if (
-      props.column.type === "areaMapLongitudePoint" ||
-      props.column.type === "mapLongitudePoint"
-    ) {
-      const toggleModal = () => {
-        setModalOpen(!modalOpen);
-      };
-      return (
-        <Table.Cell {...props}>
-          <Modal isOpen={modalOpen} toggle={toggleModal}>
-            <ModalBody>
-              <LocationMap
-                // location={{
-                //   latitude: 30,
-                //   longitude: 22,
-                //   // radius: +props.row.radius,
-                // }}
-                location={props.row}
-                fields={schema?.dashboardFormSchemaParameters}
-                clickable={false}
-              />
-            </ModalBody>
-          </Modal>
-          <button className={detailsButtonStyle.button} onClick={toggleModal}>
-            {localization.table.areaColumnTitle}
-          </button>
-        </Table.Cell>
-      );
-    } else if (firstColsFound.includes(props.column.type)) {
-      // TODO:here make the popup of rate
-
-      return (
-        <Table.Cell {...props}>
-          <div className="flex items-center">
-            <p className="m-0 text-md !mx-1 !p-0">
-              {props.row[props.column.type]}
-            </p>
-            <div className="text-accent">
-              {GetIconByName(props.column.type, 22)}
-            </div>
-          </div>
-        </Table.Cell>
-      );
-    }
-    return <Table.Cell {...props} />;
   };
   // e
   useEffect(() => {
@@ -493,7 +225,7 @@ function BaseTable({
         console.log("====================================");
         console.log(rows.length, totalCount, schema.idField);
         console.log("====================================");
-        getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2);
+        getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2, dispatch);
         setCurrentSkip(currentSkip + 1);
       }
     },
@@ -525,79 +257,6 @@ function BaseTable({
       switchAction: true,
     },
   ];
-  console.log(filters);
-  ///filter custom filters
-  // Custom editor component for switch values in the grid
-  const SwitchEditor = ({ onValueChange, value }) => {
-    const handleChange = (value) => {
-      // Update the value when the switch is toggled
-      onValueChange(value);
-    };
-
-    return (
-      <Switch
-        value={value}
-        onValueChanged={(e) => handleChange(e.value)}
-        style={{ direction: "ltr" }}
-      />
-    );
-  };
-  // Custom editor component for currency values in the grid
-  const DateEditor = ({ onValueChange, value }) => {
-    const handleChange = (event) => {
-      const { value: targetValue } = event.target;
-      // If the input is empty, set value to undefined
-      if (targetValue.trim() === "") {
-        onValueChange(undefined);
-        return;
-      }
-      // Parse the input value as an integer and update
-      onValueChange(parseInt(targetValue, 10));
-    };
-
-    return (
-      <input
-        type="number" // Input type set to number for currency entry
-        className="form-control"
-        placeholder="Filter..." // Placeholder text for the input field
-        value={value} // Get the current value for the input
-        min={0} // Minimum value allowed
-        onChange={handleChange} // Handle value changes
-      />
-    );
-  };
-
-  // Custom formatter component for displaying currency values
-  const DateFormatter = ({ value }) => (
-    <i>
-      {value.toLocaleString("en-US", { style: "currency", currency: "USD" })}{" "}
-      {/* Format value as currency */}
-    </i>
-  );
-  // DataTypeProvider for currency column, specifying formatter and editor
-  const CurrencyTypeProvider = (props) => (
-    <DataTypeProvider
-      formatterComponent={DateFormatter} // Formatter for displaying currency
-      editorComponent={DateEditor} // Editor for inputting currency values
-      // availableFilterOperations={availableFilterOperations} // Operations for filtering
-      {...props} // Spread any additional props
-    />
-  );
-  // Custom formatter component for displaying switch values
-  const SwitchFormatter = ({ value }) => (
-    <span>{value ? "On" : "Off"}</span> // Display "On" or "Off" based on the boolean value
-  );
-
-  // DataTypeProvider for switch column, specifying formatter and editor
-  const SwitchTypeProvider = (props) => (
-    <DataTypeProvider
-      formatterComponent={SwitchFormatter} // Formatter for displaying switch values
-      editorComponent={SwitchEditor} // Editor for inputting switch values
-      availableFilterOperations={[]}
-      {...props} // Spread any additional props
-    />
-  );
-
   return (
     <Card>
       <Grid
@@ -643,20 +302,37 @@ function BaseTable({
         )}
         {selectionRow && <IntegratedSelection />}
         <Table
-          rowComponent={({ row, ...props }) => (
+          rowComponent={(props) => (
             <CustomRow
               {...props}
-              onRowDoubleClick={rowDoubleClick}
-              row={row}
+              schema={schema}
               onRowClick={handleRowClick}
-              // selected={selection?.includes(row[schema.idField])}
-              selected={selection?.some(
-                (selectedRow) =>
-                  selectedRow[schema.idField] === row[schema.idField]
-              )}
+              rowDoubleClick={rowDoubleClick}
+              selectedRow={selectedRow}
+              expandedRows={expandedRows}
+              setExpandedRows={setExpandedRows}
+              includeSchemas={includeSchemas}
+              subSchema={subSchema}
+              fieldName={fieldName}
+              title={title}
+              columns={columns}
+              selection={selection}
+              setSelectedRow={setSelectedRow}
             />
           )}
-          cellComponent={DetailsCell}
+          // cellComponent={DetailsCell}
+          cellComponent={(props) =>
+            CustomDetailsCell({
+              props,
+              subSchemas,
+              setSubSchema,
+              setFieldName,
+              setTitle,
+              toggleRowExpanded,
+              specialActions,
+              schema,
+            })
+          }
         />
         {/* {loading && <Loading />} */}
         {/* {selectionRow && <TableSelection showSelectAll />} */}
