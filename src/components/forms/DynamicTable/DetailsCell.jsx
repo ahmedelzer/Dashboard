@@ -148,10 +148,11 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   );
 };
 
-export const SwitchCell = ({ value, onValueChange }) => {
+export const SwitchCell = ({ value, onValueChange, specialActions }) => {
   return (
     <Switch
       value={value}
+      disabled={specialActions.length > 0 ? false : true}
       onValueChanged={(e) => onValueChange(e.value)}
       style={{ direction: "ltr" }}
     />
@@ -197,6 +198,7 @@ export const DetailsCell = ({
       <Table.Cell {...props}>
         <SwitchCell
           value={props.row[column.name]}
+          specialActions={specialActions}
           onValueChange={(newValue) => {
             // Add logic to trigger specialActions here if needed
             console.log("Switch changed to", newValue);

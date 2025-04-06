@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input, Label } from "reactstrap";
 import { LanguageContext } from "../../contexts/Language";
 
@@ -20,12 +20,23 @@ function TimeDuringParameter({ ...props }) {
     setMinutes(e.target.value);
   };
   let { value, enable, title, fieldName, type } = props;
+  useEffect(() => {
+    if (value !== undefined && value !== null) {
+      const totalMinutes = parseInt(value, 10);
+
+      if (!isNaN(totalMinutes)) {
+        setDays(Math.floor(totalMinutes / 1440)); // 1 day = 1440 minutes
+        setHours(Math.floor((totalMinutes % 1440) / 60)); // 1 hour = 60 minutes
+        setMinutes(totalMinutes % 60); // Remaining minutes
+      }
+    }
+  }, [value]);
   const className = `${props.className} form-control`;
   // Calculate total time in minutes
   const totalMinutes =
-    (parseInt(days, 10) || 0) * 1440 +
-    (parseInt(hours, 10) || 0) * 60 +
-    (parseInt(minutes, 10) || 0);
+    (Number(days) || 0) * 1440 +
+    (Number(hours) || 0) * 60 +
+    (Number(minutes) || 0);
   return (
     <div className="flex space-x-4">
       <div>
@@ -89,6 +100,7 @@ function TimeDuringParameter({ ...props }) {
         type="hidden"
         value={totalMinutes}
         required={enable}
+        data-isNumber="true"
         defaultValue={value}
         name={fieldName}
         id={fieldName}

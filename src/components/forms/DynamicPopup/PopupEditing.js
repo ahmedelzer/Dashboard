@@ -71,9 +71,30 @@ const PopupEditing = React.memo(
                 e.preventDefault();
                 const form = e.target;
                 const formData = new FormData(form);
+
+                // Convert formData into an object with proper boolean conversion where needed
+                const fromEntries = Object.fromEntries(
+                  Array.from(formData.entries()).map(([key, value]) => {
+                    // Check if the element has the 'data-isBoolean' attribute
+                    const formElement = form.querySelector(`[name="${key}"]`);
+                    // If the element has 'data-isBoolean="true"', convert the string value to boolean
+                    if (formElement?.dataset.isboolean === "true") {
+                      if (value === "true") {
+                        return [key, true]; // Convert "true" string to boolean true
+                      } else if (value === "false") {
+                        return [key, false]; // Convert "false" string to boolean false
+                      }
+                    } else if (formElement?.dataset.isnumber === "true") {
+                      return [key, Number(value)];
+                    }
+                    // If not a boolean field, return the value as-is
+                    return [key, value];
+                  })
+                );
+
                 const formJson = {
                   ...editedRow,
-                  ...Object.fromEntries(formData.entries()),
+                  ...fromEntries,
                 };
                 const filteredData =
                   editedRow && Object.keys(editedRow).length > 0
@@ -83,6 +104,9 @@ const PopupEditing = React.memo(
                       }
                     : formJson;
                 const action = isNew ? postAction : putAction;
+                console.log("====================================");
+                console.log(editedRow, filteredData);
+                console.log("====================================");
                 //todo: make event on inputs of specialActions to url/id of row and in body set the value
                 const apply = await onApply(
                   filteredData,

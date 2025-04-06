@@ -5,11 +5,15 @@ import ImageParameter from "../ImageParameter";
 import BrowserUrlAction from "./BrowserUrlAction";
 import UploadAction from "./UploadAction";
 import WebcamActions from "./WebcamActins";
+import { publicImageURL } from "../../../request";
 class ImageParameterWithPanelActions extends BaseInput {
   constructor(props) {
     super(props);
     this.state = {
-      FileData: this.props.value,
+      FileData:
+        this.props.type === "publicImage" && this.props.value
+          ? publicImageURL + this.props.value
+          : this.props.value,
     };
     this.handleImageUpload = this.handleImageUpload.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
@@ -58,7 +62,16 @@ class ImageParameterWithPanelActions extends BaseInput {
           <FileParameter {...this.props} value={FileData} actions={actions} />
         ) : ( */}
         <div onDrop={this.handleDrop} onDragOver={this.handleDragOver}>
-          <ImageParameter {...this.props} value={FileData} actions={actions} />
+          <ImageParameter
+            {...this.props}
+            value={FileData}
+            defaultValue={
+              this.props.type === "publicImage"
+                ? publicImageURL + this.props.value
+                : this.props.value
+            }
+            actions={actions}
+          />
         </div>
         {/* )} */}
       </>

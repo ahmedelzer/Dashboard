@@ -27,21 +27,10 @@ const ImageParameter = (props) => {
         );
     }
   };
-  // useEffect to handle componentDidMount and componentDidUpdate
   useEffect(() => {
-    handleImageChange();
-
-    const currentImageRef = imageRef.current;
-    if (currentImageRef && defaultImage !== currentImageRef.src) {
-      currentImageRef.addEventListener("load", handleImageChange);
+    if (props.defaultValue !== props.value) {
+      handleImageChange();
     }
-
-    return () => {
-      // Cleanup the event listener in componentWillUnmount
-      if (currentImageRef && defaultImage !== currentImageRef.src) {
-        currentImageRef.removeEventListener("load", handleImageChange);
-      }
-    };
   }, [props.value]); // Dependency array mimicking componentDidUpdate when value changes
 
   const { fieldName, value } = props;
@@ -70,7 +59,7 @@ const ImageParameter = (props) => {
           ))}
         </div>
       )}
-      <input type="hidden" name={props.fieldName} value={base64} />
+      <input type="hidden" name={props.fieldName} value={base64 || null} />
     </div>
   );
 };

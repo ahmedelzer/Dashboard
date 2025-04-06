@@ -1,5 +1,5 @@
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
-import { baseURLWithoutApi } from "../../../request";
+import { baseURLWithoutApi, publicImageURL } from "../../../request";
 
 const filedFormat = ({ value, column }) => {
   switch (
@@ -10,6 +10,16 @@ const filedFormat = ({ value, column }) => {
         <img
           src={`${baseURLWithoutApi}/${value}`}
           alt="image"
+          loading="lazy"
+          style={{ width: "50px", height: "50px" }}
+        />
+      );
+    case "publicImage":
+      return (
+        <img
+          src={`${publicImageURL}/${value}`}
+          alt="image"
+          loading="lazy"
           style={{ width: "50px", height: "50px" }}
         />
       );

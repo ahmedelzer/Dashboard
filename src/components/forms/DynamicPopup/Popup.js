@@ -6,6 +6,7 @@ import FormContainer from "./FormContainer";
 import DotsLoading from "../../loading/DotsLoading";
 import Loading from "../../loading/Loading";
 import { LoadIndicator } from "devextreme-react";
+import { IoCloseCircle } from "react-icons/io5";
 const Popup = ({
   open,
   row,
@@ -15,22 +16,34 @@ const Popup = ({
   errorResult,
   isNewRow,
 }) => {
-  const { localization } = useContext(LanguageContext);
+  const { localization, Right } = useContext(LanguageContext);
   const [doneButtonText, setDoneButtonText] = useState(
     localization.popup.submitButton
   );
   const [doneButtonDisable, setDoneButtonDisable] = useState(false);
-
   return (
     <Modal
       isOpen={open}
       onClose={() => (open = false)}
       aria-labelledby="form-dialog-title"
     >
-      <ModalHeader id="form-dialog-title">
-        {isNewRow
-          ? tableSchema.dashboardFormSchemaInfoDTOView.addingHeader
-          : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
+      <ModalHeader id="form-dialog-title" className="relative">
+        <span>
+          {isNewRow
+            ? tableSchema.dashboardFormSchemaInfoDTOView.addingHeader
+            : tableSchema.dashboardFormSchemaInfoDTOView.editingHeader}
+        </span>
+        <div
+          className={`flex justify-between items-center absolute top-5 ${
+            Right ? "left-5" : "right-5"
+          }`}
+        >
+          <IoCloseCircle
+            size={30}
+            className="cursor-pointer"
+            onClick={onCancelChanges} // Close the modal on X click
+          />
+        </div>
       </ModalHeader>
       <form
         onSubmit={async (e) => {

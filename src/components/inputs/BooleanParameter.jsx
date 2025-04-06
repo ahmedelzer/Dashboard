@@ -35,7 +35,12 @@ const BooleanParameter = ({
         value={newValue}
         onKeyPress={onKeyPress}
       />
-      <input type="hidden" name={fieldName} value={newValue?.value} />
+      <input
+        type="hidden"
+        data-isBoolean="true"
+        name={fieldName}
+        value={newValue?.value}
+      />
     </div>
   );
 };

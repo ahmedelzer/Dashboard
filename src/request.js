@@ -5,6 +5,7 @@ export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
 export const token = Cookies.get("user");
+export const publicImageURL = "http://41.196.0.25:5004/";
 export const websocketBaseURI =
   "wss://maingatewayapi.ihs-solutions.com:8000/Chanels";
 export const defaultProjectProxyRoute =

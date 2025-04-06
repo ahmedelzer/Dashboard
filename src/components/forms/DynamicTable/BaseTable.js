@@ -148,6 +148,15 @@ function BaseTable({
   //e
   //load data every render
 
+  // useEffect(() => {
+  //   if (
+  //     Object.keys(selectedRow).length === 0 &&
+  //     setSelectedRow &&
+  //     rows.length > 0
+  //   ) {
+  //     setSelectedRow(rows[0]);
+  //   }
+  // });
   useEffect(() => {
     LoadData(
       state,
@@ -203,7 +212,9 @@ function BaseTable({
     }
   }, [rows]);
   const columnsFormat = columns
-    .filter((column) => column.type === "image")
+    .filter(
+      (column) => column.type === "image" || column.type === "publicImage"
+    )
     .map((column) => column.name);
   const handleRowClick = (row) => {
     const isSelected = selection.some(
