@@ -71,6 +71,7 @@ const PopupEditing = React.memo(
                 e.preventDefault();
                 const form = e.target;
                 const formData = new FormData(form);
+                const imagesPaths = {};
 
                 // Convert formData into an object with proper boolean conversion where needed
                 const fromEntries = Object.fromEntries(
@@ -86,11 +87,16 @@ const PopupEditing = React.memo(
                       }
                     } else if (formElement?.dataset.isnumber === "true") {
                       return [key, Number(value)];
+                    } else if (formElement?.dataset.isimage === "true") {
+                      imagesPaths[key] = formElement?.dataset.imagepath;
                     }
                     // If not a boolean field, return the value as-is
                     return [key, value];
                   })
                 );
+                console.log("====================================");
+                console.log(imagesPaths);
+                console.log("====================================");
 
                 const formJson = {
                   ...editedRow,
@@ -104,9 +110,6 @@ const PopupEditing = React.memo(
                       }
                     : formJson;
                 const action = isNew ? postAction : putAction;
-                console.log("====================================");
-                console.log(editedRow, filteredData);
-                console.log("====================================");
                 //todo: make event on inputs of specialActions to url/id of row and in body set the value
                 const apply = await onApply(
                   filteredData,
@@ -117,7 +120,10 @@ const PopupEditing = React.memo(
                 );
                 setResult(apply);
                 if (apply && apply.success === true) {
-                  const newRow = { ...formJson, ...apply.data };
+                  const newRow = { ...formJson, ...imagesPaths, ...apply.data };
+                  console.log("====================================");
+                  console.log(newRow, imagesPaths);
+                  console.log("====================================");
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
                     cancelAddedRows({ rowIds });

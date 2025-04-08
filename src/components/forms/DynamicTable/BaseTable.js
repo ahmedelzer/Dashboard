@@ -152,9 +152,9 @@ function BaseTable({
   //   if (
   //     Object.keys(selectedRow).length === 0 &&
   //     setSelectedRow &&
-  //     rows.length > 0
+  //     state.rows.length > 0
   //   ) {
-  //     setSelectedRow(rows[0]);
+  //     setSelectedRow(state.rows[0]);
   //   }
   // });
   useEffect(() => {

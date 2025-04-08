@@ -14,11 +14,13 @@ export const onApply = async (
     ? SharedLists(editedRow, schemaParameters, "parameterField")
     : null;
   if (row) editedRow = row;
+  // Remove ID field for patching
+  const { [iDField]: _, ...editedRowWithoutIDField } = editedRow;
   const body = isNew
     ? editedRow
     : {
         entityID: `${editedRow[iDField]}`,
-        ...{ patchJSON: editedRow },
+        ...{ patchJSON: editedRowWithoutIDField },
       };
   SetReoute(proxyRoute);
   const res = await APIHandling(

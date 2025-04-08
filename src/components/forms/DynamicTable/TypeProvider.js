@@ -2,13 +2,13 @@ import { DataTypeProvider } from "@devexpress/dx-react-grid";
 import { baseURLWithoutApi, publicImageURL } from "../../../request";
 
 const filedFormat = ({ value, column }) => {
-  switch (
-    column.type // Use 'fieldType' here
-  ) {
+  const isBlob = typeof value === "string" && value.startsWith("blob:");
+
+  switch (column.type) {
     case "image":
       return (
         <img
-          src={`${baseURLWithoutApi}/${value}`}
+          src={isBlob ? value : `${baseURLWithoutApi}/${value}`}
           alt="image"
           loading="lazy"
           style={{ width: "50px", height: "50px" }}
@@ -17,7 +17,7 @@ const filedFormat = ({ value, column }) => {
     case "publicImage":
       return (
         <img
-          src={`${publicImageURL}/${value}`}
+          src={isBlob ? value : `${publicImageURL}/${value}`}
           alt="image"
           loading="lazy"
           style={{ width: "50px", height: "50px" }}
@@ -29,10 +29,5 @@ const filedFormat = ({ value, column }) => {
 };
 
 export const TypeProvider = ({ ...props }) => {
-  return (
-    <DataTypeProvider
-      formatterComponent={filedFormat} // Pass 'fieldType' here
-      {...props}
-    />
-  );
+  return <DataTypeProvider formatterComponent={filedFormat} {...props} />;
 };

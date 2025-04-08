@@ -11,9 +11,6 @@ function InputDisplay({ props, BaseInput, errorResult }) {
   const { localization } = useContext(LanguageContext);
 
   const handleChange = (e) => {
-    if (!inputErrorResult) {
-      setChanged(true);
-    }
     if (props.onChange) {
       props.onChange(e); // Call the onChange prop if it exists
     }

@@ -59,7 +59,13 @@ const ImageParameter = (props) => {
           ))}
         </div>
       )}
-      <input type="hidden" name={props.fieldName} value={base64 || null} />
+      <input
+        type="hidden"
+        name={props.fieldName}
+        value={base64 || null}
+        data-isImage="true"
+        data-imagePath={value}
+      />
     </div>
   );
 };

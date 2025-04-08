@@ -58,9 +58,16 @@ const CustomDropdown = ({
         </span>
       </div>
 
-      {isPanelOpen && (
-        <div className={customDropdownStyle.panelContent}>{panelContent}</div>
-      )}
+      {/* {isPanelOpen && ( */}
+      <div
+        className={
+          customDropdownStyle.panelContent +
+          ` ${isPanelOpen ? "block" : "hidden"}`
+        }
+      >
+        {panelContent}
+      </div>
+      {/* )} */}
     </FormGroup>
     // <DropDownBox
     //   dataSource={dataSource}
