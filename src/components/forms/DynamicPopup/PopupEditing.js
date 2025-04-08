@@ -119,11 +119,11 @@ const PopupEditing = React.memo(
                   proxyRoute
                 );
                 setResult(apply);
+                console.log("====================================");
+                console.log(formJson);
+                console.log("====================================");
                 if (apply && apply.success === true) {
                   const newRow = { ...formJson, ...imagesPaths, ...apply.data };
-                  console.log("====================================");
-                  console.log(newRow, imagesPaths);
-                  console.log("====================================");
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
                     cancelAddedRows({ rowIds });

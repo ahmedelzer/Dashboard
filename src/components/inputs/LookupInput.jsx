@@ -9,7 +9,7 @@ class LookupInput extends BaseInput {
     super(props);
     this.state = {
       data: null,
-      selectedRow: {},
+      selectedRow: props.value || {},
       isPanelOpen: false,
     };
     this.setSelectedRow = this.setSelectedRow.bind(this);
@@ -71,14 +71,8 @@ class LookupInput extends BaseInput {
     return (
       <div className=" ">
         <CustomDropdown
-          returnField={
-            selectedRow[lookupReturnField] ||
-            this.props.value[lookupReturnField]
-          }
-          displayField={
-            selectedRow[lookupDisplayField] ||
-            this.props.value[lookupDisplayField]
-          }
+          returnField={selectedRow[lookupReturnField]}
+          displayField={selectedRow[lookupDisplayField]}
           panelContent={panelContent}
           isPanelOpen={isPanelOpen}
           setPanelOpen={this.setPanelOpen}

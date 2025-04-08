@@ -40,7 +40,7 @@ const CustomDropdown = ({
   return (
     <FormGroup className={customDropdownStyle.formGroup}>
       <input
-        // name={props.fieldName}
+        name={props.lookupDisplayField}
         className={`${props.className} ${customDropdownStyle.inputField}`}
         readOnly
         ref={inputRef}

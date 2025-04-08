@@ -9,6 +9,5 @@ tabs switch //done
 reset lang ws 
 adding parameter
 ////////////////
-1-boolan value must be bool not string
-2-make x button in popup
-3-make when do not found the spical action make input disable in table
+1-make oclick on image table app display it in popup
+2-make defult action in image paramter

@@ -40,6 +40,7 @@ const ImageParameter = (props) => {
     <div
       className={imageInputStyle.container}
       title={props.title}
+      // onClick={}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -134,6 +134,7 @@ import LocationMap from "../../inputs/LocationMap";
 import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import { detailsButtonStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
+import StarsIcons from "../../../utils/StarsIcons";
 
 export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   return (
@@ -232,16 +233,18 @@ export const DetailsCell = ({
     );
   } else if (firstColsFound.includes(props.column.type)) {
     // TODO:here make the popup of rate
-
+    const value = parseFloat(props.row[props.column.name]) || 0;
     return (
       <Table.Cell {...props}>
         <div className="flex items-center">
-          <p className="m-0 text-md !mx-1 !p-0">
-            {props.row[props.column.type]}
-          </p>
-          <div className="text-accent">
-            {GetIconByName(props.column.type, 22)}
-          </div>
+          <p className="m-0 text-md !mx-1 !p-0">{value}</p>
+          {props.column.type === "rate" ? (
+            <StarsIcons value={value} />
+          ) : (
+            <div className="text-accent">
+              {GetIconByName(props.column.type, 22)}
+            </div>
+          )}
         </div>
       </Table.Cell>
     );

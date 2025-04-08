@@ -147,16 +147,16 @@ function BaseTable({
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
   //e
   //load data every render
-
-  // useEffect(() => {
-  //   if (
-  //     Object.keys(selectedRow).length === 0 &&
-  //     setSelectedRow &&
-  //     state.rows.length > 0
-  //   ) {
-  //     setSelectedRow(state.rows[0]);
-  //   }
-  // });
+  useEffect(() => {
+    if (
+      selectedRow &&
+      Object.keys(selectedRow).length === 0 &&
+      setSelectedRow &&
+      state.rows.length > 0
+    ) {
+      setSelectedRow(state.rows[0]);
+    }
+  });
   useEffect(() => {
     LoadData(
       state,
