@@ -40,7 +40,13 @@ const ImageParameter = (props) => {
     <div
       className={imageInputStyle.container}
       title={props.title}
-      // onClick={}
+      // onClick={}todo here on click make it as clicking on the first action
+      onClick={() => {
+        const uploadInput = document.getElementById(props.fieldName);
+        if (uploadInput) {
+          uploadInput.click();
+        }
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

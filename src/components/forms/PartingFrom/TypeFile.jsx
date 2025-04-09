@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { LanguageContext } from "../../../contexts/Language";
+import MediaModel from "../../../utils/MediaModel";
 
 function TypeFile({ file, title, type = false }) {
   const { localization } = useContext(LanguageContext);
@@ -10,22 +11,24 @@ function TypeFile({ file, title, type = false }) {
   const videoRef = useRef(null);
   let fileUrl = type ? file : URL.createObjectURL(file);
   const typeFile = type ? type : file.type;
-  const [fileSrc, setFileSrc] = useState(null);
+  const [fileSrc, setFileSrc] = useState(fileUrl);
 
   useEffect(() => {
     //todo:here if publicImage do not make fetch and set http://41.196.0.25:5004/value to get the image
-    fetch(fileUrl)
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response);
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const imgURL = URL.createObjectURL(blob);
-        setFileSrc(imgURL); // Set the dynamic image source
-      })
-      .catch((error) => console.error("Error fetching the image:", error));
+    if (type !== "publicImage") {
+      fetch(fileUrl)
+        .then((response) => {
+          if (!response.ok) {
+            console.log(response);
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const imgURL = URL.createObjectURL(blob);
+          setFileSrc(imgURL); // Set the dynamic image source
+        })
+        .catch((error) => console.error("Error fetching the image:", error));
+    }
   }, [fileUrl]);
   function toggleModal() {
     setModalOpen(!modalOpen);
@@ -49,6 +52,7 @@ function TypeFile({ file, title, type = false }) {
   const renderFileContent = () => {
     switch (true) {
       case typeFile.startsWith("image"):
+      case typeFile === "publicImage":
         return (
           <img
             src={fileSrc}
@@ -69,6 +73,7 @@ function TypeFile({ file, title, type = false }) {
             {localization.fileContainer.videoNotSupport}
           </video>
         );
+
       default:
         return <div>{localization.fileContainer.fileNotSupport}</div>;
     }
@@ -79,9 +84,14 @@ function TypeFile({ file, title, type = false }) {
       <button type="button" onClick={() => setModalOpen(true)}>
         {renderFileContent()}
       </button>
-      <Modal isOpen={modalOpen} toggle={toggleModal} size="lg">
+      {/* <Modal isOpen={modalOpen} toggle={toggleModal} size="lg">
         <ModalBody>{renderFileContent()}</ModalBody>
-      </Modal>
+      </Modal> */}
+      <MediaModel
+        modalOpen={modalOpen}
+        renderFileContent={renderFileContent}
+        toggleModal={toggleModal}
+      />
     </div>
   );
 }

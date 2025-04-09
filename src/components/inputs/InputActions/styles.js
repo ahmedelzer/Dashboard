@@ -1,5 +1,5 @@
 export const uploadActionStyle = {
-  label: "cursor-pointer !m-0 !p-0",
+  label: "cursor-pointer !m-0 !p-0 size-full",
   icon: "color",
   hiddenInput: "hidden",
 };
