@@ -48,8 +48,6 @@ class LookupInput extends BaseInput {
   render() {
     const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
     const { data, selectedRow, isPanelOpen } = this.state;
-    console.log(selectedRow);
-
     const panelContent = (
       <div className="drop-list">
         {data && (
