@@ -135,6 +135,8 @@ import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import { detailsButtonStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import StarsIcons from "../../../utils/StarsIcons";
+import { SetReoute } from "../../../request";
+import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 
 export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   return (
@@ -149,11 +151,11 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   );
 };
 
-export const SwitchCell = ({ value, onValueChange, specialActions }) => {
+export const SwitchCell = ({ value, onValueChange, isFound }) => {
   return (
     <Switch
       value={value}
-      disabled={specialActions.length > 0 ? false : true}
+      disabled={!isFound}
       onValueChanged={(e) => onValueChange(e.value)}
       style={{ direction: "ltr" }}
     />
@@ -195,13 +197,23 @@ export const DetailsCell = ({
       </Table.Cell>
     );
   } else if (column.name === "switchAction" || column.type === "boolean") {
+    const isFound = specialActions.find(
+      (item) => item.dashboardFormActionMethodType.split(":")[1] === column.name
+    );
     return (
       <Table.Cell {...props}>
         <SwitchCell
           value={props.row[column.name]}
-          specialActions={specialActions}
-          onValueChange={(newValue) => {
+          isFound={isFound}
+          onValueChange={async (newValue) => {
             // Add logic to trigger specialActions here if needed
+            SetReoute(schema.projectProxyRoute);
+            await APIHandling(
+              isFound.routeAdderss + "/" + props.row[schema.idField],
+              isFound.dashboardFormActionMethodType,
+              newValue
+            );
+            //await action();
             console.log("Switch changed to", newValue);
           }}
         />

@@ -49,7 +49,7 @@ class LookupInput extends BaseInput {
     const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
     const { data, selectedRow, isPanelOpen } = this.state;
     const panelContent = (
-      <div className="drop-list">
+      <div className="drop-list max-w-[450px] max-h-[400px] overflow-auto">
         {data && (
           <Table
             schema={data}

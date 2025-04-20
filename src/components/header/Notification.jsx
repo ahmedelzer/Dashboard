@@ -18,32 +18,32 @@ function Notification() {
   const navigate = useNavigate();
   const [notificationsNewNum, setNotificationsNewNum] = useState(0);
   const { isOnline } = useNetworkStatus();
-  useEffect(() => {
-    // Early return if token is missing or offline
-    if (!token || !isOnline) return;
+  // useEffect(() => {
+  //   // Early return if token is missing or offline
+  //   if (!token || !isOnline) return;
 
-    // Create a new WebSocket connection
-    const WS = new WSclass(
-      `/Notifications?token=${token}&languageID=${languageID}`
-    );
+  //   // Create a new WebSocket connection
+  //   const WS = new WSclass(
+  //     `/Notifications?token=${token}&languageID=${languageID}`
+  //   );
 
-    // Clear notifications when reconnecting
-    setNotifications([]); // Reset notifications to an empty array
+  //   // Clear notifications when reconnecting
+  //   setNotifications([]); // Reset notifications to an empty array
 
-    // Connect the WebSocket
-    WS.connect();
-    console.log("WebSocket connected");
+  //   // Connect the WebSocket
+  //   WS.connect();
+  //   console.log("WebSocket connected");
 
-    // Handle incoming messages and show notifications
-    WS.ReciveMessages(showNotification);
+  //   // Handle incoming messages and show notifications
+  //   WS.ReciveMessages(showNotification);
 
-    // Cleanup function to disconnect WebSocket on unmount or offline status
-    return () => {
-      setNotifications([]); // Clear notifications again on cleanup
-      WS.disconnect();
-      console.log("WebSocket disconnected");
-    };
-  }, [token, isOnline, languageID]); // Re-run effect when token, online status or languageID changes
+  //   // Cleanup function to disconnect WebSocket on unmount or offline status
+  //   return () => {
+  //     setNotifications([]); // Clear notifications again on cleanup
+  //     WS.disconnect();
+  //     console.log("WebSocket disconnected");
+  //   };
+  // }, [token, isOnline, languageID]); // Re-run effect when token, online status or languageID changes
 
   // WSClient.ReciveMessages((datasources) => {
   //   let schemaDataSource = Schemas?.map(
