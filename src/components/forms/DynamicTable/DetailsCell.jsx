@@ -151,11 +151,11 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   );
 };
 
-export const SwitchCell = ({ value, onValueChange, isFound }) => {
+export const SwitchCell = ({ value, onValueChange, fieldAction }) => {
   return (
     <Switch
       value={value}
-      disabled={!isFound}
+      disabled={!fieldAction}
       onValueChanged={(e) => onValueChange(e.value)}
       style={{ direction: "ltr" }}
     />
@@ -197,24 +197,26 @@ export const DetailsCell = ({
       </Table.Cell>
     );
   } else if (column.name === "switchAction" || column.type === "boolean") {
-    const isFound = specialActions.find(
+    const fieldAction = specialActions.find(
       (item) => item.dashboardFormActionMethodType.split(":")[1] === column.name
     );
+
     return (
       <Table.Cell {...props}>
         <SwitchCell
           value={props.row[column.name]}
-          isFound={isFound}
+          fieldAction={fieldAction}
           onValueChange={async (newValue) => {
             // Add logic to trigger specialActions here if needed
+            console.log("fieldAction", fieldAction);
+
             SetReoute(schema.projectProxyRoute);
-            await APIHandling(
-              isFound.routeAdderss + "/" + props.row[schema.idField],
-              isFound.dashboardFormActionMethodType,
-              newValue
+            const res = await APIHandling(
+              fieldAction.routeAdderss + "/" + props.row[schema.idField],
+              fieldAction.dashboardFormActionMethodType?.split(":")[0],
+              newValue.value
             );
-            //await action();
-            console.log("Switch changed to", newValue);
+            console.log("Switch changed to", schema.idField);
           }}
         />
       </Table.Cell>

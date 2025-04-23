@@ -20,7 +20,8 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   const onChange = new Onchange(
     specialActions,
     tableSchema.projectProxyRoute,
-    row
+    row,
+    tableSchema
   );
   function SetValue(param) {
     if (
