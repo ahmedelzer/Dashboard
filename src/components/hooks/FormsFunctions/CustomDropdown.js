@@ -8,8 +8,6 @@ const CustomDropdown = ({
   displayField,
   setPanelOpen,
   isPanelOpen,
-  setSelectedRow,
-  selectedRow,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -38,9 +36,8 @@ const CustomDropdown = ({
     if (inputRef.current) {
       onChange({
         target: {
-          name: inputRef.current.name,
-          value: selectedRow,
-          setValue: setSelectedRow,
+          name: props.fieldName,
+          value: returnField,
         },
       });
     }

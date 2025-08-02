@@ -51,6 +51,11 @@ import {
 import { DetailsCell as CustomDetailsCell } from "./DetailsCell";
 import { listObserverStyle } from "./styles";
 import { TypeProvider } from "./TypeProvider";
+import { useWS } from "../../../contexts/WSContext";
+import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
+// import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
+// import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
+import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
 const VIRTUAL_PAGE_SIZE = 50;
 function BaseTable({
   schema,
@@ -87,6 +92,8 @@ function BaseTable({
   const [fieldName, setFieldName] = useState("");
   const [title, setTitle] = useState("");
   const [currentSkip, setCurrentSkip] = useState(1);
+  const { _wsMessageMenuItem, setWSMessageMenuItem } = useWS();
+  const [WS_Connected, setWS_Connected] = useState(false);
   const observerRef = useRef();
   const getRowId = (row) => row[schema.idField];
   const toggleRowExpanded = (row) => {
@@ -260,6 +267,54 @@ function BaseTable({
       }
     };
   }, [observerCallback]);
+  //WS
+  useEffect(() => {
+    setWS_Connected(false);
+  }, []);
+  // 🌐 Setup WebSocket connection on mount or WS_Connected change
+  useEffect(() => {
+    if (WS_Connected) return;
+
+    SetReoute(schema.projectProxyRoute);
+    let cleanup;
+    ConnectToWS(setWSMessageMenuItem, setWS_Connected, schema.projectProxyRoute)
+      .then(() => console.log("🔌 WebSocket setup done"))
+      .catch((e) => {
+        console.error("❌ Cart WebSocket error", e);
+      });
+    return () => {
+      if (cleanup) cleanup(); // Clean up when component unmounts or deps change
+      console.log("🧹 Cleaned up WebSocket handler");
+    };
+  }, [WS_Connected]);
+
+  // 🧠 Reducer callback to update rows
+  const callbackReducerUpdate = async (ws_updatedRows) => {
+    await dispatch({
+      type: "WS_OPE_ROW",
+      payload: {
+        rows: ws_updatedRows.rows,
+        totalCount: ws_updatedRows.totalCount,
+      },
+    });
+  };
+  const fieldsType = {
+    idField: schema.idField,
+    dataSourceName: schema.dataSourceName ||schema.idField|| "nodeMenuItemID",
+  };
+  // 📨 React to WebSocket messages only when valid
+  useEffect(() => {
+    if (!_wsMessageMenuItem) return;
+    const _handleWSMessage = new WSMessageHandler({
+      _WSsetMessage: _wsMessageMenuItem,
+      fieldsType,
+      rows,
+      totalCount,
+      callbackReducerUpdate,
+    });
+    _handleWSMessage.process();
+    setWSMessageMenuItem(_wsMessageMenuItem);
+  }, [_wsMessageMenuItem]);
   let initialRows = [
     {
       rate: "9",

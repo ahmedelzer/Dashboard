@@ -1,12 +1,12 @@
-import React, { useState, createContext } from "react";
+import { createContext, useState } from "react";
 import { GetActionsFromSchema } from "../components/hooks/DashboardAPIs/GetActionsFromSchema";
-import { useSearchParams } from "react-router-dom";
 //context
 export const TableContext = createContext();
 
 const TableProvider = ({ children, schemas }) => {
   const mainSchema = schemas?.find((item) => item.isMainSchema);
   const subSchemas = schemas?.filter((item) => !item.isMainSchema);
+
   const [selectedRow, setSelectedRow] = useState(null);
   const [actionsForm, setActionsForm] = useState(null);
   const {

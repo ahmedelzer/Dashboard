@@ -15,6 +15,7 @@ export default function FieldGroup({ value, onChange, ...props }) {
       {...props}
       onChange={onChange}
       onFocus={props.onFocus}
+      min={props.type === "number" ? 0 : undefined}
       className={`${props.className} form-control`}
     />
   );

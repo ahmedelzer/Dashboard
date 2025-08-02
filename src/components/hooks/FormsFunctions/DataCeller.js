@@ -23,7 +23,6 @@ export default function DataCellRender({
       return "lookup";
     }
   };
-  console.log(inputKey(), data.parameterType);
 
   const InputComponentClass = GetInputComponent(inputKey());
   // Optionally instantiate the class (if needed)

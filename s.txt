@@ -9,5 +9,10 @@ tabs switch //done
 reset lang ws 
 adding parameter
 ////////////////
-1-make oclick on image table app display it in popup
-2-make defult action in image paramter
+3-solve image cache in web and mobile
+4-customer cart stop timer using ws
+
+2-show why form behavier change replace to oldtechnich 
+1-finsh dependences in lookup currently
+
+

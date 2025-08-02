@@ -17,69 +17,67 @@ export class Onchange {
     return this.row;
   };
   UpdateRow = async (e) => {
-    let { name, value, setValue } = e?.target;
-    const prams = this.tableSchema.dashboardFormSchemaParameters;
-    const depend = prams.find((pram) =>
+    let { name, value, type } = e?.target;
+    console.log(this.ReturnRow(), "onchange");
+
+    const params = this.tableSchema.dashboardFormSchemaParameters;
+    const dependParam = params.find((pram) =>
       pram.parameterType.startsWith("depend")
     );
-    const menuItemID = prams.find(
-      (pram) =>
-        pram.dashboardFormSchemaParameterID ===
-        "d6435646-9a1a-4a72-b0f4-b1605c3725cb"
+    // Get the dependency IDs from that parameter
+    const dependencyIDs =
+      dependParam?.dashboardFormSchemaParameterDependencies?.map(
+        (dep) => dep.dependDashboardFormSchemaParameterID
+      ) || [];
+
+    // Get the actual parameter objects that match those dependency IDs
+    const dependItems = params.filter((param) =>
+      dependencyIDs.includes(param.dashboardFormSchemaParameterID)
     );
-    if (depend && setValue) {
-      setValue({
-        menuItemID: "8cf28545-d1e3-488f-a220-22d95254ab00",
-        rate: 5,
-        numberOfOrders: 0,
-        numberOfReviews: 0,
-        numberOfLikes: 0,
-        numberOfDislikes: 0,
-        itemImage:
-          "MenuItemImages\\34a706bf-8bf2-4c45-b660-c247ed177d83.jpg?v4/23/2025 1:06:12 PM",
-        publicImage: null,
-        menuCategoryName: "Foods",
-        menuCategoryID: "b7d65f7f-f87a-4fa6-beaa-d799ba77b9ce",
-        menuItemName: "apple",
-        menuItemDescription: "dfsdfsds dsgsgsdgsdg sdgsdgsdgdsgsdg",
-        preparingTimeAmountPerMinute: 0,
-        canReturn: false,
-        keywords: "تفاح,apple,apple",
-      });
-      console.log(name, value, 1122);
-      if (name === menuItemID.parameterField) {
-        value = "8cf28545-d1e3-488f-a220-22d95254ab00";
-        console.log(name, value, "djdjdjj");
+    if (dependParam) {
+      if (name === dependParam.parameterField) {
+        //add here in the tableSchema in objs of dependItems new proparty key and value change the value
+        dependItems.forEach((item) => {
+          // Find the actual item reference in tableSchema and update it
+          const originalItem = params.find(
+            (p) =>
+              p.dashboardFormSchemaParameterID ===
+              item.dashboardFormSchemaParameterID
+          );
+          if (originalItem) {
+            originalItem["key"] = value; // <-- Set the new property and value
+          }
+        });
       }
-      console.log(depend, menuItemID, "depend");
+      console.log(dependItems, "dependItems", name, dependParam.parameterField);
     }
     console.log(this.row, this.specialActions);
     const specialAction = this.specialActions?.find((action) =>
       action.dashboardFormActionMethodType.endsWith(name)
     );
 
-    if (specialAction && value && name) {
-      console.log(`${specialAction.routeAdderss}/1233`);
-      const apply = await onApplyWithSpecialAction(
-        value,
-        "",
-        specialAction.dashboardFormActionMethodType.split(":")[0],
-        `${specialAction.routeAdderss}/1233`,
-        this.proxyRoute
-        // proxyRoute
-      );
-      console.log(apply);
-    }
+    // if (specialAction && value && name) {
+    //   console.log(`${specialAction.routeAdderss}/1233`);
+    //   const apply = await onApplyWithSpecialAction(
+    //     value,
+    //     "",
+    //     specialAction.dashboardFormActionMethodType.split(":")[0],
+    //     `${specialAction.routeAdderss}/1233`,
+    //     this.proxyRoute
+    //     // proxyRoute
+    //   );
+    //   console.log(apply);
+    // }
 
     // // Assuming PrepareInputValue is an asynchronous function you have defined elsewhere
-    // const valueAfterPreparing = await PrepareInputValue(type, value);
+    const valueAfterPreparing = await PrepareInputValue(type, value);
 
-    // if (this.row[name]) {
-    //   this.row[name] = valueAfterPreparing;
-    // } else {
-    //   const newParam = { [name]: valueAfterPreparing };
-    //   this.row = { ...this.row, ...newParam };
-    // }
+    if (this.row[name]) {
+      this.row[name] = valueAfterPreparing;
+    } else {
+      const newParam = { [name]: valueAfterPreparing };
+      this.row = { ...this.row, ...newParam };
+    }
 
     return this.row;
   };

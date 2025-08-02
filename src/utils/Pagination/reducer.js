@@ -15,6 +15,15 @@ export function reducer(state, { type, payload }) {
         totalCount: payload.totalCount,
         loading: false,
       };
+    case "WS_OPE_ROW":
+      const result = {
+        ...state,
+        rows: [...payload.rows],
+        totalCount: payload.totalCount,
+        loading: false,
+      };
+
+      return result;
     case "START_LOADING":
       return {
         ...state,

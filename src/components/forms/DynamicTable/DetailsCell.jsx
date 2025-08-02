@@ -151,11 +151,11 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   );
 };
 
-export const SwitchCell = ({ value, onValueChange, fieldAction }) => {
+export const SwitchCell = ({ value, onValueChange, fieldAction, loading }) => {
   return (
     <Switch
       value={value}
-      disabled={!fieldAction}
+      disabled={!fieldAction || loading}
       onValueChanged={(e) => onValueChange(e.value)}
       style={{ direction: "ltr" }}
     />
@@ -173,6 +173,7 @@ export const DetailsCell = ({
   specialActions,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const column = props.column;
   const { localization } = useContext(LanguageContext);
 
@@ -206,17 +207,18 @@ export const DetailsCell = ({
         <SwitchCell
           value={props.row[column.name]}
           fieldAction={fieldAction}
+          loading={loading}
           onValueChange={async (newValue) => {
-            // Add logic to trigger specialActions here if needed
-            console.log("fieldAction", fieldAction);
-
+            setLoading(true); // Disable the switch
             SetReoute(schema.projectProxyRoute);
-            const res = await APIHandling(
+            const result = await APIHandling(
               fieldAction.routeAdderss + "/" + props.row[schema.idField],
               fieldAction.dashboardFormActionMethodType?.split(":")[0],
-              newValue.value
+              newValue
             );
-            console.log("Switch changed to", schema.idField);
+            if (result && result.success) {
+              setLoading(false);
+            }
           }}
         />
       </Table.Cell>

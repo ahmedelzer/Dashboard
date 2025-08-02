@@ -46,9 +46,10 @@ class LookupInput extends BaseInput {
   }
 
   render() {
-    const { lookupReturnField, lookupDisplayField, lookupID } = this.props;
+    const { lookupReturnField, lookupDisplayField, lookupID, externalRow } =
+      this.props;
     const { data, selectedRow, isPanelOpen } = this.state;
-    console.log(selectedRow);
+    console.log(externalRow(), "externalRow");
 
     const panelContent = (
       <div className="drop-list max-w-[450px] max-h-[400px] overflow-auto">
@@ -60,14 +61,14 @@ class LookupInput extends BaseInput {
             editMessage={false}
             deleteMessage={false}
             isSearchingTable={true}
-            key={lookupID}
+            rowDetails={externalRow()}
+            key={this.props.formSchemaParameters.key || lookupID}
             selectedRow={this.state.selectedRow}
             setSelectedRow={this.setSelectedRow}
           />
         )}
       </div>
     );
-
     return (
       <div className=" ">
         <CustomDropdown
@@ -76,7 +77,6 @@ class LookupInput extends BaseInput {
           panelContent={panelContent}
           isPanelOpen={isPanelOpen}
           selectedRow={this.state.selectedRow}
-          setSelectedRow={this.setSelectedRow}
           setPanelOpen={this.setPanelOpen}
           {...this.props}
         />

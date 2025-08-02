@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 class BaseInput extends Component {
   handleChange = (e) => {
+    // ResetValue =>first item
     let value = this.props.value;
     let rowParam = this.props.row[this.props.fieldName];
     let row = this.props.row;

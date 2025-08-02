@@ -70,6 +70,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
                   data={param}
                   value={SetValue(param)}
                   onChange={onChange.UpdateRow}
+                  externalRow={onChange.ReturnRow}
                   errorResult={errorResult}
                   activeIndexInput={GetActiveIndexInput()}
                   formSchemaParameters={

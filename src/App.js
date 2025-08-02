@@ -22,6 +22,7 @@ import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
+import { WSProvider } from "./contexts/WSContext";
 function App() {
   const { user, loading } = useAuth();
   // SetReoute(schemaLanguages.projectProxyRoute);
@@ -144,9 +145,11 @@ export default function Root() {
       <AuthProvider>
         <NavigationProvider>
           <Language>
-            <div className={`app ${screenSizeClass}`}>
-              <App />
-            </div>
+            <WSProvider>
+              <div className={`app ${screenSizeClass}`}>
+                <App />
+              </div>
+            </WSProvider>
           </Language>
         </NavigationProvider>
       </AuthProvider>

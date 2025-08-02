@@ -1,15 +1,23 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
+// export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
+export const domainURL = "41.196.0.25";
+export const baseURL = "http://" + domainURL + ":8000";
+
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
 export const token = Cookies.get("user");
-export const publicImageURL = "http://41.196.0.25:5004/";
-export const websocketBaseURI =
-  "wss://maingatewayapi.ihs-solutions.com:8000/Chanels";
-export const defaultProjectProxyRoute =
-  "https://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
+// export const publicImageURL = "http://41.196.0.25:5004/";
+// export const websocketBaseURI =
+//   "wss://maingatewayapi.ihs-solutions.com:8000/Chanels";
+// export const defaultProjectProxyRoute =
+//   "https://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
+export const defaultProjectProxyRoute = `${baseURL}/Centralization/api`;
+export const defaultProjectProxyRouteWithoutAPI = `${baseURL}/BrandingMart/`;
+export const publicImageURL = "http://" + domainURL + ":5056/";
+export const websocketBaseURI = "ws://" + domainURL + ":9000";
+// export const baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
 
 // Get projectProxyRoute
 export const projectProxyRoute =
