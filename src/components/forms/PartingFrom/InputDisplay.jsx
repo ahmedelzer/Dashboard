@@ -38,14 +38,16 @@ function InputDisplay({ props, BaseInput, errorResult }) {
   return (
     <div>
       {BreaksPoints() && (
-        <FormGroup>
+        <FormGroup className="!mb-0">
           <DisplayErorr
             dataError={errorResult}
             parameterField={props.fieldName}
             setTitle={setInputErrorResult}
             setStyle={setStyle}
           />
-          <Label for={props.fieldName}>{props.title}</Label>
+          {props.displayLabel && (
+            <Label for={props.fieldName}>{props.title}</Label>
+          )}
           <BaseInput
             {...props}
             onChange={handleChange}

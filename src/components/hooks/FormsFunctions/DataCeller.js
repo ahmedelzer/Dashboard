@@ -31,6 +31,7 @@ export default function DataCellRender({
       props={{
         ...CreateInputProps(data, value),
         onChange: onChange,
+        displayLabel: props.displayLabel || true,
         ...props,
       }}
       errorResult={errorResult}

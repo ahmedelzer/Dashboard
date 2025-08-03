@@ -126,7 +126,7 @@
 import { Table } from "@devexpress/dx-react-grid-bootstrap4";
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 import Switch from "devextreme-react/switch";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TbListDetails } from "react-icons/tb";
 import { Modal, ModalBody } from "reactstrap";
 import { GetIconByName } from "../../../utils/GetIconByName";
@@ -135,7 +135,7 @@ import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import { detailsButtonStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import StarsIcons from "../../../utils/StarsIcons";
-import { SetReoute } from "../../../request";
+import { GetProjectUrl, SetHeaders, SetReoute } from "../../../request";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 
 export const DetailsButton = ({ row, fieldName, title, onClick }) => {
@@ -150,17 +150,60 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
     </div>
   );
 };
+export const CustomSwitchButton = ({
+  initialValue = false,
+  onChange = () => {},
+  fieldAction,
+}) => {
+  const [isOn, setIsOn] = useState(initialValue);
 
-export const SwitchCell = ({ value, onValueChange, fieldAction, loading }) => {
+  const toggleSwitch = () => {
+    const newValue = !isOn;
+
+    setIsOn(newValue);
+    onChange(newValue);
+  };
+
   return (
-    <Switch
-      value={value}
-      disabled={!fieldAction || loading}
-      onValueChanged={(e) => onValueChange(e.value)}
-      style={{ direction: "ltr" }}
-    />
+    <button
+      disabled={!fieldAction}
+      onClick={toggleSwitch}
+      style={{
+        direction: "ltr",
+        backgroundColor: isOn ? "green" : "red",
+        color: "white",
+        padding: "8px 16px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        minWidth: "60px",
+        transition: "0.3s",
+      }}
+    >
+      {isOn ? "ON" : "OFF"}
+    </button>
   );
 };
+
+export default CustomSwitchButton;
+
+// export const ToggleSwitchComponent = ({ onChangeAction }: { onChangeAction: (newState: boolean) => void },fieldAction) => {
+//   const [isOn, setIsOn] = useState(false); // Initialize state to false
+
+//   const handleSwitchChange = (e: { value: boolean }) => {
+//     setIsOn(e.value);  // Update state based on switch value
+//     onChangeAction(e.value);  // Call the passed in handler with the new value
+//   };
+
+//   return (
+//     <Switch
+//       disabled={!fieldAction}
+//         value={isOn}
+//         onValueChanged={(e)=>handleSwitchChange} // Handles toggling the switch
+//         style={{ direction: "ltr" }}
+//       />
+//   );
+// };
 
 export const DetailsCell = ({
   props,
@@ -173,10 +216,9 @@ export const DetailsCell = ({
   specialActions,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const column = props.column;
   const { localization } = useContext(LanguageContext);
-
+  const [loading, setLoading] = useState(false);
   if (column.type === "detailsCell") {
     const findSubSchemas = subSchemas?.find(
       (schema) => schema.dashboardFormSchemaID === column.lookupID
@@ -204,20 +246,35 @@ export const DetailsCell = ({
 
     return (
       <Table.Cell {...props}>
-        <SwitchCell
-          value={props.row[column.name]}
+        <CustomSwitchButton
+          initialValue={props.row[column.name]}
           fieldAction={fieldAction}
-          loading={loading}
-          onValueChange={async (newValue) => {
-            setLoading(true); // Disable the switch
-            SetReoute(schema.projectProxyRoute);
-            const result = await APIHandling(
-              fieldAction.routeAdderss + "/" + props.row[schema.idField],
-              fieldAction.dashboardFormActionMethodType?.split(":")[0],
-              newValue
-            );
-            if (result && result.success) {
-              setLoading(false);
+          onChange={async (newValue) => {
+            try {
+              // Optimistic UI update (optional): update local row state immediately
+              // if you maintain row state somewhere like in a parent component
+              // Example: updateRowValue(schema.idField, newValue.value);
+
+              SetReoute(schema.projectProxyRoute);
+
+              // Optional: show loading state
+              setLoading(true);
+
+              const response = await APIHandling(
+                `${fieldAction.routeAdderss}/${props.row[schema.idField]}`,
+                fieldAction.dashboardFormActionMethodType?.split(":")[0],
+                newValue
+              );
+
+              console.log("Switch changed to", schema.idField);
+              // Optionally process the response if needed
+              // Example: show success toast, update local state with response data
+            } catch (error) {
+              console.error("Failed to update value", error);
+              // Show user-friendly error message (Toast, Dialog, etc.)
+              // Example: showToast("Something went wrong updating the value.")
+            } finally {
+              setLoading(false); // Reset loading state
             }
           }}
         />
@@ -262,6 +319,46 @@ export const DetailsCell = ({
             </div>
           )}
         </div>
+      </Table.Cell>
+    );
+  } else if (column.type === "filedFlag") {
+    //const flag = props.column.isWithFlag;
+    const colorFlag = () => {
+      switch (props.row[props.column.name]) {
+        case 0:
+          return "black";
+        case -1:
+          return "rgb(250 204 21)";
+        case -2:
+          return `rgb(185 28 28 )`;
+        case 1:
+          return "rgb(74 222 128 )";
+        default:
+          return "black";
+      }
+    };
+    console.log("====================================");
+    console.log(colorFlag, "colorFlag");
+    console.log("====================================");
+    return (
+      <Table.Cell {...props}>
+        <button
+          disabled={true}
+          // onClick={toggleSwitch}
+          style={{
+            direction: "ltr",
+            backgroundColor: colorFlag(),
+            color: "white",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            minWidth: "60px",
+            transition: "0.3s",
+          }}
+        >
+          {/* {isOn ? "ON" : "OFF"} */}
+        </button>
       </Table.Cell>
     );
   }
