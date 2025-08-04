@@ -31,6 +31,23 @@ const filedFormat = ({ value, column }) => {
           />
         </div>
       );
+    case "time":
+      var date = new Date(value);
+      console.log("====================================");
+      console.log(value, "value form date");
+      console.log("====================================");
+      // Format only the time part in local time zone
+      var timeString = new Intl.DateTimeFormat(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false, // or true for AM/PM
+      }).format(date);
+      if (value === null) {
+        timeString = "";
+      }
+
+      return <span>{timeString}</span>;
     default:
       return <span>{value}</span>;
   }

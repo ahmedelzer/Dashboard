@@ -306,6 +306,7 @@ function BaseTable({
   subSchemas,
   selectedRow,
   specialActions,
+  wsAction,
 }) {
   const [state, dispatch] = useReducer(
     reducer,
@@ -467,7 +468,10 @@ function BaseTable({
   }, [rows]);
   const columnsFormat = columns
     .filter(
-      (column) => column.type === "image" || column.type === "publicImage"
+      (column) =>
+        column.type === "image" ||
+        column.type === "publicImage" ||
+        column.type === "time"
     )
     .map((column) => column.name);
   const handleRowClick = (row) => {
@@ -496,7 +500,9 @@ function BaseTable({
     },
     [rows, totalCount, loading, skip]
   );
-
+  console.log("====================================");
+  console.log(wsAction, "wsAction");
+  console.log("====================================");
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
@@ -520,11 +526,17 @@ function BaseTable({
   }, []);
   // 🌐 Setup WebSocket connection on mount or WS_Connected change
   useEffect(() => {
-    if (WS_Connected) return;
+    // if (WS_Connected||wsAction=) return;
 
     SetReoute(schema.projectProxyRoute);
     let cleanup;
-    ConnectToWS(setWSMessageMenuItem, setWS_Connected, schema.projectProxyRoute)
+    ConnectToWS(
+      setWSMessageMenuItem,
+      setWS_Connected,
+      schema.projectProxyRoute,
+      {},
+      wsAction
+    )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
         console.error("❌ Cart WebSocket error", e);
@@ -533,7 +545,7 @@ function BaseTable({
       if (cleanup) cleanup(); // Clean up when component unmounts or deps change
       console.log("🧹 Cleaned up WebSocket handler");
     };
-  }, [WS_Connected]);
+  }, [WS_Connected, wsAction]);
 
   // 🧠 Reducer callback to update rows
   const callbackReducerUpdate = async (ws_updatedRows) => {

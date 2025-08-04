@@ -154,7 +154,7 @@ export function disconnectWS(baseUrl, force = false) {
     return;
   }
 
-  const wsInstances = store.getState().ws?.wsInstances || [];
+  const wsInstances = [];
   const instance = wsInstances.find((inst) => inst.key === baseUrl);
 
   if (instance) {
@@ -178,7 +178,7 @@ export function disconnectWS(baseUrl, force = false) {
 }
 
 export function isWSConnected(baseUrl) {
-  const wsInstances = store.getState().ws?.wsInstances || [];
+  const wsInstances = [];
   const instance = wsInstances.find((inst) => inst.key === baseUrl);
   return instance?.ws?.readyState === WebSocket.OPEN || false;
 }

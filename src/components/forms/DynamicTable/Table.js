@@ -41,8 +41,14 @@ const DynamicTable = ({
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
   SetReoute(schema.projectProxyRoute);
-  const { getAction, postAction, putAction, deleteAction, specialActions } =
-    GetActionsFromSchemaAction(schemaActions);
+  const {
+    getAction,
+    postAction,
+    putAction,
+    deleteAction,
+    wsAction,
+    specialActions,
+  } = GetActionsFromSchemaAction(schemaActions);
 
   const PopupComponentTable = ({ state }) => {
     return (
@@ -77,6 +83,7 @@ const DynamicTable = ({
         setPanelOpen={setPanelOpen}
         popupComponent={PopupComponent ? PopupComponent : PopupComponentTable}
         getAction={getAction}
+        wsAction={wsAction}
         selection={selection}
         setSelection={setSelection}
         addSelectedList={addSelectedList}

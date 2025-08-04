@@ -321,7 +321,7 @@ export const DetailsCell = ({
         </div>
       </Table.Cell>
     );
-  } else if (column.type === "filedFlag") {
+  } else if (column.type === "flag") {
     //const flag = props.column.isWithFlag;
     const colorFlag = () => {
       switch (props.row[props.column.name]) {
@@ -337,9 +337,6 @@ export const DetailsCell = ({
           return "black";
       }
     };
-    console.log("====================================");
-    console.log(colorFlag, "colorFlag");
-    console.log("====================================");
     return (
       <Table.Cell {...props}>
         <button

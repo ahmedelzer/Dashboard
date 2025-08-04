@@ -20,21 +20,6 @@ export const FilterCell = ({
     return <td />;
   }
 
-  // TEXT FIELDS
-  if (column.type === "text" || column.type === "string") {
-    return (
-      <TableFilterRow.Cell {...restProps}>
-        <Input
-          type="text"
-          value={filter ? filter.value : ""}
-          onChange={(e) =>
-            onFilter(e.target.value ? { value: e.target.value } : null)
-          }
-        />
-      </TableFilterRow.Cell>
-    );
-  }
-
   // IMAGE FIELDS (usually not filterable)
   if (column.type === "image" || column.type === "publicImage") {
     return (
