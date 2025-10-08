@@ -4,7 +4,10 @@ import useFetch from "../../components/hooks/APIsFunctions/useFetch";
 import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
 import Loading from "../../components/loading/Loading";
 import { LanguageContext } from "../../contexts/Language";
-import { defaultProjectProxyRoute } from "../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../request";
 import "../dynamicTable/DynamicTable.scss";
 function DynamicTransform() {
   const dashboardItemID = ExtractIDFromPath(window.location.pathname);
@@ -12,7 +15,7 @@ function DynamicTransform() {
 
   const { data, error, isLoading } = useFetch(
     `/Dashboard/GetDashboardForm?DashboardMenuItemID=${dashboardItemID}`,
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
 
   if (error && !data) {

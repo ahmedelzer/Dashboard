@@ -97,6 +97,10 @@
       "elementAttr": { "class": "form-text" }
     }
   },
+  "onlineState": {
+    "offLine": "⚠ You are offline",
+    "slowConnection": "⚠ Your internet connection is slow"
+  },
   "panelActions": {
     "button": {
       "search": "Search",

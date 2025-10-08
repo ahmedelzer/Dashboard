@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
 import { Col, Container, Row } from "reactstrap";
+import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
 import DataCellRender from "../../hooks/FormsFunctions/DataCeller";
 import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
-import { Sm } from "./Sm";
-import { LanguageContext } from "../../../contexts/Language";
 import avoidColsTypes from "../DynamicTable/avoidColsTypes.json";
 import firstColsFound from "./firstColsFound.json";
-import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
-import { SetReoute } from "../../../request";
+import { Sm } from "./Sm";
 function FormContainer({ tableSchema, row, errorResult, returnRow }) {
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable

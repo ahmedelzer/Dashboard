@@ -1,17 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import { defaultProjectProxyRoute } from "../../../request";
+import { FormContext } from "../../../contexts/Form";
 import { BuildWSURL } from "../../hooks/APIsFunctions/BuildWSURL";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { WSclass } from "../../hooks/FormsFunctions/WSclass";
 import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
 import BaseTable from "../DynamicTable/BaseTable";
 import PanelActions from "./PanelActions";
-import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
-import { FormContext } from "../../../contexts/Form";
-import { DependenciesCategory } from "./DependenciesCategory";
-import { useSearchParams } from "react-router-dom";
 
 function PartionFrom({ Schemas, AdditionForm }) {
   const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =

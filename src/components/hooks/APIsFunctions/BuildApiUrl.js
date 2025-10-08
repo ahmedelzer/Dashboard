@@ -2,7 +2,7 @@ import { GetProjectUrl } from "../../../request";
 export function buildApiUrl(
   apiRequest,
   baseConstants,
-  getProjectUrl = GetProjectUrl()
+  getProjectUrl = GetProjectUrl(apiRequest.projectProxyRoute)
 ) {
   if (!apiRequest || !apiRequest.dashboardFormSchemaActionQueryParams) {
     // Handle the case where apiRequest is null or does not have dashboardFormSchemaActionQueryParams

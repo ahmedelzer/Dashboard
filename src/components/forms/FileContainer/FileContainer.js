@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import FileInput from "../PartingFrom/FileInput";
+import { useContext, useState } from "react";
+import { FaFileCirclePlus } from "react-icons/fa6";
 import { Button } from "reactstrap";
-import DuringTransactionContainer from "../PartingFrom/DuringTransactionContainer";
-import { IsSecondListSubsetOfFirstList } from "../PartingFrom/IsSecondListSubsetOfFirstList";
-import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
-import { defaultProjectProxyRoute, SetReoute } from "../../../request";
-import useFetch from "../../hooks/APIsFunctions/useFetch";
 import { LanguageContext } from "../../../contexts/Language";
 import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
-import StaticFilesModel from "../PartingFrom/fileInput/StaticFilesModel";
-import FilesWithScrollPaging from "../PartingFrom/fileInput/FilesWithScrollPaging";
-import FilesWithButtonPaging from "../PartingFrom/fileInput/FilesWithButtonPaging";
-import { stylesFile } from "../PartingFrom/styles";
-import { FaFileCirclePlus } from "react-icons/fa6";
 import Loading from "../../loading/Loading";
+import DuringTransactionContainer from "../PartingFrom/DuringTransactionContainer";
+import FilesWithButtonPaging from "../PartingFrom/fileInput/FilesWithButtonPaging";
+import FilesWithScrollPaging from "../PartingFrom/fileInput/FilesWithScrollPaging";
+import StaticFilesModel from "../PartingFrom/fileInput/StaticFilesModel";
+import { IsSecondListSubsetOfFirstList } from "../PartingFrom/IsSecondListSubsetOfFirstList";
+import { stylesFile } from "../PartingFrom/styles";
 function FileContainer({
   parentSchemaParameters,
   schema,

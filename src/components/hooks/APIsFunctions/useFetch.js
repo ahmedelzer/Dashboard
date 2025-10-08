@@ -9,12 +9,8 @@ import {
 import RedirectToLogin from "./RedirectToLogin";
 import UseFetchWithoutBaseUrl from "./UseFetchWithoutBaseUrl";
 
-const useFetch = (url, base_URL) => {
-  const realurl = `${
-    base_URL !== GetProjectUrl() ? defaultProjectProxyRoute : base_URL
-  }${url}`;
-
-  // console.log(base_URL, GetProjectUrl());
+const useFetch = (url, projectRoute) => {
+  const realurl = `${GetProjectUrl(projectRoute)}${url}`;
   return UseFetchWithoutBaseUrl(realurl);
 };
 export const fetchData = async (url, base_URL, options = {}) => {

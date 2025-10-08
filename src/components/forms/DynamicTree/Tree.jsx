@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import { SetReoute, defaultProjectProxyRoute } from "../../../request";
+import { defaultProjectProxyRoute } from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import BaseTree from "./BaseTree";
@@ -33,10 +33,9 @@ const Tree = ({
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
-    defaultProjectProxyRoute
+    schema.projectProxyRoute
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
-  SetReoute(schema.projectProxyRoute);
   const { getAction, postAction, putAction, deleteAction } =
     GetActionsFromSchemaAction(schemaActions);
 

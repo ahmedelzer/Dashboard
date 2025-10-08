@@ -9,7 +9,7 @@ import React, {
 import { MdDelete } from "react-icons/md";
 import { Button } from "reactstrap";
 import { LanguageContext } from "../../../../contexts/Language";
-import { baseURL, SetReoute } from "../../../../request";
+import { baseURL } from "../../../../request";
 import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../../hooks/APIsFunctions/loadData";
 import DeleteItem from "../DeleteItem";
@@ -104,8 +104,6 @@ function FilesWithButtonPaging({
   };
 
   const dataSourceAPI = (query, skip, take) => {
-    SetReoute(proxyRoute);
-
     return buildApiUrl(query, {
       pageIndex: currentPage,
       pageSize: itemsPerPage,

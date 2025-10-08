@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Card, CardBody, CardTitle, CardText } from "reactstrap";
-import { GetProjectUrl, SetReoute } from "../../../request";
+import { GetProjectUrl } from "../../../request";
 import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import UseFetchWithoutBaseUrl from "../../hooks/APIsFunctions/UseFetchWithoutBaseUrl";
 import { FormContext } from "../../../contexts/Form";
@@ -34,8 +34,10 @@ export const DependenciesCategory = () => {
   }, [notificationLinkID, getActionByID]);
 
   // const [activeIndex, setActiveIndex] = useState(serviceCategoryID);
-  SetReoute(mainSchema.projectProxyRoute);
-  const { data: notificationRow } = useFetch(route, GetProjectUrl());
+  const { data: notificationRow } = useFetch(
+    route,
+    mainSchema.projectProxyRoute
+  );
   useEffect(() => {
     if (notificationRow) {
       setSelectedRow(notificationRow);

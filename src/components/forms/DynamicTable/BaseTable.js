@@ -31,7 +31,6 @@ import React, {
 import { MdDelete, MdEdit } from "react-icons/md";
 import { Card } from "reactstrap";
 import { LanguageContext } from "../../../contexts/Language";
-import { SetReoute } from "../../../request";
 import {
   getRemoteRows,
   initialState,
@@ -334,7 +333,6 @@ function BaseTable({
     );
   };
   const dataSourceAPI = (query, skip, take) => {
-    SetReoute(schema.projectProxyRoute);
     return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
@@ -351,12 +349,6 @@ function BaseTable({
         ...rest,
       })
     );
-    console.log("====================================");
-    console.log(
-      transformedFilters,
-      encodeURIComponent(JSON.stringify(transformedFilters))
-    );
-    console.log("====================================");
     setFilters(transformedFilters); // Update filters state with new values
   };
 
@@ -413,6 +405,7 @@ function BaseTable({
     }
   });
   useEffect(() => {
+    if (!getAction) return;
     LoadData(
       state,
       dataSourceAPI,
@@ -421,18 +414,18 @@ function BaseTable({
       updateRows(dispatch, cache, state),
       dispatch
     );
-  });
-  useEffect(() => {
-    LoadData(
-      state,
-      dataSourceAPI,
-      getAction,
-      cache,
-      updateRows(dispatch, cache, state),
-      dispatch,
-      filters
-    );
-  }, [filters]);
+  }, [currentSkip, filters, getAction]);
+  // useEffect(() => {
+  //   LoadData(
+  //     state,
+  //     dataSourceAPI,
+  //     getAction,
+  //     cache,
+  //     updateRows(dispatch, cache, state),
+  //     dispatch,
+  //     filters
+  //   );
+  // }, [filters]);
   useEffect(() => {
     const findServerContainer = subSchemas?.filter(
       (schema) => schema.schemaType === "ServerFilesContainer"
@@ -491,18 +484,12 @@ function BaseTable({
     (entries) => {
       const [entry] = entries;
       if (entry.isIntersecting && rows.length < totalCount && !loading) {
-        console.log("====================================");
-        console.log(rows.length, totalCount, schema.idField);
-        console.log("====================================");
         getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2, dispatch);
         setCurrentSkip(currentSkip + 1);
       }
     },
     [rows, totalCount, loading, skip]
   );
-  console.log("====================================");
-  console.log(wsAction, "wsAction");
-  console.log("====================================");
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
@@ -527,8 +514,6 @@ function BaseTable({
   // 🌐 Setup WebSocket connection on mount or WS_Connected change
   useEffect(() => {
     // if (WS_Connected||wsAction=) return;
-
-    SetReoute(schema.projectProxyRoute);
     let cleanup;
     ConnectToWS(
       setWSMessageMenuItem,

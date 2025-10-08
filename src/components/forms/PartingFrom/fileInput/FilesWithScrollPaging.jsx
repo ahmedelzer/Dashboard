@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { baseURLWithoutApi, baseURL, SetReoute } from "../../../../request";
+import { baseURLWithoutApi, baseURL } from "../../../../request";
 import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../../hooks/APIsFunctions/loadData";
 import DotsLoading from "../../../loading/DotsLoading";
@@ -88,7 +88,6 @@ function FilesWithScrollPaging({
     // Load remote data logic here
   };
   const dataSourceAPI = (query, skip, take) => {
-    SetReoute(proxyRoute);
     return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,

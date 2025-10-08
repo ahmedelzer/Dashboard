@@ -5,16 +5,18 @@ import GetFormSchema from "../../components/hooks/DashboardAPIs/GetFormSchema";
 import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
 import Loading from "../../components/loading/Loading";
 import { LanguageContext } from "../../contexts/Language";
-import { defaultProjectProxyRoute } from "../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../request";
 import "./DynamicTable.scss";
 
 export default function DynamicTable() {
   // const { dashboardItemID } = useParams();
   const dashboardItemID = ExtractIDFromPath(window.location.pathname);
-  const { Right } = useContext(LanguageContext);
   const { data, error, isLoading } = useFetch(
     GetFormSchema(dashboardItemID),
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
 
   // const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable

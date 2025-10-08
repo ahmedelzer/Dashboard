@@ -1,7 +1,7 @@
 import Button from "devextreme-react/button";
 import LoadPanel from "devextreme-react/load-panel";
 import "devextreme/dist/css/dx.common.css";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Navigate,
   Route,
@@ -12,6 +12,7 @@ import ApiRoutes from "./app-routes";
 import { Footer, LoginForm } from "./components";
 import LanguageSelector from "./components/header/LanguageSelector";
 import Language, { LanguageContext } from "./contexts/Language";
+import { WSProvider } from "./contexts/WSContext";
 import { AuthProvider, useAuth } from "./contexts/auth";
 import { NavigationProvider } from "./contexts/navigation";
 import "./dx-styles.scss";
@@ -22,10 +23,9 @@ import Home from "./pages/home/Home";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
-import { WSProvider } from "./contexts/WSContext";
+import { NetworkProvider } from "./contexts/NetworkContext";
 function App() {
   const { user, loading } = useAuth();
-  // SetReoute(schemaLanguages.projectProxyRoute);
   const { Right, localization } = useContext(LanguageContext);
 
   const [routes, setRoutes] = useState("");
@@ -145,11 +145,13 @@ export default function Root() {
       <AuthProvider>
         <NavigationProvider>
           <Language>
-            <WSProvider>
-              <div className={`app ${screenSizeClass}`}>
-                <App />
-              </div>
-            </WSProvider>
+            <NetworkProvider>
+              <WSProvider>
+                <div className={`app ${screenSizeClass}`}>
+                  <App />
+                </div>
+              </WSProvider>
+            </NetworkProvider>
           </Language>
         </NavigationProvider>
       </AuthProvider>

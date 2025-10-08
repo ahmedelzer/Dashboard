@@ -1,6 +1,9 @@
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "./GetSchemaActionsUrl";
-import { defaultProjectProxyRoute, SetReoute } from "../../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../../request";
 
 export function GetActionsFromSchema(schema) {
   const {
@@ -9,9 +12,8 @@ export function GetActionsFromSchema(schema) {
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
-  SetReoute(schema.projectProxyRoute);
 
   const getAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Get"

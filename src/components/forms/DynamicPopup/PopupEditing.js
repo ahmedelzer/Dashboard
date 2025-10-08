@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
 
@@ -19,12 +19,14 @@ const PopupEditing = React.memo(
     postAction,
     putAction,
     state,
-    setResult,
-    result,
+    // setResult,
+    // result,
     schema,
     proxyRoute,
     specialActions,
   }) => {
+    const [result, setResult] = useState({}); //that is make re-render to the rows
+
     return (
       <Plugin>
         <Template name="popupEditing">
@@ -94,9 +96,6 @@ const PopupEditing = React.memo(
                     return [key, value];
                   })
                 );
-                console.log("====================================");
-                console.log(imagesPaths);
-                console.log("====================================");
 
                 const formJson = {
                   ...editedRow,
@@ -119,9 +118,6 @@ const PopupEditing = React.memo(
                   proxyRoute
                 );
                 setResult(apply);
-                console.log("====================================");
-                console.log(formJson);
-                console.log("====================================");
                 if (apply && apply.success === true) {
                   const newRow = { ...formJson, ...imagesPaths, ...apply.data };
                   if (isNew) {

@@ -135,7 +135,6 @@ import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import { detailsButtonStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import StarsIcons from "../../../utils/StarsIcons";
-import { GetProjectUrl, SetHeaders, SetReoute } from "../../../request";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 
 export const DetailsButton = ({ row, fieldName, title, onClick }) => {
@@ -254,8 +253,6 @@ export const DetailsCell = ({
               // Optimistic UI update (optional): update local row state immediately
               // if you maintain row state somewhere like in a parent component
               // Example: updateRowValue(schema.idField, newValue.value);
-
-              SetReoute(schema.projectProxyRoute);
 
               // Optional: show loading state
               setLoading(true);

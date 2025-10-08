@@ -2,8 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
-export const domainURL = "41.196.0.25";
-export const baseURL = "http://" + domainURL + ":8000";
+export const domainURL = "ihs-solutions.com";
+export const baseURL = "https://" + domainURL + ":8000";
 
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
@@ -14,29 +14,24 @@ export const token = Cookies.get("user");
 // export const defaultProjectProxyRoute =
 //   "https://maingatewayapi.ihs-solutions.com:8000/Centralization/api";
 export const defaultProjectProxyRoute = `${baseURL}/Centralization/api`;
-export const defaultProjectProxyRouteWithoutAPI = `${baseURL}/BrandingMart/`;
-export const publicImageURL = "http://" + domainURL + ":5056/";
+export const defaultProjectProxyRouteWithoutBaseURL = `Centralization`;
+export const defaultProjectProxyRouteWithoutAPI = `${baseURL}/Centralization/`;
+export const publicImageURL = "https://" + domainURL + ":5055/";
 export const websocketBaseURI = "ws://" + domainURL + ":9000";
 // export const baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
-
-// Get projectProxyRoute
-export const projectProxyRoute =
-  window.sessionStorage.getItem("projectProxyRoute");
-
-// Set projectProxyRoute
-export function SetReoute(Route) {
-  window.sessionStorage.setItem("projectProxyRoute", Route);
-}
+export let isOnline = true;
 
 // Add other methods as needed
+export function SetIsOnline(state) {
+  isOnline = state;
+}
+export var baseURLWithoutApi = `${baseURL}`;
 
-export const baseURLWithoutApi = `${baseURL}/${window.sessionStorage.getItem(
-  "projectProxyRoute"
-)}`;
 //"proxy": "http://ihs.ddnsking.com:8000",
 
-export function GetProjectUrl() {
-  return `${baseURL}/${window.sessionStorage.getItem("projectProxyRoute")}/api`;
+export function GetProjectUrl(projectProxyRoute) {
+  baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
+  return `${baseURL}/${projectProxyRoute}/api`;
 }
 export function SetHeaders() {
   const token = Cookies.get("user");

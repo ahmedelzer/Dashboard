@@ -7,7 +7,10 @@ import {
 } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import { LanguageContext } from "../../../contexts/Language";
-import { defaultProjectProxyRoute, SetReoute } from "../../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import Table from "../DynamicTable/Table";
@@ -207,10 +210,8 @@ const TableTransformer = ({ TransFormSchema }) => {
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(rightSchema.dashboardFormSchemaID),
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
-  SetReoute(schema.projectProxyRoute);
-
   const { postAction, deleteAction } =
     GetActionsFromSchemaAction(schemaActions);
   const [leftSelection, setLeftSelection] = useState([]);

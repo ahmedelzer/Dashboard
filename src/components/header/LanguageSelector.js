@@ -2,18 +2,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BiWorld } from "react-icons/bi";
 import { LanguageContext } from "../../contexts/Language";
-import { GetProjectUrl, SetHeaders, SetReoute } from "../../request";
+import staticLocalization from "../../contexts/StaticLocalization.json";
+import { GetProjectUrl, SetHeaders } from "../../request";
 import { buildApiUrl } from "../hooks/APIsFunctions/BuildApiUrl";
 import useFetch from "../hooks/APIsFunctions/useFetch";
-import staticLocalization from "../../contexts/StaticLocalization.json";
 import UseFetchWithoutBaseUrl from "../hooks/APIsFunctions/UseFetchWithoutBaseUrl";
-import schemaLanguages from "../login-form/Schemas/LanguageSchema/LanguageSchema.json";
 import LanguageSchemaActions from "../login-form/Schemas/LanguageSchema/LanguageSchemaActions.json";
 import LocalizationSchemaActions from "../login-form/Schemas/Localization/LocalizationSchemaActions.json";
 import { DeepMerge } from "./deepMerge";
 const LanguageSelector = ({ open }) => {
   const [selectedLanguage, SetSelectedLanguage] = useState(null); // or an appropriate default value
-  SetReoute(schemaLanguages.projectProxyRoute);
   const dataSourceAPI = (query) =>
     buildApiUrl(query, {
       pageIndex: 1,
@@ -25,7 +23,7 @@ const LanguageSelector = ({ open }) => {
     LanguageSchemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Get"
     );
-  const query = dataSourceAPI(getAction);
+  const query = React.useMemo(() => dataSourceAPI(getAction), [getAction]);
   const { data } = UseFetchWithoutBaseUrl(query);
   const { setRight, setLocalization, setLan, Right, Lan, setLanguageID } =
     useContext(LanguageContext);
@@ -72,7 +70,7 @@ const LanguageSelector = ({ open }) => {
   const language = selectedLanguage || window.localStorage.getItem("language");
   const { data: localization } = useFetch(
     `/${getLocalizationAction?.routeAdderss}/${language}`,
-    GetProjectUrl()
+    getLocalizationAction?.projectProxyRoute
   );
 
   useEffect(() => {

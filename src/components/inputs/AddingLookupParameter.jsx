@@ -10,7 +10,6 @@ import {
 // import { browserActionsStyle } from "./InputActions/styles";
 // import useFetch from "../../../hooks/APIsFunctions/useFetch";
 // import DashboardItemSchema from "../../../Schemas/DashboardItemSchema/DashboardItemSchema.json";
-// import { GetProjectUrl, SetReoute } from "../../../request";
 // import { LanguageContext } from "../../../context/Language";
 // import { GetActionsFromSchema } from "../../../hooks/DashboardAPIs/GetActionsFromSchema";
 // import { onApply } from "../../DynamicPopup/OnApplay";
@@ -21,6 +20,7 @@ import { onApply } from "../forms/DynamicPopup/OnApplay";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
 import { browserActionsStyle } from "./InputActions/styles";
 import SelectParameter from "./SelectParameter";
+import { defaultProjectProxyRouteWithoutBaseURL } from "../../request";
 
 function AddingLookupParameter({ ...props }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,7 +40,8 @@ function AddingLookupParameter({ ...props }) {
   };
 
   const { data: schema, isLoading } = useFetch(
-    `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${props.lookupID}`
+    `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${props.lookupID}`,
+    defaultProjectProxyRouteWithoutBaseURL
   );
 
   if (isLoading || !schema) {

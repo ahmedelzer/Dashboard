@@ -1,5 +1,3 @@
-import { defaultProjectProxyRoute } from "../../request";
-import useFetch from "../hooks/APIsFunctions/useFetch";
 import Table from "./DynamicTable/Table";
 import FileContainer from "./FileContainer/FileContainer";
 export default function SelectForm({

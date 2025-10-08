@@ -9,7 +9,10 @@ import React, {
   useState,
 } from "react";
 import { useNavigation } from "../../contexts/navigation";
-import { defaultProjectProxyRoute } from "../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../request";
 import { useScreenSize } from "../../utils/media-query";
 import useFetch from "../hooks/APIsFunctions/useFetch";
 import "./SideNavigationMenu.scss";
@@ -18,7 +21,7 @@ let [id, setId] = "";
 function SideNavigationMenu(props) {
   let { data, error } = useFetch(
     "/Dashboard/GetDashboardMenuItems?pagination.PageSize=100&pagination.PageNumber=1",
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
 
   const { localization } = useContext(LanguageContext);

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import { SetReoute, defaultProjectProxyRoute } from "../../../request";
+import { defaultProjectProxyRouteWithoutBaseURL } from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
+import { GetActionsFromSchemaAction } from "../../hooks/DashboardAPIs/GetActionsFromSchemaAction";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import Popup from "../DynamicPopup/Popup";
 import PopupEditing from "../DynamicPopup/PopupEditing";
 import BaseTable from "./BaseTable";
-import { GetActionsFromSchema } from "../../hooks/DashboardAPIs/GetActionsFromSchema";
-import { GetActionsFromSchemaAction } from "../../hooks/DashboardAPIs/GetActionsFromSchemaAction";
 const DynamicTable = ({
   schema,
   isSearchingTable,
@@ -29,18 +28,15 @@ const DynamicTable = ({
   subSchemas,
   selectedRow,
 }) => {
-  const [result, setResult] = useState({}); //that is make re-render to the rows
-
   const {
     data: SchemaActions,
     error,
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
-  SetReoute(schema.projectProxyRoute);
   const {
     getAction,
     postAction,
@@ -57,8 +53,8 @@ const DynamicTable = ({
         putAction={putAction}
         postAction={postAction}
         state={state}
-        setResult={setResult}
-        result={result}
+        // setResult={setResult}
+        // result={result}
         proxyRoute={schema.projectProxyRoute}
         schema={schema}
         addSelectedList={addSelectedList}

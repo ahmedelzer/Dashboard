@@ -3,7 +3,10 @@ import PartionFrom from "../../components/forms/PartingFrom/PartionFrom";
 import useFetch from "../../components/hooks/APIsFunctions/useFetch";
 import { ExtractIDFromPath } from "../../components/hooks/FormsFunctions/ExtractIDFromPath";
 import Loading from "../../components/loading/Loading";
-import { defaultProjectProxyRoute } from "../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../request";
 import "../dynamicTable/DynamicTable.scss";
 import Form from "../../contexts/Form";
 import { DependenciesCategory } from "../../components/forms/PartingFrom/DependenciesCategory";
@@ -12,7 +15,7 @@ function DynamicDependForm() {
 
   const { data, error, isLoading } = useFetch(
     `/Dashboard/GetDashboardForm?DashboardMenuItemID=${dashboardItemID}`,
-    defaultProjectProxyRoute
+    defaultProjectProxyRouteWithoutBaseURL
   );
 
   if (error && !data) {

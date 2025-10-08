@@ -5,11 +5,13 @@ import { DropDownBox } from "devextreme-react";
 import NativeDropdown from "./CustomDropdown"; // Adjust the import path based on your file structure
 import CustomDropdown from "./CustomDropdown";
 import useFetch from "../APIsFunctions/useFetch";
+import { defaultProjectProxyRouteWithoutBaseURL } from "../../../request";
 export function SearchingCellRender({ dataForm }) {
   const Enable = dataForm.isEnable;
   const lookupID = dataForm.lookupID;
   const data = useFetch(
-    `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${lookupID}`
+    `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${lookupID}`,
+    defaultProjectProxyRouteWithoutBaseURL
   );
   const [selectedRow, setSelectedRow] = useState({});
   const [isPanelOpen, setPanelOpen] = useState(false);

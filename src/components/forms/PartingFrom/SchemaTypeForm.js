@@ -1,4 +1,3 @@
-import { SetReoute } from "../../../request";
 import CompainedLiveTable from "./CompainedLiveTable";
 import { DependenciesCategory } from "./DependenciesCategory";
 import FormComponent from "./FormComponent";
@@ -11,9 +10,6 @@ export function SchemaType({
   updatedData,
   actions,
 }) {
-  console.log("====================================");
-  console.log(Schema.schemaType);
-  console.log("====================================");
   const categories = [
     { title: "React" },
     { title: "DevExpress" },

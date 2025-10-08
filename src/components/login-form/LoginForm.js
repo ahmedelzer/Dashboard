@@ -11,7 +11,6 @@ import { jwtDecode } from "jwt-decode";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
-import { SetReoute } from "../../request";
 import FormContainer from "../forms/DynamicPopup/FormContainer";
 import { onApply } from "../forms/DynamicPopup/OnApplay";
 import "./LoginForm.scss";
@@ -34,7 +33,6 @@ export default function LoginForm() {
   }, [location.state]);
   const onSubmit = useCallback(
     async (e) => {
-      SetReoute(schema.projectProxyRoute);
       const postAction =
         schemaActions &&
         schemaActions.find(

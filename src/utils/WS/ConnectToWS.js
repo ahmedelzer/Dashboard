@@ -1,12 +1,11 @@
 import { buildApiUrl } from "../../components/hooks/APIsFunctions/BuildApiUrl";
-import { projectProxyRoute, token, websocketBaseURI } from "../../request";
 import defWSSchemaAction from "../../components/login-form/Schemas/WSSchema/WSSchemaAction.json";
+import { token, websocketBaseURI } from "../../request";
 import { disconnectWS, getWSInstance } from "./WSManager";
 
 export async function ConnectToWS(
   setWSsetMessage,
   setWS_Connected,
-  proxyRoute = projectProxyRoute,
   row = {},
   wS_SchemaAction = defWSSchemaAction
 ) {
@@ -20,7 +19,7 @@ export async function ConnectToWS(
       ...row,
       token: token,
     },
-    websocketBaseURI + "/" + proxyRoute
+    websocketBaseURI + "/" + wS_SchemaAction.projectProxyRoute
   );
 
   const handleMessage = (WSMessage) => {
@@ -36,7 +35,11 @@ export async function ConnectToWS(
     }
   };
   const baseURL =
-    websocketBaseURI + "/" + proxyRoute + "/" + wS_SchemaAction.routeAdderss;
+    websocketBaseURI +
+    "/" +
+    wS_SchemaAction.projectProxyRoute +
+    "/" +
+    wS_SchemaAction.routeAdderss;
   // Get instance and handler remover
   const { removeHandler } = getWSInstance(baseURL, buildUrl, handleMessage);
 

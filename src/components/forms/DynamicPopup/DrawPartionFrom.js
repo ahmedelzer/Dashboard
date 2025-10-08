@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
-import { SetReoute } from "../../../request";
 import CompainedLiveTable from "../PartingFrom/CompainedLiveTable";
 import LiveFormPartions from "../PartingFrom/LiveFormPartions";
 import { stylesFile } from "./styles";
@@ -21,7 +20,6 @@ function DrawPartionFrom({
   const { actionsForm, mainSchema, selectedRow } = useContext(FormContext);
   const [open, setOpen] = useState(false);
   const { localization } = useContext(LanguageContext);
-  SetReoute(Schema.projectProxyRoute);
   const [editedRow, setEditedgRow] = useState("");
   const [disable, setDisable] = useState("");
   const Header = Schema.dashboardFormSchemaInfoDTOView.schemaHeader;
