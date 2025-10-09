@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react";
 import TreeView from "devextreme-react/tree-view";
 import Button from "devextreme-react/button";
-import { LanguageContext } from "../../contexts/Language";
+import { LanguageContext } from "../../../contexts/Language";
 import TreeList, {
   Column,
   Editing,
   Paging,
   Scrolling,
 } from "devextreme-react/tree-list";
+import BarcodeInput from "./QrCodeSeconner";
 
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
@@ -503,29 +504,34 @@ const Test = () => {
 
   const treeData = flattenData(initialData[0]);
   return (
-    <TreeList
-      id="collapsible-treeview"
-      idField="id"
-      parentIdField="parentId"
-      dataStructure="plain"
-      dataSource={treeData}
-      rootValue=""
-      // height={500}
-      items={treeData}
-      displayExpr="text"
-      parentIdExpr="parentId"
-      keyExpr="id"
-      onRowInserting={handleRowInserting}
-      onRowUpdating={handleRowUpdating}
-      columnAutoWidth={true}
-      showRowLines={true}
-      showBorders={true}
-    >
-      <Scrolling mode="standard" />
-      <Editing allowUpdating={(e) => e.row.data.value !== ""} mode="row" />
-      <Column dataField="text" caption="Name" />
-      <Column dataField="value" caption="Value" />
-    </TreeList>
+    // <TreeList
+    //   id="collapsible-treeview"
+    //   idField="id"
+    //   parentIdField="parentId"
+    //   dataStructure="plain"
+    //   dataSource={treeData}
+    //   rootValue=""
+    //   // height={500}
+    //   items={treeData}
+    //   displayExpr="text"
+    //   parentIdExpr="parentId"
+    //   keyExpr="id"
+    //   onRowInserting={handleRowInserting}
+    //   onRowUpdating={handleRowUpdating}
+    //   columnAutoWidth={true}
+    //   showRowLines={true}
+    //   showBorders={true}
+    // >
+    //   <Scrolling mode="standard" />
+    //   <Editing allowUpdating={(e) => e.row.data.value !== ""} mode="row" />
+    //   <Column dataField="text" caption="Name" />
+    //   <Column dataField="value" caption="Value" />
+    // </TreeList>
+    <BarcodeInput
+      onChange={(i) => {
+        console.log(i, "i");
+      }}
+    />
   );
 };
 

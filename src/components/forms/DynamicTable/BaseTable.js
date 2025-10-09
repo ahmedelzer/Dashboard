@@ -515,13 +515,7 @@ function BaseTable({
   useEffect(() => {
     // if (WS_Connected||wsAction=) return;
     let cleanup;
-    ConnectToWS(
-      setWSMessageMenuItem,
-      setWS_Connected,
-      schema.projectProxyRoute,
-      {},
-      wsAction
-    )
+    ConnectToWS(setWSMessageMenuItem, setWS_Connected, {}, wsAction)
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
         console.error("❌ Cart WebSocket error", e);
@@ -667,7 +661,7 @@ function BaseTable({
         {/*end filter and search*/}
         <TableHeaderRow showSortingControls={true} />
         {/* <VirtualTable /> can you make lazy loading work without this */}
-        {!isSearchingTable ? popupComponent({ state }) : <></>}
+        {!isSearchingTable && popupComponent({ state })}
         {paging ? <PagingPanel /> : null}
         <WaringPop
           confirmDelete={confirmDelete}

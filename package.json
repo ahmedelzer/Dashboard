@@ -10,10 +10,12 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@zxing/browser": "^0.1.5",
     "axios": "^1.3.3",
     "bootstrap": "^5.3.2",
     "devextreme": "^23.1.5",
     "devextreme-react": "^23.1.5",
+    "html5-qrcode": "^2.3.8",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
@@ -37,6 +39,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:lan": "cross-env HOST=192.168.1.8 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -62,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "devextreme-cli": "1.6.1",
     "devextreme-themebuilder": "^23.1.5",
     "http-proxy-middleware": "^2.0.6",

@@ -79,7 +79,8 @@
       "labelDays": "Days:",
       "labelHours": "Hours:",
       "labelMinutes": "Minutes:"
-    }
+    },
+    "notifyError": "Invalid Form"
   },
   "loadData": {
     "loading": "Loading"

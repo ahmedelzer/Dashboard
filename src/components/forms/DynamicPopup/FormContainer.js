@@ -5,7 +5,52 @@ import { Onchange } from "../../hooks/FormsFunctions/OnchangeClass";
 import avoidColsTypes from "../DynamicTable/avoidColsTypes.json";
 import firstColsFound from "./firstColsFound.json";
 import { Sm } from "./Sm";
+import { useContext, useEffect, useRef } from "react";
+import { LanguageContext } from "../../../contexts/Language";
+import { useDisplayToast } from "../../../utils/components/useDisplayToast";
 function FormContainer({ tableSchema, row, errorResult, returnRow }) {
+  const errors = errorResult?.error?.errors || {};
+  const { showToast } = useDisplayToast();
+  const { localization } = useContext(LanguageContext);
+
+  // Convert error keys to lowercase
+  const lowercaseErrors = Object.keys(errors).reduce((acc, key) => {
+    acc[key.toLowerCase()] = errors[key];
+    return acc;
+  }, {});
+
+  // Get expected field names from schema
+  const expectedFields =
+    tableSchema?.dashboardFormSchemaParameters?.map((param) =>
+      param.parameterField?.toLowerCase()
+    ) || [];
+
+  // Get unmatched error messages (e.g., "userError")
+  // const globalErrorMessages = [["test"], ["test1"]]; // get message(s)
+  const globalErrorMessages = Object.entries(lowercaseErrors)
+    .filter(([key]) => !expectedFields.includes(key)) // key not found in schema
+    .map(([_, message]) => message); // get message(s)
+  // Show toast on global errors
+  // Show the first global error as toast
+
+  const lastShownErrorRef = useRef(null); // track last error shown
+  useEffect(() => {
+    const currentError = globalErrorMessages[0];
+
+    if (currentError && lastShownErrorRef.current !== currentError) {
+      lastShownErrorRef.current = currentError;
+      // Always wrap in setTimeout to let React commit before showing
+      setTimeout(() => {
+        showToast(
+          localization.inputs.notifyError,
+          currentError,
+          "error",
+          4000,
+          "top"
+        );
+      }, 0);
+    }
+  }, [globalErrorMessages, showToast, localization.inputs.notifyError]);
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
     (e) => e.isEnable
   ).parameterField;

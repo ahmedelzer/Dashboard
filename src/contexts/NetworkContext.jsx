@@ -94,9 +94,9 @@ export const NetworkProvider = ({ children }) => {
         setIsOnline(false);
         return;
       }
-      // RunOnlyInDeployment(async () => {
-      await testNetworkSpeed();
-      // });
+      RunOnlyInDeployment(async () => {
+        await testNetworkSpeed();
+      });
     } catch (error) {
       console.error("verifyInternet error:", error);
       SetIsOnline(false);
@@ -142,18 +142,17 @@ export const NetworkProvider = ({ children }) => {
   const renderWifiIcon = () => {
     switch (speedLevel) {
       case 1:
-        return <MdSignalWifi1Bar size={20} color="white" />;
+        return <MdSignalWifi1Bar size={20} className="text-bg" />;
       case 2:
-        return <MdSignalWifi2Bar size={20} color="white" />;
+        return <MdSignalWifi2Bar size={20} className="text-bg" />;
       case 3:
-        return <MdSignalWifi3Bar size={20} color="white" />;
+        return <MdSignalWifi3Bar size={20} className="text-bg" />;
       case 4:
-        return <MdSignalWifi4Bar size={20} color="white" />;
+        return <MdSignalWifi4Bar size={20} className="text-bg" />;
       default:
-        return <MdWifiOff size={20} color="white" />;
+        return <MdWifiOff size={20} className="text-bg" />;
     }
   };
-
   return (
     <NetworkContext.Provider value={{ status, isOnline, checkNetwork }}>
       {/* Offline banner */}
@@ -174,7 +173,9 @@ export const NetworkProvider = ({ children }) => {
           }}
         >
           {renderWifiIcon()}
-          <span>{localization.Hum_screens.slowConnection}</span>
+          <span className="text-bg">
+            {localization.onlineState.slowConnection}
+          </span>
         </div>
       )}
 

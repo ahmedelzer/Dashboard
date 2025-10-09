@@ -109,6 +109,7 @@ function App() {
             title={localization.login.sign}
             component={languageComponent}
           >
+            {/* <Test /> */}
             <LoginForm />
           </SingleCard>
         }
