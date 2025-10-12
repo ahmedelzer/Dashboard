@@ -17,13 +17,12 @@ export default async function APIHandling(url, methodType, sendBody) {
   var requestOptions = {
     method: methodType,
     headers: myHeaders,
-    body: raw,
+    // body: raw,
     redirect: "follow",
-    // credentials: "include",
   };
-
+  if (methodType !== "Get") requestOptions = { ...requestOptions, body: raw };
   try {
-    const response = await fetch(GetProjectUrl() + "/" + url, requestOptions);
+    const response = await fetch(url, requestOptions);
     const result = await response.json();
 
     // Check if the API call was successful based on the HTTP status code

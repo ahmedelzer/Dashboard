@@ -39,6 +39,8 @@ export function GetInputComponent(type) {
       return LookupInput;
     case "addingLookup":
       return AddingLookupParameter; ///addingLookup
+    case "barcodeInput":
+      return AddingLookupParameter; ///addingLookup
     //detailsCell
     case "listOfKeywords":
       return ListOfKeywordsParameter;

@@ -1,4 +1,5 @@
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
+import { buildApiUrl } from "../../hooks/APIsFunctions/BuildApiUrl";
 import { SharedLists } from "../PartingFrom/SharedLists";
 
 export const onApply = async (
@@ -6,27 +7,37 @@ export const onApply = async (
   iDField,
   isNew,
   action,
-  proxyRoute,
-  schemaParameters = false
+  proxyRoute = "",
+  schemaParameters = false,
+  constants = {}
 ) => {
+  // const { showErrorToast } = useErrorToast();
+  // const { isOnline, checkNetwork } = useNetwork();
+  // console.log(isOnline, "isOnline");
+
+  // if (!isOnline) {
+  //   showErrorToast("connection Error", "please connect to internet ");
+  //   return null;
+  // }
   let row = schemaParameters
     ? SharedLists(editedRow, schemaParameters, "parameterField")
     : null;
   if (row) editedRow = row;
-  // Remove ID field for patching
-  const { [iDField]: _, ...editedRowWithoutIDField } = editedRow;
   const body = isNew
     ? editedRow
     : {
         entityID: `${editedRow[iDField]}`,
-        ...{ patchJSON: editedRowWithoutIDField },
+        ...{ patchJSON: editedRow },
       };
+  const dataSourceAPI = (query) => {
+    return buildApiUrl(query, { ...constants });
+  };
+
   const res = await APIHandling(
-    action.routeAdderss,
+    dataSourceAPI(action),
     action.dashboardFormActionMethodType,
     body
   );
-
   return res;
 };
 export const onApplyWithSpecialAction = async (

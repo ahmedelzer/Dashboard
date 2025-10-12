@@ -6,8 +6,9 @@ import { WSclass } from "../../hooks/FormsFunctions/WSclass";
 import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
 import BaseTable from "../DynamicTable/BaseTable";
 import PanelActions from "./PanelActions";
+import DrawPartitionForms from "./DrawPartitionForms";
 
-function PartionFrom({ Schemas, AdditionForm }) {
+function PartitionFrom({ Schemas, AdditionForm }) {
   const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =
     useContext(FormContext);
 
@@ -103,28 +104,7 @@ function PartionFrom({ Schemas, AdditionForm }) {
   }, [panelOpen]);
   return (
     <div>
-      {mainSchema && (
-        <DrawPartionFrom
-          mainID={mainID}
-          Schema={mainSchema}
-          updatedData={data}
-        />
-      )}
-      {subSchemas.length > 0 &&
-        subSchemas.map((Schema) => (
-          <div key={Schema?.dashboardFormSchemaID}>
-            <DrawPartionFrom
-              mainID={mainID}
-              Schema={Schema}
-              updatedData={data}
-            />
-            {/* <LiveFormPartions
-              Schema={mainSchema}
-              updatedData={data[0][mainSchema?.dataSourceName] || {}}
-            /> */}
-            {/* <LiveTable dataSource={Schema} updateRow={data[index]} /> */}
-          </div>
-        ))}
+      <DrawPartitionForms Schemas={Schemas} />
       {AdditionForm && <AdditionForm />}
       <PanelActions
         panelOpen={panelOpen}
@@ -189,4 +169,4 @@ function PartionFrom({ Schemas, AdditionForm }) {
       </div> */
 }
 
-export default PartionFrom;
+export default PartitionFrom;

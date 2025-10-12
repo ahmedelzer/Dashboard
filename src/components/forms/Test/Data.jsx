@@ -8,8 +8,12 @@ import TreeList, {
   Paging,
   Scrolling,
 } from "devextreme-react/tree-list";
-import BarcodeInput from "./QrCodeSeconner";
-
+import BarcodeIframe from "./BarcodeIframe";
+import BarcodeInput from "../../inputs/BarcodeInput";
+import DynamicReport from "../../../pages/dynamicReport/DynamicReport";
+import Form from "../../../contexts/Form";
+import DrawPartitionForms from "../PartingFrom/DrawPartitionForms";
+import testSchema from "./testSchema.json";
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
   // const [treeData, setTreeData] = useState([
@@ -528,9 +532,12 @@ const Test = () => {
     //   <Column dataField="value" caption="Value" />
     // </TreeList>
     <BarcodeInput
-      onChange={(i) => {
-        console.log(i, "i");
-      }}
+      value={{ fieldNameBarcode: "" }}
+      enable={true}
+      title={"enter barcode"}
+      fieldName={"fieldNameBarcode"}
+      type={""}
+      placeholder="enter barcode"
     />
   );
 };

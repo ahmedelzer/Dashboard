@@ -1,0 +1,70 @@
+[
+  {
+    "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+    "schemaType": "Form",
+    "idField": "dailyStaffAttendanceID",
+    "dashboardFormSchemaInfoDTOView": {
+      "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+      "schemaHeader": "Daily Staff Attendance",
+      "addingHeader": "New Attendance",
+      "editingHeader": "Edit Attendance"
+    },
+    "dashboardFormSchemaParameters": [
+      {
+        "dashboardFormSchemaParameterID": "a976a142-5acf-4f4c-9dbf-81ae92ef2400",
+        "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+        "isEnable": true,
+        "parameterType": "barcodeInput",
+        "parameterField": "barcode",
+        "parameterTitel": "barcode",
+        "parameterLookupTitel": null,
+        "isIDField": true,
+        "lookupID": null,
+        "lookupReturnField": null,
+        "lookupDisplayField": null,
+        "indexNumber": 0,
+        "isFilterOperation": true,
+        "dashboardFormSchemaParameterDependencies": []
+      }
+    ],
+    "projectProxyRoute": "BrandingMartHR",
+    "isMainSchema": true,
+    "dataSourceName": "StaffAttendance",
+    "propertyName": null,
+    "indexNumber": 0
+  },
+  {
+    "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+    "schemaType": "Form",
+    "idField": "dailyStaffAttendanceID",
+    "dashboardFormSchemaInfoDTOView": {
+      "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+      "schemaHeader": "Daily Staff Attendance",
+      "addingHeader": "New Attendance",
+      "editingHeader": "Edit Attendance"
+    },
+    "dashboardFormSchemaParameters": [
+      {
+        "dashboardFormSchemaParameterID": "a976a142-5acf-4f4c-9dbf-81ae92ef2400",
+        "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+        "isEnable": true,
+        "parameterType": "barcodeInput",
+        "parameterField": "barcode",
+        "parameterTitel": "barcode",
+        "parameterLookupTitel": null,
+        "isIDField": false,
+        "lookupID": null,
+        "lookupReturnField": null,
+        "lookupDisplayField": null,
+        "indexNumber": 0,
+        "isFilterOperation": true,
+        "dashboardFormSchemaParameterDependencies": []
+      }
+    ],
+    "projectProxyRoute": "BrandingMartHR",
+    "isMainSchema": false,
+    "dataSourceName": "StaffAttendance",
+    "propertyName": null,
+    "indexNumber": 0
+  }
+]

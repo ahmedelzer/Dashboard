@@ -10,7 +10,8 @@ import {
 } from "../../request";
 import "../dynamicTable/DynamicTable.scss";
 import Form from "../../contexts/Form";
-function DynamicFrom() {
+import DrawPartitionForms from "../../components/forms/PartingFrom/DrawPartitionForms";
+function DynamicReport() {
   const dashboardItemID = ExtractIDFromPath(window.location.pathname);
   const { Right } = useContext(LanguageContext);
 
@@ -31,8 +32,8 @@ function DynamicFrom() {
 
   return (
     <Form schemas={data}>
-      <PartionFrom Schemas={data} />
+      <DrawPartitionForms Schemas={data} />
     </Form>
   );
 }
-export default DynamicFrom;
+export default DynamicReport;
