@@ -15,6 +15,7 @@ function DrawPartionFrom({
   // putAction,
   // actions,
   // mainSchema,
+  setUpdatedData,
   mainID,
 }) {
   const { actionsForm, mainSchema, selectedRow } = useContext(FormContext);
@@ -53,6 +54,7 @@ function DrawPartionFrom({
     console.log("====================================");
     console.log(formJson, action, actionsForm);
     console.log("====================================");
+
     setDisable(true);
     try {
       const request = await onApply(
@@ -63,10 +65,19 @@ function DrawPartionFrom({
         null,
         true,
         action,
-        route
+        route,
+        false,
+        {
+          ...formJson,
+          ...selectedRow,
+        }
       );
-      if (request) {
+      if (request.success && request.data) {
         // setResult(request);
+        console.log("====================================");
+        console.log(request.data, "request.data");
+        console.log("====================================");
+        setUpdatedData(() => request.data);
       }
     } catch (error) {
       console.error("API call failed:", error);
@@ -90,7 +101,7 @@ function DrawPartionFrom({
       <form
         className={stylesFile.formContainer(open)}
         onSubmit={(e) =>
-          onSubmit(e, actionsForm.postAction, null, Schema.projectProxyRoute)
+          onSubmit(e, actionsForm.getAction, null, Schema.projectProxyRoute)
         } // The form will only submit when Save button is clicked
       >
         {/* <div className="flex justify-end">

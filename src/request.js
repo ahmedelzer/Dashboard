@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 // export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const domainURL = "ihs-solutions.com";
-export const baseURL = "https://" + domainURL + ":8000";
+export const baseURL = "https://" + domainURL + ":8882";
 
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
@@ -17,7 +17,7 @@ export const defaultProjectProxyRoute = `${baseURL}/Centralization/api`;
 export const defaultProjectProxyRouteWithoutBaseURL = `Centralization`;
 export const defaultProjectProxyRouteWithoutAPI = `${baseURL}/Centralization/`;
 export const publicImageURL = "https://" + domainURL + ":5055/";
-export const websocketBaseURI = "ws://" + domainURL + ":9000";
+export const websocketBaseURI = "wss://" + domainURL + ":9000";
 // export const baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
 export let isOnline = true;
 
@@ -39,7 +39,7 @@ export function SetHeaders() {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
     // "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Origin": "*",
     token: token,
     languageID: window.localStorage.getItem("languageID"),
   };

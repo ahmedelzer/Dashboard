@@ -321,7 +321,7 @@ function BaseTable({
   const [fieldName, setFieldName] = useState("");
   const [title, setTitle] = useState("");
   const [currentSkip, setCurrentSkip] = useState(1);
-  const { _wsMessageMenuItem, setWSMessageMenuItem } = useWS();
+  const { _wsMessageTable, setWSMessageTable } = useWS();
   const [WS_Connected, setWS_Connected] = useState(false);
   const observerRef = useRef();
   const getRowId = (row) => row[schema.idField];
@@ -515,7 +515,7 @@ function BaseTable({
   useEffect(() => {
     // if (WS_Connected||wsAction=) return;
     let cleanup;
-    ConnectToWS(setWSMessageMenuItem, setWS_Connected, {}, wsAction)
+    ConnectToWS(setWSMessageTable, setWS_Connected, {}, wsAction)
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
         console.error("❌ Cart WebSocket error", e);
@@ -543,17 +543,17 @@ function BaseTable({
 
   // 📨 React to WebSocket messages only when valid
   useEffect(() => {
-    if (!_wsMessageMenuItem) return;
+    if (!_wsMessageTable) return;
     const _handleWSMessage = new WSMessageHandler({
-      _WSsetMessage: _wsMessageMenuItem,
+      _WSsetMessage: _wsMessageTable,
       fieldsType,
       rows,
       totalCount,
       callbackReducerUpdate,
     });
     _handleWSMessage.process();
-    setWSMessageMenuItem(_wsMessageMenuItem);
-  }, [_wsMessageMenuItem]);
+    setWSMessageTable(_wsMessageTable);
+  }, [_wsMessageTable]);
   let initialRows = [
     {
       rate: "9",

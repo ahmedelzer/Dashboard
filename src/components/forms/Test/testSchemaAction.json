@@ -1,0 +1,19 @@
+[
+  {
+    "projectProxyRoute": "BrandingMartPOS",
+    "dashboardFormSchemaActionID": "46ac8869-4745-41c8-8839-d02dfe9999f0",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "ShopNode/GetSaleInvoiceByInvoiceNumber",
+    "body": "",
+    "returnPropertyName": "",
+    "dashboardFormSchemaActionQueryParams": [
+      {
+        "dashboardFormSchemaActionQueryParameterID": "5c060feb-679d-45fe-b48a-4ebce6fec77f",
+        "dashboardFormSchemaActionID": "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
+        "parameterName": "invoiceNumber",
+        "IsRequired": false,
+        "dashboardFormParameterField": "invoiceNumber"
+      }
+    ]
+  }
+]

@@ -9,11 +9,13 @@ import TreeList, {
   Scrolling,
 } from "devextreme-react/tree-list";
 import BarcodeIframe from "./BarcodeIframe";
+import testSchema from "./testSchema.json";
 import BarcodeInput from "../../inputs/BarcodeInput";
 import DynamicReport from "../../../pages/dynamicReport/DynamicReport";
 import Form from "../../../contexts/Form";
 import DrawPartitionForms from "../PartingFrom/DrawPartitionForms";
-import testSchema from "./testSchema.json";
+// import testSchema from "./testSchema.json";
+import PartitionFrom from "../PartingFrom/PartionFrom";
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
   // const [treeData, setTreeData] = useState([
@@ -531,14 +533,17 @@ const Test = () => {
     //   <Column dataField="text" caption="Name" />
     //   <Column dataField="value" caption="Value" />
     // </TreeList>
-    <BarcodeInput
-      value={{ fieldNameBarcode: "" }}
-      enable={true}
-      title={"enter barcode"}
-      fieldName={"fieldNameBarcode"}
-      type={""}
-      placeholder="enter barcode"
-    />
+    // <BarcodeInput
+    //   value={{ fieldNameBarcode: "" }}
+    //   enable={true}
+    //   title={"enter barcode"}
+    //   fieldName={"fieldNameBarcode"}
+    //   type={""}
+    //   placeholder="enter barcode"
+    // />
+    <Form schemas={testSchema}>
+      <DrawPartitionForms Schemas={testSchema} />
+    </Form>
   );
 };
 

@@ -16,6 +16,9 @@ export function SchemaType({
     { title: "Tailwind CSS" },
     { title: "Reactstrap" },
   ];
+  console.log("====================================");
+  console.log(Schema.schemaType, "Schema.schemaType");
+  console.log("====================================");
   switch (Schema.schemaType) {
     case "LiveForm":
       return (
@@ -47,13 +50,23 @@ export function SchemaType({
           {/* <LiveFormPartions Schema={Schema} data={updatedData} /> */}
         </div>
       );
+    case "Report":
+      return (
+        <FormComponent
+          tableSchema={Schema}
+          editInitState={true}
+          row={updatedData}
+          // errorResult={result}
+          returnRow={() => {}}
+        />
+      );
     default:
       return (
         // <div>
         // <DependenciesCategory Schema={Schema} />
         <FormComponent
           tableSchema={Schema}
-          row={{}}
+          row={updatedData}
           // errorResult={result}
           returnRow={() => {}}
         />

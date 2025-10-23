@@ -1,5 +1,5 @@
 export function Sm(param) {
-  if (param.lookupID !== null) {
+  if (param.lookupID) {
     return 12;
   } else if (param.parameterType !== "text") {
     return 12;

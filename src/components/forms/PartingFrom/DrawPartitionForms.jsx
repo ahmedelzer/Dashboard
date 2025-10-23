@@ -6,13 +6,16 @@ import { WSclass } from "../../hooks/FormsFunctions/WSclass";
 import DrawPartionFrom from "../DynamicPopup/DrawPartionFrom";
 import BaseTable from "../DynamicTable/BaseTable";
 import PanelActions from "./PanelActions";
+import { useWS } from "../../../contexts/WSContext";
+import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
+import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
 
 function DrawPartitionForms({ Schemas }) {
   const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =
     useContext(FormContext);
 
   // const [data, setData] = useState([{ invoice: {}, invoiceItems: [] }]);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [mainID, setMainID] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   var WSClient;
@@ -59,6 +62,7 @@ function DrawPartitionForms({ Schemas }) {
       GetDataSources();
     }
   }, [panelOpen]);
+
   return (
     <div>
       {mainSchema && (
@@ -66,6 +70,7 @@ function DrawPartitionForms({ Schemas }) {
           mainID={mainID}
           Schema={mainSchema}
           updatedData={data}
+          setUpdatedData={setData}
         />
       )}
       {subSchemas.length > 0 &&
@@ -75,6 +80,7 @@ function DrawPartitionForms({ Schemas }) {
               mainID={mainID}
               Schema={Schema}
               updatedData={data}
+              setUpdatedData={setData}
             />
           </div>
         ))}

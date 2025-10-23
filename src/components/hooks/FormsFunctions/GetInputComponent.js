@@ -11,6 +11,7 @@ import {
   AddingLookupParameter,
   ListOfKeywordsParameter,
   RateParameter,
+  BarcodeInput,
 } from "../../inputs";
 export function GetInputComponent(type) {
   switch (type) {
@@ -37,6 +38,8 @@ export function GetInputComponent(type) {
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;
+    case "scanInput":
+      return BarcodeInput;
     case "addingLookup":
       return AddingLookupParameter; ///addingLookup
     case "barcodeInput":

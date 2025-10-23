@@ -1,4 +1,5 @@
 import { withNavigationWatcher } from "./contexts/navigation";
+import DynamicReport from "./pages/dynamicReport/DynamicReport";
 import Home from "./pages/home/Home";
 import {
   DynamicLiveForm,
@@ -41,6 +42,8 @@ function SwitchElement(element) {
       return Form;
     case "dynamicLiveForm":
       return DynamicLiveForm;
+    case "dynamicReport":
+      return DynamicReport;
     default:
       return Home;
   }

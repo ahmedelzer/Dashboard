@@ -3,12 +3,16 @@ import { Button } from "reactstrap";
 import { stylesFile } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import { FormContext } from "../../../contexts/Form";
-
+import testSchemaAction from "../Test/testSchemaAction.json";
+import { GetActionsFromSchemaAction } from "../../hooks/DashboardAPIs/GetActionsFromSchemaAction";
 function EditFormToggle({ actions, edit, setEdit }) {
   // const [Edit, setEdit] = useState(false);
   const { localization } = useContext(LanguageContext);
   const { setActionsForm } = useContext(FormContext);
-
+  const actionTypeLocalization = actions?.getAction
+    ? localization.drawPartionForm.button.save
+    : "📷";
+  const initActions = GetActionsFromSchemaAction(testSchemaAction);
   return (
     <div className="flex justify-end">
       <div className={stylesFile.buttonText(edit)}>
@@ -23,11 +27,11 @@ function EditFormToggle({ actions, edit, setEdit }) {
           <Button
             type="submit"
             key={1}
-            onClick={() => setActionsForm(actions)}
+            onClick={() => setActionsForm(initActions)}
             className="pop"
           >
             {/*here i want to send pram on click */}
-            {localization.drawPartionForm.button.save}
+            {actionTypeLocalization}
           </Button>
         ) : (
           <Button

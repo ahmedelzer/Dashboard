@@ -1,7 +1,7 @@
 [
   {
     "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-    "schemaType": "Form",
+    "schemaType": "Report",
     "idField": "dailyStaffAttendanceID",
     "dashboardFormSchemaInfoDTOView": {
       "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
@@ -14,11 +14,11 @@
         "dashboardFormSchemaParameterID": "a976a142-5acf-4f4c-9dbf-81ae92ef2400",
         "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
         "isEnable": true,
-        "parameterType": "barcodeInput",
-        "parameterField": "barcode",
+        "parameterType": "scanInput",
+        "parameterField": "invoiceNumber",
         "parameterTitel": "barcode",
         "parameterLookupTitel": null,
-        "isIDField": true,
+        "isIDField": false,
         "lookupID": null,
         "lookupReturnField": null,
         "lookupDisplayField": null,
@@ -45,23 +45,144 @@
     },
     "dashboardFormSchemaParameters": [
       {
-        "dashboardFormSchemaParameterID": "a976a142-5acf-4f4c-9dbf-81ae92ef2400",
-        "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
+        "dashboardFormSchemaParameterID": "9e49c792-9b64-4d15-8c47-90a21c560e95",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
         "isEnable": true,
-        "parameterType": "barcodeInput",
-        "parameterField": "barcode",
-        "parameterTitel": "barcode",
+        "parameterType": "text",
+        "parameterField": "cartID",
+        "parameterTitel": "cart ID",
         "parameterLookupTitel": null,
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 0,
-        "isFilterOperation": true,
-        "dashboardFormSchemaParameterDependencies": []
+        "isIDField": true,
+        "indexNumber": 1
+      },
+      {
+        "dashboardFormSchemaParameterID": "1d748453-042e-4d32-a805-86792a5d37a2",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "totalAmount",
+        "parameterTitel": "Total Amount",
+        "indexNumber": 2
+      },
+      {
+        "dashboardFormSchemaParameterID": "1d748453-042e-4d32-a805-86792a5d37a2",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "otherFeesAmount",
+        "parameterTitel": "Other Fees Amount",
+        "indexNumber": 2
+      },
+      {
+        "dashboardFormSchemaParameterID": "bfd67a2d-2492-474e-9dc6-9a6c7e373eee",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "invoiceItemsTaxAmount",
+        "parameterTitel": "Invoice Items Tax",
+        "indexNumber": 3
+      },
+      {
+        "dashboardFormSchemaParameterID": "d03bb8a9-f236-4371-a8ed-71d5fdaec366",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "invoiceTaxAmount",
+        "parameterTitel": "Invoice Tax",
+        "indexNumber": 4
+      },
+      {
+        "dashboardFormSchemaParameterID": "f46519c0-b5a4-4f4e-90fc-bb0b6ceff2f3",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "totalFeesAmount",
+        "parameterTitel": "Total Fees Amount",
+        "indexNumber": 5
+      },
+      {
+        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "netAmount",
+        "parameterTitel": "Net Amount",
+        "indexNumber": 6
+      },
+      {
+        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "netPayAmount",
+        "parameterTitel": "netPayAmount",
+        "indexNumber": 6
+      },
+      {
+        "dashboardFormSchemaParameterID": "7dcf2e85-7646-4d35-b875-1b57c37e7687",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "invoiceItemsDiscountAmount",
+        "parameterTitel": "Items Discount",
+        "indexNumber": 7
+      },
+      {
+        "dashboardFormSchemaParameterID": "c439b6cd-e456-4139-8995-e4a3025fae44",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "invoiceDiscountAmount",
+        "parameterTitel": "Invoice Discount",
+        "indexNumber": 8
+      },
+      {
+        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "totalDiscountAmount",
+        "parameterTitel": "Total Discount",
+        "indexNumber": 9
+      },
+      {
+        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "totalTaxAmount",
+        "parameterTitel": "Total Tax Amount",
+        "indexNumber": 9
+      },
+      {
+        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "otherFees",
+        "parameterTitel": "Other Fees",
+        "indexNumber": 9
+      },
+      {
+        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "feesAmount",
+        "parameterTitel": "Shipment Fees",
+        "indexNumber": 9
+      },
+      {
+        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "text",
+        "parameterField": "totalShipmentsNeeded",
+        "parameterTitel": "Total Shipments Needed",
+        "indexNumber": 9
       }
     ],
-    "projectProxyRoute": "BrandingMartHR",
+    "projectProxyRoute": "BrandingMartPOS",
     "isMainSchema": false,
     "dataSourceName": "StaffAttendance",
     "propertyName": null,

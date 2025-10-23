@@ -20,6 +20,7 @@ export default async function APIHandling(url, methodType, sendBody) {
     // body: raw,
     redirect: "follow",
   };
+
   if (methodType !== "Get") requestOptions = { ...requestOptions, body: raw };
   try {
     const response = await fetch(url, requestOptions);

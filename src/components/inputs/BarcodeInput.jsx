@@ -1,30 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { RunsSpacialAction } from "../hooks/APIsFunctions/RunsSpacialAction";
-const action = [
-  {
-    dashboardFormSchemaActionID: "aec3c9f0-747d-41b6-986c-6caa787bb0b7",
-    dashboardFormActionMethodType: "Get:isAvailable",
-    routeAdderss: "ShopNode/AvailableNodeMenuItem",
-    body: "",
-    returnPropertyName: "",
-    projectProxyRoute: "BrandingMartPOS",
-    dashboardFormSchemaActionQueryParams: [
-      {
-        dashboardFormSchemaActionQueryParameterID:
-          "5c060feb-679d-45fe-b48a-4ebce6fec77f",
-        dashboardFormSchemaActionID: "e77b4a7b-7ab5-46f7-8240-0da8a3b50a25",
-        parameterName: "fieldNameBarcode",
-        IsRequired: true,
-        dashboardFormParameterField: "fieldNameBarcode",
-      },
-    ],
-  },
-];
 const BarcodeInput = ({ ...props }) => {
   //   const [scanning, setScanning] = useState(false);
   let { value, enable, title, fieldName, type, placeholder } = props;
-  const [scannedValue, setScannedValue] = useState(value[fieldName] || "");
+  const [scannedValue, setScannedValue] = useState(value || "");
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.data?.type === "BARCODE_SCANNED") {
@@ -48,21 +28,21 @@ const BarcodeInput = ({ ...props }) => {
     value = scannedValue;
     const runAction = async () => {
       try {
-        const req = await RunsSpacialAction(
-          "isAvailable",
-          "testID",
-          scannedValue[fieldName],
-          action,
-          true,
-          scannedValue
-        );
-        console.log("✅ Action completed:", req);
+        // const req = await RunsSpacialAction(
+        //   "isAvailable",
+        //   "testID",
+        //   scannedValue[fieldName],
+        //   action,
+        //   true,
+        //   scannedValue
+        // );
+        // console.log("✅ Action completed:", req);
       } catch (error) {
         console.error("❌ Error running action:", error);
       }
     };
 
-    runAction();
+    // runAction();
   }, [scannedValue]);
 
   return (
