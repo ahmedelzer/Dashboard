@@ -40,9 +40,9 @@ export function GetActionsFromSchema(schema) {
     (action) => action.dashboardFormActionMethodType === "ws"
   );
   const specialActions = schemaActions?.filter((action) =>
-    ["Put", "Post", "Delete"].some((method) =>
-      action.dashboardFormActionMethodType.startsWith(`${method}:`)
-    )
+    ["Get", "Put", "Post", "Delete"].some((method) => {
+      return action.dashboardFormActionMethodType.startsWith(`${method}:`);
+    })
   );
 
   return {

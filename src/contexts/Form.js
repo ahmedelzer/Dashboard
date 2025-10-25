@@ -9,6 +9,8 @@ const Form = ({ children, schemas }) => {
   const subSchemas = schemas?.filter((item) => item.isMainSchema !== true);
   const [selectedRow, setSelectedRow] = useState(null);
   const [actionsForm, setActionsForm] = useState(null);
+  const [dependenceRow, setDependenceRow] = useState({});
+
   const {
     getAction,
     postAction,
@@ -33,6 +35,8 @@ const Form = ({ children, schemas }) => {
         actionsForm,
         setActionsForm,
         subSchemas,
+        dependenceRow,
+        setDependenceRow,
       }}
     >
       {children}

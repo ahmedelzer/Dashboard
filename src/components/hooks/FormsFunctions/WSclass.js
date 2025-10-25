@@ -21,6 +21,11 @@ export class WSclass {
 
     this.socket.onclose = () => {
       this.connectionCallbacks.forEach((cb) => cb(false));
+      // Reconnect ONLY if closed unexpectedly
+      // if (this.shouldReconnect) {
+      console.warn("WebSocket closed. Reconnecting...");
+      this.connect(onConnect);
+      // }
     };
 
     this.socket.onmessage = (event) => {
@@ -29,6 +34,7 @@ export class WSclass {
 
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
+      this.socket.close(); // will trigger onclose → reconnect
     };
   }
 

@@ -8,17 +8,14 @@ import { SchemaType } from "../PartingFrom/SchemaTypeForm";
 import { FormContext } from "../../../contexts/Form";
 import { Button } from "reactstrap";
 import { onApply } from "./OnApplay";
-function DrawPartionFrom({
-  Schema,
-  updatedData,
-  // postAction,
-  // putAction,
-  // actions,
-  // mainSchema,
-  setUpdatedData,
-  mainID,
-}) {
-  const { actionsForm, mainSchema, selectedRow } = useContext(FormContext);
+function DrawPartionFrom({ Schema, mainID }) {
+  const {
+    actionsForm,
+    mainSchema,
+    selectedRow,
+    dependenceRow,
+    setDependenceRow,
+  } = useContext(FormContext);
   const [open, setOpen] = useState(false);
   const { localization } = useContext(LanguageContext);
   const [editedRow, setEditedgRow] = useState("");
@@ -74,10 +71,7 @@ function DrawPartionFrom({
       );
       if (request.success && request.data) {
         // setResult(request);
-        console.log("====================================");
-        console.log(request.data, "request.data");
-        console.log("====================================");
-        setUpdatedData(() => request.data);
+        setDependenceRow(() => request.data);
       }
     } catch (error) {
       console.error("API call failed:", error);
@@ -139,7 +133,7 @@ function DrawPartionFrom({
             Schema={Schema}
             editedRow={editedRow}
             setEditedgRow={setEditedgRow}
-            updatedData={updatedData}
+            updatedData={dependenceRow}
           />
         </div>
       </form>

@@ -8,7 +8,7 @@ import { Sm } from "./Sm";
 import { useContext, useEffect, useRef } from "react";
 import { LanguageContext } from "../../../contexts/Language";
 import { useDisplayToast } from "../../../utils/components/useDisplayToast";
-function FormContainer({ tableSchema, row, errorResult, returnRow }) {
+function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
   const errors = errorResult?.error?.errors || {};
   const { showToast } = useDisplayToast();
   const { localization } = useContext(LanguageContext);
@@ -118,6 +118,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow }) {
                   formSchemaParameters={
                     tableSchema?.dashboardFormSchemaParameters
                   }
+                  {...props}
                 />
               </Col>
             ))}

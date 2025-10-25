@@ -7,8 +7,10 @@ import { stylesFile } from "../DynamicPopup/styles";
 import { useWS } from "../../../contexts/WSContext";
 import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
 import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
-
+import testSchemaAction from "../Test/testSchemaAction.json";
 function FormComponent({ tableSchema, ...props }) {
+  const { mainSchema, selectedRow, dependenceRow, setDependenceRow } =
+    useContext(FormContext);
   const {
     getAction,
     postAction,
@@ -17,6 +19,7 @@ function FormComponent({ tableSchema, ...props }) {
     getDependenciesAction,
     getActionByID,
     wsAction,
+    specialActions,
   } = GetActionsFromSchema(tableSchema);
   const [formRow, setFormRow] = useState(props.row);
   const { _wsMessageForm, setWSMessageForm } = useWS();
@@ -28,7 +31,21 @@ function FormComponent({ tableSchema, ...props }) {
     searchAction,
     getDependenciesAction,
     getActionByID,
+    specialActions,
   };
+
+  const { actionsForm } = useContext(FormContext);
+  const costemspecialActions = testSchemaAction?.filter((action) =>
+    ["Get", "Put", "Post", "Delete"].some((method) => {
+      // console.log("====================================");
+      // console.log(
+      //   action.dashboardFormActionMethodType.startsWith(`${method}:`),
+      //   action.dashboardFormActionMethodType
+      // );
+      // console.log("====================================");
+      return action.dashboardFormActionMethodType.startsWith(`${method}:`);
+    })
+  );
   const [edit, setEdit] = useState(props.editInitState || false);
   //WS
   useEffect(() => {
@@ -75,6 +92,7 @@ function FormComponent({ tableSchema, ...props }) {
   useEffect(() => {
     setFormRow(props.row);
   }, [props.row]);
+
   return (
     <div>
       {actions && (
@@ -82,7 +100,13 @@ function FormComponent({ tableSchema, ...props }) {
       )}
 
       <div className={stylesFile.formEditState(edit)} key={props.row}>
-        <FormContainer tableSchema={tableSchema} {...props} row={formRow} />
+        <FormContainer
+          tableSchema={tableSchema}
+          specialActions={costemspecialActions}
+          setDependenceRow={setDependenceRow}
+          {...props}
+          row={formRow}
+        />
       </div>
     </div>
   );

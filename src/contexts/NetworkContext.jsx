@@ -121,7 +121,7 @@ export const NetworkProvider = ({ children }) => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         RunOnlyInDeployment(() => {
-          window.location.reload();
+          // window.location.reload();
         });
       }
     };

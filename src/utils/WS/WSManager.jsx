@@ -36,7 +36,6 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
       console.log(`🔄 URL changed from ${instance.url} to ${url}`);
       disconnectWS(baseUrl, true); // Force disconnect
     }
-    console.log("🆕 Creating new WebSocket instance", url);
     const wsInstance = new WSclass(url);
 
     try {

@@ -16,9 +16,6 @@ export function SchemaType({
     { title: "Tailwind CSS" },
     { title: "Reactstrap" },
   ];
-  console.log("====================================");
-  console.log(Schema.schemaType, "Schema.schemaType");
-  console.log("====================================");
   switch (Schema.schemaType) {
     case "LiveForm":
       return (

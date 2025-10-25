@@ -2,7 +2,7 @@
   {
     "projectProxyRoute": "BrandingMartPOS",
     "dashboardFormSchemaActionID": "46ac8869-4745-41c8-8839-d02dfe9999f0",
-    "dashboardFormActionMethodType": "Get",
+    "dashboardFormActionMethodType": "Get:invoiceNumber",
     "routeAdderss": "ShopNode/GetSaleInvoiceByInvoiceNumber",
     "body": "",
     "returnPropertyName": "",

@@ -29,7 +29,6 @@ export async function ConnectToWS(
       const urlEncodedString = new TextDecoder().decode(byteArray);
       const decodedString = decodeURIComponent(urlEncodedString);
       setWSsetMessage(() => decodedString);
-      console.log("🔔 Incoming message decoded:", decodedString);
     } catch (err) {
       console.error("❌ Failed to decode WebSocket message:", err);
     }

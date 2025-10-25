@@ -11,11 +11,17 @@ import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
 import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
 
 function DrawPartitionForms({ Schemas }) {
-  const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =
-    useContext(FormContext);
+  const {
+    getAction,
+    selectedRow,
+    setSelectedRow,
+    mainSchema,
+    subSchemas,
+    dependenceRow,
+    setDependenceRow,
+  } = useContext(FormContext);
 
   // const [data, setData] = useState([{ invoice: {}, invoiceItems: [] }]);
-  const [data, setData] = useState({});
   const [mainID, setMainID] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   var WSClient;
@@ -52,7 +58,7 @@ function DrawPartitionForms({ Schemas }) {
             (data) => datasources[0][data?.dataSourceName]
           );
 
-          setData(schemaDataSource);
+          setDependenceRow(schemaDataSource);
         });
       }
     };
@@ -65,23 +71,11 @@ function DrawPartitionForms({ Schemas }) {
 
   return (
     <div>
-      {mainSchema && (
-        <DrawPartionFrom
-          mainID={mainID}
-          Schema={mainSchema}
-          updatedData={data}
-          setUpdatedData={setData}
-        />
-      )}
+      {mainSchema && <DrawPartionFrom mainID={mainID} Schema={mainSchema} />}
       {subSchemas.length > 0 &&
         subSchemas.map((Schema) => (
           <div key={Schema?.dashboardFormSchemaID}>
-            <DrawPartionFrom
-              mainID={mainID}
-              Schema={Schema}
-              updatedData={data}
-              setUpdatedData={setData}
-            />
+            <DrawPartionFrom mainID={mainID} Schema={Schema} />
           </div>
         ))}
     </div>

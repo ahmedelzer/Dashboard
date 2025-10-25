@@ -13,6 +13,17 @@ function EditFormToggle({ actions, edit, setEdit }) {
     ? localization.drawPartionForm.button.save
     : "📷";
   const initActions = GetActionsFromSchemaAction(testSchemaAction);
+  const specialActions = testSchemaAction?.filter((action) =>
+    ["Get", "Put", "Post", "Delete"].some((method) => {
+      // console.log("====================================");
+      // console.log(
+      //   action.dashboardFormActionMethodType.startsWith(`${method}:`),
+      //   action.dashboardFormActionMethodType
+      // );
+      // console.log("====================================");
+      return action.dashboardFormActionMethodType.startsWith(`${method}:`);
+    })
+  );
   return (
     <div className="flex justify-end">
       <div className={stylesFile.buttonText(edit)}>
@@ -27,7 +38,7 @@ function EditFormToggle({ actions, edit, setEdit }) {
           <Button
             type="submit"
             key={1}
-            onClick={() => setActionsForm(initActions)}
+            onClick={() => setActionsForm({ ...initActions })}
             className="pop"
           >
             {/*here i want to send pram on click */}

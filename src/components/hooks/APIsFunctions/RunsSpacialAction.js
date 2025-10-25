@@ -47,12 +47,12 @@ export const RunsSpacialAction = async (
 
     if (result && result.success) {
       setLoading(false);
-      return true;
+      return result;
     } else {
       console.log("====================================");
       console.log(result);
       console.log("====================================");
-      return false;
+      return result;
     }
   }
 };
