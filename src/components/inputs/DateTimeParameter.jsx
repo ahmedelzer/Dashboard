@@ -32,7 +32,26 @@ class DateTimeParameter extends BaseInput {
   render() {
     const { localization, Right } = this.context;
 
-    const { fieldName, value, onChange, enable } = this.props;
+    const { fieldName, value, onChange, enable, type } = this.props;
+    const getValue = () => {
+      if (value) {
+        if (type === "localDateTime") {
+          var date = new Date(value);
+          // Format only the time part in local time zone
+          var timeString = new Intl.DateTimeFormat(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false, // or true for AM/PM
+          }).format(date);
+          return timeString;
+        } else {
+          return value;
+        }
+      } else {
+        return Date.now();
+      }
+    };
     function handleChange(e) {
       const value = e.value;
       onChange({ target: { name: fieldName, value: value } });
@@ -41,7 +60,7 @@ class DateTimeParameter extends BaseInput {
     return (
       <div className="mb-3" title={this.props.title}>
         <DateBox
-          value={new Date(value ? value : Date.now())}
+          value={new Date(getValue())}
           readOnly={!enable}
           title={this.props.title}
           type="datetime"

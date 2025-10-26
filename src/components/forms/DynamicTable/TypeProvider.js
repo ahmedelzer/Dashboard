@@ -33,9 +33,6 @@ const filedFormat = ({ value, column }) => {
       );
     case "time":
       var date = new Date(value);
-      console.log("====================================");
-      console.log(value, "value form date");
-      console.log("====================================");
       // Format only the time part in local time zone
       var timeString = new Intl.DateTimeFormat(undefined, {
         hour: "2-digit",

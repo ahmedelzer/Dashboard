@@ -18,6 +18,7 @@ export function GetInputComponent(type) {
     case "text" || "float" || "numeric":
       return TextParameter;
     case "datetime":
+    case "localDateTime":
       return DateTimeParameter;
     case "date":
       return DateParameter;
