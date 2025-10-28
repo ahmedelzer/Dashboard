@@ -124,6 +124,7 @@
   },
   "waringPop": {
     "deleteConfirmation": "Are you sure you want to delete this item?",
+    "waringConfirmation": "Are you sure you want to updated this item?",
     "yes": "Yes, I'm sure",
     "no": "No, cancel"
   },
@@ -170,5 +171,9 @@
     "itemsUploaded": "items Uploaded",
     "note": "note: please do not close the browser or reload the page until theitems uploaded",
     "ok": "OK"
-  }
+  },
+  "orderState": [
+    { "name": "pick up", "id": "1" },
+    { "name": "address", "id": "2" }
+  ]
 }

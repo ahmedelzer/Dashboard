@@ -74,7 +74,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
     ) {
       return row;
     } else {
-      return row[param.parameterField];
+      return row?.[param?.parameterField];
     }
   }
   function GetActiveIndexInput() {

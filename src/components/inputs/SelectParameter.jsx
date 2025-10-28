@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Input } from "reactstrap";
+import { LanguageContext } from "../../contexts/Language";
 
 function SelectParameter({
   value: initialValue,
@@ -10,18 +11,33 @@ function SelectParameter({
   displayField,
   ...props
 }) {
-  console.log("====================================");
-  console.log(returnField, displayField);
-  console.log("====================================");
-
+  const { Right, localization } = useContext(LanguageContext);
+  const [selectedValue, setSelectedValue] = useState(null);
   const handleChange = (event) => {
-    // setSelectedValue(event.target.value);
+    setSelectedValue(event.target.value);
+  };
+  const RunOptions = () => {
+    if (props.type?.startsWith("lookupLocalization:")) {
+      const key = props.type.split(":")[1];
+      const values = localization[key] || [];
+      console.log("====================================");
+      console.log(values);
+      console.log("====================================");
+
+      return values.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      ));
+    } else {
+      return <option>{displayField}</option>;
+    }
   };
   return (
     // <div className="w-full">
     <Input
       className={`${props.className} form-control`}
-      value={displayField}
+      value={displayField || selectedValue}
       placeholder={displayField}
       onChange={handleChange}
       {...props}
@@ -34,8 +50,12 @@ function SelectParameter({
           {option}
         </option>
       ))} */}
-      <option>{displayField}</option>
-      <input type="hidden" name={fieldName} value={returnField} />
+      {RunOptions()}
+      <input
+        type="hidden"
+        name={fieldName}
+        value={returnField || selectedValue}
+      />
     </Input>
     /* </div> */
   );

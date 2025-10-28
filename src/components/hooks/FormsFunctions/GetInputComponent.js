@@ -12,10 +12,16 @@ import {
   ListOfKeywordsParameter,
   RateParameter,
   BarcodeInput,
+  SelectParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
+  if (type.startsWith("lookupLocalization:")) {
+    return SelectParameter;
+  }
   switch (type) {
-    case "text" || "float" || "numeric":
+    case "text":
+    case "float":
+    case "numeric":
       return TextParameter;
     case "datetime":
     case "localDateTime":
@@ -39,6 +45,7 @@ export function GetInputComponent(type) {
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;
+
     case "scanInput":
       return BarcodeInput;
     case "addingLookup":

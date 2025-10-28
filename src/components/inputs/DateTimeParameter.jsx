@@ -3,6 +3,7 @@ import BaseInput from "./BaseInput";
 import { DateBox } from "devextreme-react";
 import { loadMessages, locale } from "devextreme/localization";
 import { LanguageContext } from "../../contexts/Language";
+import { setdateTime } from "../../utils/operation/setdateTime";
 const loadLocaleMessages = (dxDateBox) => {
   loadMessages({
     ar: {
@@ -29,6 +30,27 @@ class DateTimeParameter extends BaseInput {
     // // Set the locale for DevExtreme components
     locale(language);
   }
+  getLocalValue() {
+    const { value, type } = this.props;
+
+    if (!value) return new Date(); // default current local date/time
+
+    const date = new Date(value);
+    // ✅ Proper local time formatting
+    if (type === "localDateTime") {
+      // Convert UTC to local by using Date() directly (browser auto-adjusts)
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+
+      // Optionally use your util if needed
+      // return setdateTime(localDate);
+
+      return localDate;
+    }
+
+    return date;
+  }
   render() {
     const { localization, Right } = this.context;
 
@@ -44,7 +66,10 @@ class DateTimeParameter extends BaseInput {
             second: "2-digit",
             hour12: false, // or true for AM/PM
           }).format(date);
-          return timeString;
+          console.log("====================================");
+          console.log(value, timeString, setdateTime(value));
+          console.log("====================================");
+          return setdateTime(value);
         } else {
           return value;
         }
@@ -52,15 +77,19 @@ class DateTimeParameter extends BaseInput {
         return Date.now();
       }
     };
+
     function handleChange(e) {
       const value = e.value;
       onChange({ target: { name: fieldName, value: value } });
     }
-    handleChange({ value: new Date(value ? value : Date.now()) });
+    if (!value) {
+      handleChange({ value: new Date(value ? value : Date.now()) });
+    }
     return (
       <div className="mb-3" title={this.props.title}>
         <DateBox
-          value={new Date(getValue())}
+          value={this.getLocalValue()}
+          // value={new Date(getValue())}
           readOnly={!enable}
           title={this.props.title}
           type="datetime"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RunsSpacialAction } from "../hooks/APIsFunctions/RunsSpacialAction";
+import { useConfirmAction } from "../hooks/customHooks/useConfirmAction";
 
 const BarcodeInput = ({ ...props }) => {
   const {
@@ -12,6 +13,8 @@ const BarcodeInput = ({ ...props }) => {
     setDependenceRow,
   } = props;
   const [scannedValue, setScannedValue] = useState(value || "");
+  const { confirmAndRun, ConfirmModal } = useConfirmAction();
+
   // Listen for scanned message
   useEffect(() => {
     const handleMessage = async (event) => {
@@ -51,6 +54,12 @@ const BarcodeInput = ({ ...props }) => {
   // Function to run your special action
   const triggerAction = async (val) => {
     if (!val) return;
+    const action = specialActions.find(
+      (ac) => ac.dashboardFormActionMethodType.split(":")[1] === fieldName
+    );
+    confirmAndRun(action, () => sendRequest(val));
+  };
+  const sendRequest = async (val) => {
     try {
       const req = await RunsSpacialAction(
         fieldName,
@@ -94,6 +103,7 @@ const BarcodeInput = ({ ...props }) => {
           📷 Scan
         </button>
       </div>
+      {ConfirmModal}
     </form>
   );
 };

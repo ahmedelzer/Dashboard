@@ -16,6 +16,7 @@ import Form from "../../../contexts/Form";
 import DrawPartitionForms from "../PartingFrom/DrawPartitionForms";
 // import testSchema from "./testSchema.json";
 import PartitionFrom from "../PartingFrom/PartionFrom";
+import LocationButton from "../../../utils/components/LocationButton";
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
   // const [treeData, setTreeData] = useState([
@@ -542,6 +543,7 @@ const Test = () => {
     //   placeholder="enter barcode"
     // />
     <Form schemas={testSchema}>
+      <LocationButton latitude={"11"} longitude={"22"} />
       <DrawPartitionForms Schemas={testSchema} />
     </Form>
   );

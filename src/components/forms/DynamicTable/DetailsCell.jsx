@@ -136,6 +136,7 @@ import { detailsButtonStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import StarsIcons from "../../../utils/StarsIcons";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
+import { useConfirmAction } from "../../hooks/customHooks/useConfirmAction";
 
 export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   return (
@@ -150,22 +151,21 @@ export const DetailsButton = ({ row, fieldName, title, onClick }) => {
   );
 };
 export const CustomSwitchButton = ({
-  initialValue = false,
+  isOn = false,
+  loading,
   onChange = () => {},
   fieldAction,
 }) => {
-  const [isOn, setIsOn] = useState(initialValue);
-
-  const toggleSwitch = () => {
+  const toggleSwitch = async () => {
     const newValue = !isOn;
 
-    setIsOn(newValue);
-    onChange(newValue);
+    await onChange(newValue);
+    // setIsOn(newValue);
   };
 
   return (
     <button
-      disabled={!fieldAction}
+      disabled={!fieldAction || loading}
       onClick={toggleSwitch}
       style={{
         direction: "ltr",
@@ -215,8 +215,11 @@ export const DetailsCell = ({
   specialActions,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+
   const column = props.column;
+  const [isOn, setIsOn] = useState(props.row[column.name]);
   const { localization } = useContext(LanguageContext);
+  const { confirmAndRun, ConfirmModal } = useConfirmAction();
   const [loading, setLoading] = useState(false);
   if (column.type === "detailsCell") {
     const findSubSchemas = subSchemas?.find(
@@ -242,40 +245,39 @@ export const DetailsCell = ({
     const fieldAction = specialActions.find(
       (item) => item.dashboardFormActionMethodType.split(":")[1] === column.name
     );
-
+    const sendRequest = async (newValue) => {
+      try {
+        setLoading(true);
+        const response = await APIHandling(
+          `${fieldAction.routeAdderss}/${props.row[schema.idField]}`,
+          fieldAction.dashboardFormActionMethodType?.split(":")[0],
+          newValue
+        );
+        if (response.success) {
+          setIsOn(newValue);
+        }
+        console.log("Switch changed for", schema.idField);
+        // Optionally handle response: toast, reload, etc.
+      } catch (error) {
+        console.error("Failed to update value", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     return (
-      <Table.Cell {...props}>
-        <CustomSwitchButton
-          initialValue={props.row[column.name]}
-          fieldAction={fieldAction}
-          onChange={async (newValue) => {
-            try {
-              // Optimistic UI update (optional): update local row state immediately
-              // if you maintain row state somewhere like in a parent component
-              // Example: updateRowValue(schema.idField, newValue.value);
-
-              // Optional: show loading state
-              setLoading(true);
-
-              const response = await APIHandling(
-                `${fieldAction.routeAdderss}/${props.row[schema.idField]}`,
-                fieldAction.dashboardFormActionMethodType?.split(":")[0],
-                newValue
-              );
-
-              console.log("Switch changed to", schema.idField);
-              // Optionally process the response if needed
-              // Example: show success toast, update local state with response data
-            } catch (error) {
-              console.error("Failed to update value", error);
-              // Show user-friendly error message (Toast, Dialog, etc.)
-              // Example: showToast("Something went wrong updating the value.")
-            } finally {
-              setLoading(false); // Reset loading state
+      <>
+        <Table.Cell {...props}>
+          <CustomSwitchButton
+            isOn={isOn || props.row[column.name]}
+            fieldAction={fieldAction}
+            loading={loading}
+            onChange={(newValue) =>
+              confirmAndRun(fieldAction, () => sendRequest(newValue))
             }
-          }}
-        />
-      </Table.Cell>
+          />
+        </Table.Cell>
+        {ConfirmModal}
+      </>
     );
   } else if (
     column.type === "areaMapLongitudePoint" ||

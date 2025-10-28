@@ -24,6 +24,7 @@ import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
 import { NetworkProvider } from "./contexts/NetworkContext";
+import WaringPop from "./components/forms/PartingFrom/WaringPop";
 function App() {
   const { user, loading } = useAuth();
   const { Right, localization } = useContext(LanguageContext);
@@ -74,6 +75,7 @@ function App() {
       </div>
     </Button>
   );
+
   return (
     <Routes>
       {/* Content Pages */}

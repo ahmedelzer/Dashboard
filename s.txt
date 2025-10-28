@@ -16,3 +16,6 @@ adding parameter
 1-finsh dependences in lookup currently
 
 
+////////////
+1-method put in septical action need confirm
+2-new param lookupocali:[key]//done

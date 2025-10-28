@@ -39,11 +39,16 @@ export function GetActionsFromSchema(schema) {
   const wsAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "ws"
   );
-  const specialActions = schemaActions?.filter((action) =>
-    ["Get", "Put", "Post", "Delete"].some((method) => {
-      return action.dashboardFormActionMethodType.startsWith(`${method}:`);
-    })
-  );
+  const specialActions = schemaActions
+    ?.filter((action) =>
+      ["Get", "Put", "Post", "Delete"].some((method) =>
+        action.dashboardFormActionMethodType.startsWith(`${method}:`)
+      )
+    )
+    ?.map((action) => ({
+      ...action,
+      confirm: action.dashboardFormActionMethodType.startsWith("Put:"), // only true for Delete
+    }));
 
   return {
     getAction,
