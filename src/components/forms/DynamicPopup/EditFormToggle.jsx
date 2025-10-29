@@ -38,7 +38,7 @@ function EditFormToggle({ actions, edit, setEdit }) {
           <Button
             type="submit"
             key={1}
-            onClick={() => setActionsForm({ ...initActions })}
+            onClick={() => setActionsForm({ ...actions })}
             className="pop"
           >
             {/*here i want to send pram on click */}

@@ -13,6 +13,7 @@ import {
   RateParameter,
   BarcodeInput,
   SelectParameter,
+  DirectionButtonParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
@@ -37,7 +38,6 @@ export function GetInputComponent(type) {
     case "password":
       return PasswordParameter;
     case "areaMapLongitudePoint":
-      return LocationMapParameter;
     case "mapLongitudePoint":
       return LocationMapParameter;
     case "timeDuring": //input for days and hours amd minutes then send total minutes
@@ -45,13 +45,15 @@ export function GetInputComponent(type) {
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;
+    case "nodeLongitudePoint":
+      return DirectionButtonParameter;
 
     case "scanInput":
       return BarcodeInput;
     case "addingLookup":
       return AddingLookupParameter; ///addingLookup
-    case "barcodeInput":
-      return AddingLookupParameter; ///addingLookup
+    // case "barcodeInput":
+    //   return AddingLookupParameter; ///addingLookup
     //detailsCell
     case "listOfKeywords":
       return ListOfKeywordsParameter;

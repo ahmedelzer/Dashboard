@@ -20,9 +20,6 @@ function SelectParameter({
     if (props.type?.startsWith("lookupLocalization:")) {
       const key = props.type.split(":")[1];
       const values = localization[key] || [];
-      console.log("====================================");
-      console.log(values);
-      console.log("====================================");
 
       return values.map((option) => (
         <option key={option.id} value={option.id}>

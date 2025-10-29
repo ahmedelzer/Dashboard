@@ -70,6 +70,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
       param.lookupID ||
       param.parameterType === "areaMapLongitudePoint" ||
       param.parameterType === "mapLongitudePoint" ||
+      param.parameterType === "nodeLongitudePoint" ||
       param.parameterType === "rate"
     ) {
       return row;

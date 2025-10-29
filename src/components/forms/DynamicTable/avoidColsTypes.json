@@ -3,5 +3,6 @@
   "areaMapRadius",
   "mapLatitudePoint",
   "mapRadius",
-  "mapLatitudePoint"
+  "mapLatitudePoint",
+  "nodeLatitudePoint"
 ]

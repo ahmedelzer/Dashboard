@@ -543,7 +543,6 @@ const Test = () => {
     //   placeholder="enter barcode"
     // />
     <Form schemas={testSchema}>
-      <LocationButton latitude={"11"} longitude={"22"} />
       <DrawPartitionForms Schemas={testSchema} />
     </Form>
   );

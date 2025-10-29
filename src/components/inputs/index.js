@@ -12,3 +12,4 @@ export { default as SelectParameter } from "./SelectParameter";
 export { default as ListOfKeywordsParameter } from "./ListOfKeywordsParameter";
 export { default as RateParameter } from "./RateParameter";
 export { default as BarcodeInput } from "./BarcodeInput";
+export { default as DirectionButtonParameter } from "./DirectionButtonParameter";
