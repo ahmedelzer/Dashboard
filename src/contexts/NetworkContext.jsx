@@ -39,6 +39,7 @@ export const NetworkProvider = ({ children }) => {
 
   const [isOnline, setIsOnline] = useState(true);
   const [speedLevel, setSpeedLevel] = useState(4);
+  const [reloadTab, setReloadTab] = useState(true);
 
   const checkNetwork = useCallback(async () => {
     try {
@@ -119,9 +120,9 @@ export const NetworkProvider = ({ children }) => {
       checkNetwork();
     };
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "visible" && reloadTab) {
         RunOnlyInDeployment(() => {
-          // window.location.reload();
+          window.location.reload();
         });
       }
     };
@@ -137,7 +138,7 @@ export const NetworkProvider = ({ children }) => {
       window.removeEventListener("offline", handleOffline);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [checkNetwork]);
+  }, [checkNetwork, reloadTab]);
 
   const renderWifiIcon = () => {
     switch (speedLevel) {
@@ -154,7 +155,9 @@ export const NetworkProvider = ({ children }) => {
     }
   };
   return (
-    <NetworkContext.Provider value={{ status, isOnline, checkNetwork }}>
+    <NetworkContext.Provider
+      value={{ status, isOnline, checkNetwork, setReloadTab }}
+    >
       {/* Offline banner */}
       {!isOnline && (
         <div className="bg-red-500 text-white text-center font-bold py-2 absolute top-0 w-full z-50">

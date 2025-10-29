@@ -18,10 +18,7 @@ function DirectionButtonParameter({
     const latFiledName = formSchemaParameters.find(
       (param) => param.parameterField === `${key}LatitudePoint`
     ).parameterField;
-    console.log("====================================");
-    console.log(key, { lat: value[latFiledName], long: value[fieldName] });
-    console.log("====================================");
-    return { lat: value[latFiledName], long: value[fieldName] };
+    return { lat: value?.[latFiledName], long: value?.[fieldName] };
   };
   const { lat, long } = GetOwnLocation();
   return <LocationButton latitude={lat} longitude={long} />;

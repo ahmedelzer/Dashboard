@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RunsSpacialAction } from "../hooks/APIsFunctions/RunsSpacialAction";
 import { useConfirmAction } from "../hooks/customHooks/useConfirmAction";
+import { Input } from "reactstrap";
+import { LanguageContext } from "../../contexts/Language";
+import { useNetwork } from "../../contexts/NetworkContext";
 
 const BarcodeInput = ({ ...props }) => {
   const {
@@ -14,6 +17,8 @@ const BarcodeInput = ({ ...props }) => {
   } = props;
   const [scannedValue, setScannedValue] = useState(value || "");
   const { confirmAndRun, ConfirmModal } = useConfirmAction();
+  const { localization } = useContext(LanguageContext);
+  const { setReloadTab } = useNetwork();
 
   // Listen for scanned message
   useEffect(() => {
@@ -22,6 +27,7 @@ const BarcodeInput = ({ ...props }) => {
         setScannedValue(event.data.barcodeValue);
         await triggerAction(event.data.barcodeValue);
         console.log("✅ Received from scanner:", event.data.barcodeValue);
+        await setReloadTab(() => false);
         window.focus();
       }
     };
@@ -30,7 +36,8 @@ const BarcodeInput = ({ ...props }) => {
   }, []);
 
   // Open external barcode scanner popup
-  const goToScanner = () => {
+  const goToScanner = async () => {
+    await setReloadTab(() => false);
     window.open(
       "https://ihs-solutions.com:7552/scanbarcode",
       "scannerPopup",
@@ -83,7 +90,7 @@ const BarcodeInput = ({ ...props }) => {
       className="flex flex-col gap-3 w-full max-w-sm"
     >
       {/* Input + Scan Button */}
-      <div className="flex items-center border border-gray-300 rounded-lg p-2 bg-white">
+      <div className="flex items-center border border-border rounded-lg p-2 bg-body">
         <input
           type="text"
           placeholder={placeholder}
@@ -93,14 +100,14 @@ const BarcodeInput = ({ ...props }) => {
           onKeyDown={handleKeyDown} // 🔹 triggers on Enter key press
           title={title}
           name={fieldName}
-          className="flex-1 outline-none text-gray-800 text-sm px-2"
+          className="flex-1 outline-none text-text text-sm px-2"
         />
         <button
           type="button"
           onClick={goToScanner}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md transition"
+          className="bg-accent text-bg px-3 py-1 rounded-md transition"
         >
-          📷 Scan
+          {localization.inputs.scanInput.scan}
         </button>
       </div>
       {ConfirmModal}

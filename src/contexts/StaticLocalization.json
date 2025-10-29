@@ -65,6 +65,9 @@
       { "text": "Yes", "value": true },
       { "text": "No", "value": false }
     ],
+    "scanInput": {
+      "scan": "📷 Scan"
+    },
     "image": {
       "imageAltValue": "uploaded",
       "UrlPlaceholder": "Enter image URL",
