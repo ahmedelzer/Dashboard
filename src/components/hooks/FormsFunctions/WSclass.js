@@ -2,6 +2,7 @@ export class WSclass {
   constructor(url) {
     this.url = url;
     this.socket = null;
+    this.shouldReconnect = true;
     this.messageCallbacks = []; // Array to store multiple callbacks
     this.connectionCallbacks = [];
   }
@@ -22,10 +23,10 @@ export class WSclass {
     this.socket.onclose = () => {
       this.connectionCallbacks.forEach((cb) => cb(false));
       // Reconnect ONLY if closed unexpectedly
-      // if (this.shouldReconnect) {
-      console.warn("WebSocket closed. Reconnecting...");
-      this.connect(onConnect);
-      // }
+      if (this.shouldReconnect) {
+        console.warn("WebSocket closed. Reconnecting...");
+        this.connect(onConnect);
+      }
     };
 
     this.socket.onmessage = (event) => {
@@ -34,6 +35,7 @@ export class WSclass {
 
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
+      this.shouldReconnect = false;
       this.socket.close(); // will trigger onclose → reconnect
     };
   }

@@ -15,14 +15,20 @@ export function buildApiUrl(
   };
   const routeAddress = apiRequest.routeAdderss;
   const queryParam = apiRequest.dashboardFormSchemaActionQueryParams
-    .filter(
-      (param) =>
-        param.IsRequired || constants[param.dashboardFormParameterField]
-    )
-    .map(
-      (param) =>
-        `${param.parameterName}=${constants[param.dashboardFormParameterField]}`
-    )
+    .filter((param) => {
+      const newKey =
+        param.dashboardFormParameterField.charAt(0).toLowerCase() +
+        param.dashboardFormParameterField.slice(1);
+
+      return param.IsRequired || constants[newKey];
+    })
+    .map((param) => {
+      const newKey =
+        param.dashboardFormParameterField.charAt(0).toLowerCase() +
+        param.dashboardFormParameterField.slice(1);
+
+      return `${param.parameterName}=${constants[newKey]}`;
+    })
     .join("&");
 
   const apiUrl = `${getProjectUrl}/${routeAddress}${

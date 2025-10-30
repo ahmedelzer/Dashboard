@@ -35,17 +35,6 @@ function FormComponent({ tableSchema, ...props }) {
   };
 
   const { actionsForm } = useContext(FormContext);
-  const costemspecialActions = testSchemaAction?.filter((action) =>
-    ["Get", "Put", "Post", "Delete"].some((method) => {
-      // console.log("====================================");
-      // console.log(
-      //   action.dashboardFormActionMethodType.startsWith(`${method}:`),
-      //   action.dashboardFormActionMethodType
-      // );
-      // console.log("====================================");
-      return action.dashboardFormActionMethodType.startsWith(`${method}:`);
-    })
-  );
   const [edit, setEdit] = useState(props.editInitState || false);
   //WS
   useEffect(() => {
@@ -92,7 +81,6 @@ function FormComponent({ tableSchema, ...props }) {
   useEffect(() => {
     setFormRow(props.row);
   }, [props.row]);
-
   return (
     <div>
       {actions && (
@@ -102,7 +90,7 @@ function FormComponent({ tableSchema, ...props }) {
       <div className={stylesFile.formEditState(edit)} key={props.row}>
         <FormContainer
           tableSchema={tableSchema}
-          specialActions={costemspecialActions}
+          specialActions={specialActions}
           setDependenceRow={setDependenceRow}
           {...props}
           row={formRow}

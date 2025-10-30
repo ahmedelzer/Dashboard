@@ -14,6 +14,7 @@ import {
   BarcodeInput,
   SelectParameter,
   DirectionButtonParameter,
+  ButtonInput,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
@@ -50,6 +51,8 @@ export function GetInputComponent(type) {
 
     case "scanInput":
       return BarcodeInput;
+    case "button":
+      return ButtonInput;
     case "addingLookup":
       return AddingLookupParameter; ///addingLookup
     // case "barcodeInput":

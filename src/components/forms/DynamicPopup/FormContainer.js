@@ -71,6 +71,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
       param.parameterType === "areaMapLongitudePoint" ||
       param.parameterType === "mapLongitudePoint" ||
       param.parameterType === "nodeLongitudePoint" ||
+      param.parameterType === "button" ||
       param.parameterType === "rate"
     ) {
       return row;

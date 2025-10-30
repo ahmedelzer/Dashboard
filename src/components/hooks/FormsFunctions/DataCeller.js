@@ -25,13 +25,21 @@ export default function DataCellRender({
   };
 
   const InputComponentClass = GetInputComponent(inputKey());
+  const displayLabel = () => {
+    if (
+      data.parameterType === "button" ||
+      data.parameterType === "nodeLongitudePoint"
+    )
+      return false;
+    return true;
+  };
   // Optionally instantiate the class (if needed)
   return (
     <InputDisplay
       props={{
         ...CreateInputProps(data, value),
         onChange: onChange,
-        displayLabel: props.displayLabel || true,
+        displayLabel: props.displayLabel || displayLabel(),
         ...props,
       }}
       errorResult={errorResult}

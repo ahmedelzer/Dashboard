@@ -5,7 +5,7 @@ import { LanguageContext } from "../../contexts/Language";
 const BooleanParameter = ({
   value,
   fieldName,
-  Enable,
+  enable,
   onKeyPress,
   onChange,
 }) => {
@@ -34,6 +34,7 @@ const BooleanParameter = ({
         onValueChange={handleChange}
         value={newValue}
         onKeyPress={onKeyPress}
+        disabled={!enable}
       />
       <input
         type="hidden"

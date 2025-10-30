@@ -1,5 +1,8 @@
 export function Sm(param) {
   const type = param.parameterType;
+  if (param.lookupID) {
+    return 12;
+  }
   switch (type) {
     case "text":
     case "scanInput":
@@ -12,6 +15,7 @@ export function Sm(param) {
     case "image":
     case "publicImage":
     case "password":
+    case "username":
     case "areaMapLongitudePoint":
     case "mapLongitudePoint":
     case "timeDuring": //input for days and hours amd minutes then send total minutes
@@ -20,6 +24,7 @@ export function Sm(param) {
     case "addingLookup":
     case "barcodeInput":
     case "listOfKeywords":
+    case "dependLookup":
     case "rate":
     case "orders":
     case "reviews":

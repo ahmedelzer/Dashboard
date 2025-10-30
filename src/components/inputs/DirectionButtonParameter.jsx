@@ -21,7 +21,11 @@ function DirectionButtonParameter({
     return { lat: value?.[latFiledName], long: value?.[fieldName] };
   };
   const { lat, long } = GetOwnLocation();
-  return <LocationButton latitude={lat} longitude={long} />;
+  return (
+    <LocationButton latitude={lat} longitude={long}>
+      <p className="text-bg">{title}</p>
+    </LocationButton>
+  );
 }
 
 export default DirectionButtonParameter;

@@ -18,6 +18,7 @@ const Form = ({ children, schemas }) => {
     searchAction,
     getDependenciesAction,
     getActionByID,
+    specialActions,
   } = GetActionsFromSchema(mainSchema);
 
   return (
@@ -29,6 +30,7 @@ const Form = ({ children, schemas }) => {
         searchAction,
         getDependenciesAction,
         getActionByID,
+        specialActions,
         selectedRow,
         setSelectedRow,
         mainSchema,

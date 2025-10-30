@@ -15,11 +15,10 @@ const BarcodeInput = ({ ...props }) => {
     specialActions,
     setDependenceRow,
   } = props;
-  const [scannedValue, setScannedValue] = useState(value || "");
+  const [scannedValue, setScannedValue] = useState(value || null);
   const { confirmAndRun, ConfirmModal } = useConfirmAction();
   const { localization } = useContext(LanguageContext);
   const { setReloadTab } = useNetwork();
-
   // Listen for scanned message
   useEffect(() => {
     const handleMessage = async (event) => {
@@ -64,6 +63,7 @@ const BarcodeInput = ({ ...props }) => {
     const action = specialActions.find(
       (ac) => ac.dashboardFormActionMethodType.split(":")[1] === fieldName
     );
+
     confirmAndRun(action, () => sendRequest(val));
   };
   const sendRequest = async (val) => {
@@ -76,7 +76,9 @@ const BarcodeInput = ({ ...props }) => {
         true,
         { [fieldName]: val }
       );
-      setDependenceRow(() => req.data);
+      if (req.success) {
+        setDependenceRow(() => req.data);
+      }
 
       console.log("✅ Action completed:", req);
     } catch (error) {
@@ -94,7 +96,7 @@ const BarcodeInput = ({ ...props }) => {
         <input
           type="text"
           placeholder={placeholder}
-          value={scannedValue}
+          value={scannedValue || value || ""}
           disabled={!enable}
           onChange={(e) => setScannedValue(e.target.value)}
           onKeyDown={handleKeyDown} // 🔹 triggers on Enter key press
