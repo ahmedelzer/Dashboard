@@ -8,10 +8,19 @@ import { Sm } from "./Sm";
 import { useContext, useEffect, useRef } from "react";
 import { LanguageContext } from "../../../contexts/Language";
 import { useDisplayToast } from "../../../utils/components/useDisplayToast";
-function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
+
+function FormContainer({
+  tableSchema,
+  row,
+  errorResult,
+  returnRow,
+  shouldDisplayErrorInForm = false,
+  ...props
+}) {
   const errors = errorResult?.error?.errors || {};
   const { showToast } = useDisplayToast();
   const { localization } = useContext(LanguageContext);
+  const errorRef = useRef(null);
 
   // Convert error keys to lowercase
   const lowercaseErrors = Object.keys(errors).reduce((acc, key) => {
@@ -46,7 +55,7 @@ function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
           currentError,
           "error",
           4000,
-          "top"
+          "top right"
         );
       }, 0);
     }
@@ -124,6 +133,16 @@ function FormContainer({ tableSchema, row, errorResult, returnRow, ...props }) {
                 />
               </Col>
             ))}
+          {globalErrorMessages.length > 0 && shouldDisplayErrorInForm && (
+            <div
+              ref={errorRef}
+              className="flex-row justify-center items-center"
+            >
+              <h5 className="text-error-500 text-xl font-bold">
+                {globalErrorMessages[0].join("")}
+              </h5>
+            </div>
+          )}
         </Row>
       </Container>
     </div>
