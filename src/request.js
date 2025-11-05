@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 // export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const domainURL = "ihs-solutions.com";
-export const baseURL = "https://" + domainURL + ":8000";
+export const baseURL = "https://" + domainURL + ":8882";
 
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");

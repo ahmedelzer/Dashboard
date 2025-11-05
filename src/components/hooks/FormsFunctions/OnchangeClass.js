@@ -49,9 +49,7 @@ export class Onchange {
           }
         });
       }
-      console.log(dependItems, "dependItems", name, dependParam.parameterField);
     }
-    console.log(this.row, this.specialActions);
     const specialAction = this.specialActions?.find((action) =>
       action.dashboardFormActionMethodType.endsWith(name)
     );

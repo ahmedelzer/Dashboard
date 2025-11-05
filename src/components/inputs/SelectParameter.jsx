@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input } from "reactstrap";
 import { LanguageContext } from "../../contexts/Language";
 
@@ -9,16 +9,21 @@ function SelectParameter({
   fieldName,
   returnField,
   displayField,
+  type,
   ...props
 }) {
-  const { Right, localization } = useContext(LanguageContext);
-  const [selectedValue, setSelectedValue] = useState(null);
+  const { localization } = useContext(LanguageContext);
+  const [selectedValue, setSelectedValue] = useState(
+    displayField || initialValue || ""
+  );
+
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
+
   const RunOptions = () => {
-    if (props.type?.startsWith("lookupLocalization:")) {
-      const key = props.type.split(":")[1];
+    if (type?.startsWith("lookupLocalization:")) {
+      const key = type.split(":")[1];
       const values = localization[key] || [];
 
       return values.map((option) => (
@@ -27,34 +32,48 @@ function SelectParameter({
         </option>
       ));
     } else {
-      return <option>{displayField}</option>;
+      return <option value={initialValue}>{displayField}</option>;
     }
   };
+
+  useEffect(() => {
+    if (type?.startsWith("lookupLocalization:")) {
+      const key = type.split(":")[1];
+      const values = localization[key] || [];
+      const found = values.find(
+        (val) => val.id?.toString() === initialValue?.toString()
+      );
+      if (found) {
+        setSelectedValue(found.id);
+      } else {
+        setSelectedValue(initialValue || "");
+      }
+    } else {
+      setSelectedValue(initialValue || "");
+    }
+  }, [type, localization, initialValue]);
+
   return (
-    // <div className="w-full">
-    <Input
-      className={`${props.className} form-control`}
-      value={displayField || selectedValue}
-      placeholder={displayField}
-      onChange={handleChange}
-      {...props}
-      disabled={!enable}
-      required
-      type="select"
-    >
-      {/* {value.map((option, index) => (
-        <option key={index} value={option}>
-          {option}
-        </option>
-      ))} */}
-      {RunOptions()}
+    <div className="w-full">
+      <Input
+        className={`${props.className} form-control`}
+        value={selectedValue}
+        placeholder={title || displayField}
+        onChange={handleChange}
+        disabled={!enable}
+        required
+        type="select"
+        name={fieldName}
+      >
+        {RunOptions()}
+      </Input>
+
       <input
         type="hidden"
         name={fieldName}
         value={returnField || selectedValue}
       />
-    </Input>
-    /* </div> */
+    </div>
   );
 }
 

@@ -661,7 +661,7 @@ function BaseTable({
         {/*end filter and search*/}
         <TableHeaderRow showSortingControls={true} />
         {/* <VirtualTable /> can you make lazy loading work without this */}
-        {!isSearchingTable && popupComponent({ state })}
+        {!isSearchingTable && popupComponent({ state, dispatch })}
         {paging ? <PagingPanel /> : null}
         <WaringPop
           confirmDelete={confirmDelete}

@@ -10,12 +10,6 @@ export function SchemaType({
   updatedData,
   actions,
 }) {
-  const categories = [
-    { title: "React" },
-    { title: "DevExpress" },
-    { title: "Tailwind CSS" },
-    { title: "Reactstrap" },
-  ];
   switch (Schema.schemaType) {
     case "LiveForm":
       return (

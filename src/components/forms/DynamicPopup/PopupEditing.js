@@ -19,6 +19,7 @@ const PopupEditing = React.memo(
     postAction,
     putAction,
     state,
+    dispatch,
     // setResult,
     // result,
     schema,
@@ -52,17 +53,20 @@ const PopupEditing = React.memo(
             ) => {
               const isNew = addedRows.length > 0;
               let editedRow;
+              let originalRow;
               let rowId;
               let rowIds = [0];
               if (isNew) {
                 rowId = 0;
                 editedRow = { ...addedRows[rowId], ...editedRow };
+                originalRow = { ...addedRows[rowId], ...originalRow };
               } else {
                 [rowId] = editingRowIds;
                 const targetRow = rows.filter(
                   (row) => getRowId(row) === rowId
                 )[0];
                 editedRow = { ...targetRow, ...rowChanges[rowId] };
+                originalRow = { ...targetRow, ...rowChanges[rowId] };
               }
 
               const ReturnRow = (updatedRow) => {
@@ -101,10 +105,11 @@ const PopupEditing = React.memo(
                   ...editedRow,
                   ...fromEntries,
                 };
+
                 const filteredData =
-                  editedRow && Object.keys(editedRow).length > 0
+                  originalRow && Object.keys(originalRow).length > 0
                     ? {
-                        ...getUniqueValues(editedRow, formJson),
+                        ...getUniqueValues(originalRow, formJson),
                         [iDField]: editedRow[iDField],
                       }
                     : formJson;
@@ -122,6 +127,14 @@ const PopupEditing = React.memo(
                   const newRow = { ...formJson, ...imagesPaths, ...apply.data };
                   if (isNew) {
                     state.rows = [...state.rows, newRow];
+                    dispatch({
+                      type: "WS_OPE_ROW",
+                      payload: {
+                        rows: [...state.rows, newRow],
+                        totalCount: [...state.rows, newRow].length,
+                      },
+                    });
+
                     cancelAddedRows({ rowIds });
                   } else {
                     const updatedRows = state.rows.map((row) => {
@@ -130,9 +143,15 @@ const PopupEditing = React.memo(
                       }
                       return row;
                     });
-
                     // Update the state with the updated rows
                     state.rows = updatedRows;
+                    dispatch({
+                      type: "WS_OPE_ROW",
+                      payload: {
+                        rows: updatedRows,
+                        totalCount: updatedRows.length,
+                      },
+                    });
                   }
                   rowIds = [rowId];
                   stopEditRows({ rowIds });

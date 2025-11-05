@@ -46,7 +46,9 @@ function InputDisplay({ props, BaseInput, errorResult }) {
             setStyle={setStyle}
           />
           {props.displayLabel && (
-            <Label for={props.fieldName}>{props.title}</Label>
+            <Label for={props.fieldName} className="mt-2">
+              {props.title}
+            </Label>
           )}
           <BaseInput
             {...props}

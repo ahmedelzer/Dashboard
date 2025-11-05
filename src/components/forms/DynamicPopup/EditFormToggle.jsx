@@ -9,9 +9,6 @@ function EditFormToggle({ actions, edit, setEdit }) {
   // const [Edit, setEdit] = useState(false);
   const { localization } = useContext(LanguageContext);
   const { setActionsForm } = useContext(FormContext);
-  const actionTypeLocalization = actions?.getAction
-    ? localization.drawPartionForm.button.save
-    : "📷";
   const initActions = GetActionsFromSchemaAction(testSchemaAction);
   const specialActions = testSchemaAction?.filter((action) =>
     ["Get", "Put", "Post", "Delete"].some((method) => {
@@ -42,7 +39,7 @@ function EditFormToggle({ actions, edit, setEdit }) {
             className="pop"
           >
             {/*here i want to send pram on click */}
-            {actionTypeLocalization}
+            {localization.drawPartionForm.button.save}
           </Button>
         ) : (
           <Button

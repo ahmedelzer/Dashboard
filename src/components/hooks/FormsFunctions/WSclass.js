@@ -3,29 +3,44 @@ export class WSclass {
     this.url = url;
     this.socket = null;
     this.shouldReconnect = true;
-    this.messageCallbacks = []; // Array to store multiple callbacks
+    this.reconnectInterval = 2000; // 2 seconds
+    this.reconnectTimeout = null;
+    this.messageCallbacks = [];
     this.connectionCallbacks = [];
   }
 
   connect(onConnect) {
+    // Avoid duplicate open connections
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       if (onConnect) onConnect();
       return;
     }
 
+    // Clear any previous reconnect timeout
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {
+      console.log("✅ WebSocket connected:", this.url);
       this.connectionCallbacks.forEach((cb) => cb(true));
       if (onConnect) onConnect();
     };
 
     this.socket.onclose = () => {
+      console.warn("⚠️ WebSocket closed:", this.url);
       this.connectionCallbacks.forEach((cb) => cb(false));
-      // Reconnect ONLY if closed unexpectedly
+
       if (this.shouldReconnect) {
-        console.warn("WebSocket closed. Reconnecting...");
-        this.connect(onConnect);
+        console.log(
+          `🔁 Attempting to reconnect in ${this.reconnectInterval / 1000}s...`
+        );
+        this.reconnectTimeout = setTimeout(() => {
+          this.connect(onConnect);
+        }, this.reconnectInterval);
       }
     };
 
@@ -35,20 +50,18 @@ export class WSclass {
 
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
-      this.shouldReconnect = false;
-      this.socket.close(); // will trigger onclose → reconnect
+      this.socket.close(); // triggers onclose → reconnect
     };
   }
 
   addMessageHandler(callback) {
-    console.log("this.messageCallbacks", this.messageCallbacks.length);
     if (
       typeof callback === "function" &&
       !this.messageCallbacks.includes(callback)
     ) {
       this.messageCallbacks.push(callback);
     }
-    return () => this.removeMessageHandler(callback); // Return cleanup function
+    return () => this.removeMessageHandler(callback);
   }
 
   removeMessageHandler(callback) {
@@ -57,12 +70,34 @@ export class WSclass {
     );
   }
 
+  addConnectionHandler(callback) {
+    if (
+      typeof callback === "function" &&
+      !this.connectionCallbacks.includes(callback)
+    ) {
+      this.connectionCallbacks.push(callback);
+    }
+    return () => this.removeConnectionHandler(callback);
+  }
+
+  removeConnectionHandler(callback) {
+    this.connectionCallbacks = this.connectionCallbacks.filter(
+      (cb) => cb !== callback
+    );
+  }
+
   disconnect() {
+    // this.shouldReconnect = false;
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
     if (this.socket) {
       this.socket.close();
-      this.messageCallbacks = [];
-      this.connectionCallbacks = [];
+      this.socket = null;
     }
+    this.messageCallbacks = [];
+    this.connectionCallbacks = [];
   }
 
   get readyState() {

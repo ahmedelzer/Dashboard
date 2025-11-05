@@ -46,13 +46,14 @@ const DynamicTable = ({
     specialActions,
   } = GetActionsFromSchemaAction(schemaActions);
 
-  const PopupComponentTable = ({ state }) => {
+  const PopupComponentTable = ({ state, dispatch }) => {
     return (
       <PopupEditing
         popupComponent={Popup}
         putAction={putAction}
         postAction={postAction}
         state={state}
+        dispatch={dispatch}
         // setResult={setResult}
         // result={result}
         proxyRoute={schema.projectProxyRoute}

@@ -14,25 +14,34 @@ const BarcodeInput = ({ ...props }) => {
     placeholder,
     specialActions,
     setDependenceRow,
+    formSchemaParameters,
   } = props;
   const [scannedValue, setScannedValue] = useState(value || null);
   const { confirmAndRun, ConfirmModal } = useConfirmAction();
   const { localization } = useContext(LanguageContext);
   const { setReloadTab } = useNetwork();
+  const idField = formSchemaParameters.find(
+    (param) => param.isIDField
+  ).parameterField;
+  const action = specialActions?.find(
+    (ac) => ac.dashboardFormActionMethodType.split(":")[1] === fieldName
+  );
   // Listen for scanned message
   useEffect(() => {
+    if (!specialActions || !action) return;
     const handleMessage = async (event) => {
       if (event.data?.type === "BARCODE_SCANNED") {
         setScannedValue(event.data.barcodeValue);
-        await triggerAction(event.data.barcodeValue);
         console.log("✅ Received from scanner:", event.data.barcodeValue);
+        // can you here run onSubmit of the form
+        await triggerAction(event.data.barcodeValue); // new API that triggers form's onSubmit
         await setReloadTab(() => false);
         window.focus();
       }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [action]);
 
   // Open external barcode scanner popup
   const goToScanner = async () => {
@@ -60,9 +69,6 @@ const BarcodeInput = ({ ...props }) => {
   // Function to run your special action
   const triggerAction = async (val) => {
     if (!val) return;
-    const action = specialActions.find(
-      (ac) => ac.dashboardFormActionMethodType.split(":")[1] === fieldName
-    );
 
     confirmAndRun(action, () => sendRequest(val));
   };
@@ -70,10 +76,10 @@ const BarcodeInput = ({ ...props }) => {
     try {
       const req = await RunsSpacialAction(
         fieldName,
-        "testID",
-        val,
-        specialActions,
+        val[idField],
         true,
+        specialActions,
+        false,
         { [fieldName]: val }
       );
       if (req.success) {
@@ -89,6 +95,8 @@ const BarcodeInput = ({ ...props }) => {
   return (
     <form
       onSubmit={handleSubmitMobile}
+      action=""
+      method="post"
       className="flex flex-col gap-3 w-full max-w-sm"
     >
       {/* Input + Scan Button */}
@@ -107,6 +115,7 @@ const BarcodeInput = ({ ...props }) => {
         <button
           type="button"
           onClick={goToScanner}
+          disabled={!enable}
           className="bg-accent text-bg px-3 py-1 rounded-md transition"
         >
           {localization.inputs.scanInput.scan}
