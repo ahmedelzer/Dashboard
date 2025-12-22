@@ -513,9 +513,15 @@ function BaseTable({
   }, []);
   // 🌐 Setup WebSocket connection on mount or WS_Connected change
   useEffect(() => {
-    // if (WS_Connected||wsAction=) return;
+    if (WS_Connected) return;
     let cleanup;
-    ConnectToWS(setWSMessageTable, setWS_Connected, {}, wsAction)
+    ConnectToWS(
+      setWSMessageTable,
+      setWS_Connected,
+      fieldsType.dataSourceName,
+      {},
+      wsAction
+    )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
         console.error("❌ Cart WebSocket error", e);
@@ -528,11 +534,12 @@ function BaseTable({
 
   // 🧠 Reducer callback to update rows
   const callbackReducerUpdate = async (ws_updatedRows) => {
+    if (!ws_updatedRows?.rows || !ws_updatedRows?.totalCount) return;
     await dispatch({
       type: "WS_OPE_ROW",
       payload: {
-        rows: ws_updatedRows.rows,
-        totalCount: ws_updatedRows.totalCount,
+        rows: ws_updatedRows?.rows,
+        totalCount: ws_updatedRows?.totalCount,
       },
     });
   };

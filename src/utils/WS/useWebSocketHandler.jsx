@@ -31,12 +31,9 @@ const useWebSocketHandler = ({
       setWS_Connected(false);
     }
 
-    if (SetReoute && projectProxyRoute) SetReoute(projectProxyRoute);
-
-    ConnectToWS(setWSsetMessage, setWS_Connected)
+    ConnectToWS(setWSsetMessage, setWS_Connected, fieldsType.dataSourceName)
       .then((ws) => {
         wsRef.current = ws;
-        console.log("🔌 WebSocket connected");
       })
       .catch((e) => {
         console.error("❌ WebSocket connection failed", e);
@@ -51,13 +48,17 @@ const useWebSocketHandler = ({
         setWS_Connected(false);
       }
     };
-  }, [active, refreshTrigger, SetReoute, projectProxyRoute, setWSsetMessage, setWS_Connected]);
+  }, [
+    active,
+    refreshTrigger,
+    projectProxyRoute,
+    setWSsetMessage,
+    setWS_Connected,
+  ]);
 
   useEffect(() => {
     if (rows?.length > 0 && _WSsetMessage) {
-
-
-     const _handleWSMessage = new WSMessageHandler({
+      const _handleWSMessage = new WSMessageHandler({
         _WSsetMessage,
         fieldsType,
         rows,
@@ -75,7 +76,14 @@ const useWebSocketHandler = ({
       });
       _handleWSMessage.process();
     }
-  }, [_WSsetMessage, rows, fieldsType, totalCount, reducerDispatch, dispatchType]);
+  }, [
+    _WSsetMessage,
+    rows,
+    fieldsType,
+    totalCount,
+    reducerDispatch,
+    dispatchType,
+  ]);
 };
 
 export default useWebSocketHandler;

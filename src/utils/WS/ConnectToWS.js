@@ -6,6 +6,7 @@ import { disconnectWS, getWSInstance } from "./WSManager";
 export async function ConnectToWS(
   setWSsetMessage,
   setWS_Connected,
+  dataSourceName,
   row = {},
   wS_SchemaAction = defWSSchemaAction
 ) {
@@ -13,51 +14,55 @@ export async function ConnectToWS(
     console.warn("🛑 No token found, skipping WebSocket connection");
     return;
   }
+
   const buildUrl = buildApiUrl(
     wS_SchemaAction,
-    {
-      ...row,
-      token: token,
-    },
+    { ...row, token },
     websocketBaseURI + "/" + wS_SchemaAction.projectProxyRoute
   );
 
+  // ----------------------------
+  // HANDLE MESSAGE
+  // ----------------------------
   const handleMessage = (WSMessage) => {
     try {
       const bufferObj = JSON.parse(WSMessage);
       const byteArray = new Uint8Array(bufferObj.data);
       const urlEncodedString = new TextDecoder().decode(byteArray);
       const decodedString = decodeURIComponent(urlEncodedString);
-      setWSsetMessage(() => decodedString);
+
+      console.log("parsed[dataSourceName]:", decodedString);
+      if (decodedString.length === 0) return;
+      const parsed = JSON.parse(decodedString);
+      if (!parsed?.[dataSourceName]) return;
+
+      setWSsetMessage(() => parsed);
     } catch (err) {
       console.error("❌ Failed to decode WebSocket message:", err);
     }
   };
-  const baseURL =
+
+  const wsKey =
     websocketBaseURI +
     "/" +
     wS_SchemaAction.projectProxyRoute +
     "/" +
     wS_SchemaAction.routeAdderss;
-  // Get instance and handler remover
-  const { removeHandler } = getWSInstance(baseURL, buildUrl, handleMessage);
+
+  const { removeHandler } = getWSInstance(wsKey, buildUrl, handleMessage);
 
   setWS_Connected(true);
 
-  // Return cleanup function
+  // ----------------------------
+  // CLEANUP
+  // ----------------------------
   return () => {
     try {
-      removeHandler(); // Remove this specific handler
-      disconnectWS(baseURL); // Use baseUrl
+      removeHandler();
+      disconnectWS(wsKey);
       setWS_Connected(false);
     } catch (err) {
       console.error("❌ Failed to cleanup WebSocket:", err);
     }
-    // Store last received message
-    // if (decodedString) {
-    //   AsyncStorage.setItem("lastWSMessage", JSON.stringify(decodedString)).catch(
-    //     (err) => console.error("Failed to store last message:", err)
-    //   );
   };
-  // return null;
 }

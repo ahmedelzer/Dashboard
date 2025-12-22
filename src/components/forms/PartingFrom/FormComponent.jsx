@@ -44,7 +44,13 @@ function FormComponent({ tableSchema, ...props }) {
   useEffect(() => {
     // if (WS_Connected||wsAction=) return;
     let cleanup;
-    ConnectToWS(setWSMessageForm, setWS_Connected, {}, wsAction && wsAction)
+    ConnectToWS(
+      setWSMessageForm,
+      setWS_Connected,
+      fieldsType.dataSourceName,
+      {},
+      wsAction && wsAction
+    )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
         console.error("❌ Cart WebSocket error", e);

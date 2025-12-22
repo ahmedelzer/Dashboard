@@ -15,6 +15,7 @@ import {
   SelectParameter,
   DirectionButtonParameter,
   ButtonInput,
+  PolygonMapParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
@@ -48,6 +49,8 @@ export function GetInputComponent(type) {
       return LookupInput;
     case "nodeLongitudePoint":
       return DirectionButtonParameter;
+    case "drawPolygon":
+      return PolygonMapParameter;
 
     case "scanInput":
       return BarcodeInput;

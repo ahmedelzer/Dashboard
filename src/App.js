@@ -25,6 +25,7 @@ import "./themes/generated/theme.base.css";
 import { useScreenSizeClass } from "./utils/media-query";
 import { NetworkProvider } from "./contexts/NetworkContext";
 import WaringPop from "./components/forms/PartingFrom/WaringPop";
+import { PolygonMapParameter } from "./components/inputs";
 function App() {
   const { user, loading } = useAuth();
   const { Right, localization } = useContext(LanguageContext);
@@ -85,7 +86,7 @@ function App() {
           <SideNavBarLayout title={localization.appInfo.title}>
             <Routes>
               <Route path="/home" element={<Home />} />
-              <Route path="/test" element={<Test />} />
+              <Route path="/test" element={<PolygonMapParameter />} />
               <Route path="/tree/:id" element={<DynamicTree />} />
               {ApiRoutes(routes).map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />

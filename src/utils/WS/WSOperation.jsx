@@ -2,7 +2,7 @@ import { keysToLowerFirstChar } from "../operation/keysToLowerFirstChar";
 import { TotalCount } from "./UpdateTotalCountWS";
 
 export function WSOperation(
-  messageString,
+  message,
   setReRequest,
   callback,
   idField,
@@ -10,30 +10,29 @@ export function WSOperation(
   rows,
   totalCount = 0
 ) {
-  const message = JSON.parse(messageString);
+  // const message = JSON.parse(messageString);
   const payload = keysToLowerFirstChar(message[dataSourceName]);
-
 
   const handlers = {
     Insert: () => {
       const newRows = Array.isArray(payload) ? payload : [payload];
       if (!rows.find((row) => row[idField] === newRows[0][idField])) {
-        const count = TotalCount(totalCount,message.ope);
+        const count = TotalCount(totalCount, message.ope);
         return {
           rows: [...rows, ...newRows],
-          totalCount:count ,
+          totalCount: count,
         };
       }
     },
     Fill: () => {
-  if (!payload) return { rows: [], totalCount: 0 };
+      if (!payload) return { rows: [], totalCount: 0 };
 
-  const newRows = Array.isArray(payload) ? payload : [payload];
-  return {
-    rows: newRows,
-    totalCount: newRows.length,
-  };
-},
+      const newRows = Array.isArray(payload) ? payload : [payload];
+      return {
+        rows: newRows,
+        totalCount: newRows.length,
+      };
+    },
     Context: () => {
       callback();
     },
@@ -49,14 +48,13 @@ export function WSOperation(
       };
     },
     Delete: () => {
-      
-      const newRows = rows.filter((row) => row[idField] !== message[dataSourceName]);
+      const newRows = rows.filter(
+        (row) => row[idField] !== message[dataSourceName]
+      );
 
-      return { rows: newRows, totalCount: TotalCount(totalCount,message.ope) };
+      return { rows: newRows, totalCount: TotalCount(totalCount, message.ope) };
     },
     Clear: () => {
-      
-   
       return { rows: [], totalCount: 0 };
     },
 
