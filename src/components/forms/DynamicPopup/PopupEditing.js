@@ -126,7 +126,6 @@ const PopupEditing = React.memo(
                 if (apply && apply.success === true) {
                   const newRow = { ...formJson, ...imagesPaths, ...apply.data };
                   if (isNew) {
-                    state.rows = [...state.rows, newRow];
                     dispatch({
                       type: "WS_OPE_ROW",
                       payload: {
