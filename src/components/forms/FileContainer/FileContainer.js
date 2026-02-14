@@ -10,6 +10,7 @@ import FilesWithScrollPaging from "../PartingFrom/fileInput/FilesWithScrollPagin
 import StaticFilesModel from "../PartingFrom/fileInput/StaticFilesModel";
 import { IsSecondListSubsetOfFirstList } from "../PartingFrom/IsSecondListSubsetOfFirstList";
 import { stylesFile } from "../PartingFrom/styles";
+import DotsLoading from "../../loading/DotsLoading";
 function FileContainer({
   parentSchemaParameters,
   schema,
@@ -34,11 +35,11 @@ function FileContainer({
   const [modalFileIsOpen, setModalFileIsOpen] = useState(false);
   const idField = schema.idField;
   const fileFieldNameButtonPaging = schema.dashboardFormSchemaParameters.find(
-    (field) => field.parameterType === "imagePath"
+    (field) => field.parameterType === "imagePath",
   )?.parameterField;
   const fileFieldNameScrollPaging =
     serverSchema.dashboardFormSchemaParameters.find(
-      (field) => field.parameterType === "image"
+      (field) => field.parameterType === "image",
     )?.parameterField;
   //here
   const RefreshFiles = () => {
@@ -47,7 +48,7 @@ function FileContainer({
   const [selectedFilesContext, setSelectedFilesContext] = useState([]);
   const [open, setOpen] = useState(false);
   const schemaWithoutID = schema.dashboardFormSchemaParameters.filter(
-    (schema) => !schema.isIDField
+    (schema) => !schema.isIDField,
   );
   // const { getActionSchema, postActionSchema, deleteActionSchema } =
   //   GetActionsFromSchema(schema);
@@ -64,10 +65,21 @@ function FileContainer({
   const isSubset = IsSecondListSubsetOfFirstList(
     parentSchemaParameters,
     schemaWithoutID,
-    ["parameterField"]
+    ["parameterField"],
   );
 
   function handleUpload(postAction, containerSelectedFiles, route) {
+    setSelectPostAction(postAction);
+    if (containerSelectedFiles.length > 0) {
+      setSelectedFilesContext(containerSelectedFiles);
+      setProxyRoute(route);
+    }
+    setOpen(!isSubset);
+    setAutomated(isSubset);
+    setSelectedFiles([]);
+    setSelectedServerFiles([]);
+  }
+  function handleDelete(postAction, containerSelectedFiles, route) {
     setSelectPostAction(postAction);
     if (containerSelectedFiles.length > 0) {
       setSelectedFilesContext(containerSelectedFiles);
@@ -83,6 +95,7 @@ function FileContainer({
     getAction: getActionSchema,
     postAction: postActionSchema,
     deleteAction: deleteActionSchema,
+    isLoading,
   } = GetActionsFromSchema(schema);
   return (
     <div>
@@ -101,7 +114,7 @@ function FileContainer({
               handleUpload(
                 postActionServerSchema,
                 selectedFiles,
-                serverSchema.projectProxyRoute
+                serverSchema.projectProxyRoute,
               )
             }
             selectedFiles={selectedFiles}
@@ -122,7 +135,7 @@ function FileContainer({
                   handleUpload(
                     postActionSchema,
                     selectedServerFiles,
-                    schema.projectProxyRoute
+                    schema.projectProxyRoute,
                   );
                 }}
               >
@@ -130,26 +143,30 @@ function FileContainer({
               </Button>
             )}
           </div>
-          <FilesWithScrollPaging
-            title={title}
-            idField={serverSchema.idField}
-            row={row}
-            proxyRoute={serverSchema.projectProxyRoute}
-            getAction={getActionServerSchema}
-            selectedServerFiles={selectedServerFiles}
-            setSelectedServerFiles={setSelectedServerFiles}
-            fileFieldName={fileFieldNameScrollPaging}
-          />
-          <FilesWithButtonPaging
-            proxyRoute={schema.projectProxyRoute}
-            title={title}
-            idField={idField}
-            row={row}
-            getAction={getActionSchema}
-            deleteAction={deleteActionSchema}
-            handleToDelete={handleUpload}
-            fileFieldName={fileFieldNameButtonPaging}
-          />
+          {isLoading && <DotsLoading />}
+          {!isLoading && getActionServerSchema && (
+            <FilesWithScrollPaging
+              title={title}
+              idField={serverSchema.idField}
+              row={row}
+              proxyRoute={serverSchema.projectProxyRoute}
+              getAction={getActionServerSchema}
+              selectedServerFiles={selectedServerFiles}
+              setSelectedServerFiles={setSelectedServerFiles}
+              fileFieldName={fileFieldNameScrollPaging}
+            />
+          )}
+          {!isLoading && getActionSchema && (
+            <FilesWithButtonPaging
+              title={title}
+              idField={idField}
+              row={row}
+              getAction={getActionSchema}
+              deleteAction={deleteActionSchema}
+              handleToDelete={() => console.log("handleToDelete")}
+              fileFieldName={fileFieldNameButtonPaging}
+            />
+          )}
         </div>
       </div>
       <DuringTransactionContainer

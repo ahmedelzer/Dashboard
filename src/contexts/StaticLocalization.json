@@ -65,6 +65,11 @@
       { "text": "Yes", "value": true },
       { "text": "No", "value": false }
     ],
+    "linkView": {
+      "invalidURL": "Please provide a valid URL",
+      "loadButton": "Load",
+      "clearButton": "Clear"
+    },
     "scanInput": {
       "scan": "📷 Scan"
     },
@@ -172,11 +177,16 @@
   },
   "filesLoading": {
     "itemsUploaded": "items Uploaded",
+    "header": "Loading items to the Server",
     "note": "note: please do not close the browser or reload the page until theitems uploaded",
     "ok": "OK"
   },
   "orderTypeIndex": [
     { "name": "pick up", "id": "0" },
     { "name": "address", "id": "1" }
+  ],
+  "websites": [
+    { "name": "facebook", "id": "0" },
+    { "name": "facebookPost", "id": "1" }
   ]
 }

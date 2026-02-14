@@ -66,24 +66,27 @@ export const NetworkProvider = ({ children }) => {
   const testNetworkSpeed = async () => {
     try {
       const start = Date.now();
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/todos/1",
-        {
-          method: "GET",
-          cache: "no-store",
-        }
-      );
+      const response = await fetch("https://ihs-solutions.com/healthy", {
+        method: "GET",
+        cache: "no-store",
+      });
+
       if (!response.ok) throw new Error("Network ping failed");
 
-      const duration = Date.now() - start;
-      if (duration > 2000) setSpeedLevel(0);
-      else if (duration > 1000) setSpeedLevel(1);
-      else if (duration > 500) setSpeedLevel(2);
-      else if (duration > 200) setSpeedLevel(3);
-      else setSpeedLevel(4);
-    } catch {
+      const end = Date.now();
+      const duration = end - start; // ms ping
+
+      // Map ms → speed level (tweak thresholds as needed)
+      if (duration > 2000) {
+        setSpeedLevel(0); // 🚫 very poor
+        // setIsOnline(false);
+      } else if (duration > 1000) setSpeedLevel(1); // weak
+      else if (duration > 500) setSpeedLevel(2); // fair
+      else if (duration > 200) setSpeedLevel(3); // good
+      else setSpeedLevel(4); // excellent
+    } catch (error) {
       setSpeedLevel(0);
-      setIsOnline(false);
+      //setIsOnline(false);
     }
   };
 

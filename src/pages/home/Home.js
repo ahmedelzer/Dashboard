@@ -7,7 +7,7 @@ function Home() {
 
   return (
     <div>
-      {user.HomeDashboard ? (
+      {/* {user.HomeDashboard ? (
         <iframe
           width="100%"
           height="484"
@@ -27,7 +27,7 @@ function Home() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
         ></iframe>
-      )}
+      )} */}
     </div>
   );
 }

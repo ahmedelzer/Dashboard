@@ -9,7 +9,7 @@ import React, {
 import { MdDelete } from "react-icons/md";
 import { Button } from "reactstrap";
 import { LanguageContext } from "../../../../contexts/Language";
-import { baseURL } from "../../../../request";
+import { publicImageURL } from "../../../../request";
 import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../../hooks/APIsFunctions/loadData";
 import DeleteItem from "../DeleteItem";
@@ -68,7 +68,6 @@ function FilesWithButtonPaging({
   deleteAction,
   handleToDelete,
   fileFieldName,
-  proxyRoute,
 }) {
   const { localization } = useContext(LanguageContext);
 
@@ -127,7 +126,7 @@ function FilesWithButtonPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  });
+  }, [dataSourceAPI, getAction, currentPage]);
   const totalPages = Math.ceil(state.totalCount / itemsPerPage);
 
   const handlePageChange = (newPage) => {
@@ -140,6 +139,29 @@ function FilesWithButtonPaging({
     setDeleteWithApi(withApi);
     setModalDeleteIsOpen(true);
   };
+  const updateRowsAfterDelete = (deletedId) => {
+    // Remove from cache
+
+    const updatedRows = state.rows.filter((r) => r[idField] !== deletedId);
+
+    let newTotalCount = state.totalCount - 1;
+
+    // If page becomes empty, go back one page
+    if (updatedRows.length === 0 && currentPage > 1) {
+      setCurrentPage((p) => p - 1);
+      return;
+    }
+
+    dispatch({
+      type: "UPDATE_ROWS",
+      payload: {
+        rows: updatedRows,
+        totalCount: newTotalCount,
+        skip: state.skip,
+      },
+    });
+  };
+
   return (
     <div>
       <div className={stylesFile.gridContainer}>
@@ -147,7 +169,7 @@ function FilesWithButtonPaging({
           ?.map((row) => ({
             ...row,
 
-            displayFile: `${baseURL}/${proxyRoute}/${row[fileFieldName]}`,
+            displayFile: `${publicImageURL}/${row[fileFieldName]}`,
             fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
             id: row[idField],
           }))
@@ -195,10 +217,13 @@ function FilesWithButtonPaging({
         id={deleteID}
         modalIsOpen={modalDeleteIsOpen}
         setModalIsOpen={setModalDeleteIsOpen}
-        DeleteItemCallback={handleToDelete}
+        DeleteItemCallback={() => {
+          handleToDelete();
+          updateRowsAfterDelete(deleteID);
+          setModalDeleteIsOpen(false);
+        }}
         deleteWithApi={deleteWithApi}
         action={deleteAction}
-        proxyRoute={proxyRoute}
       />
     </div>
   );

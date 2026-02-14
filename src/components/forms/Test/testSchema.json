@@ -1,345 +1,60 @@
 [
   {
-    "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-    "schemaType": "Report",
-    "idField": "dailyStaffAttendanceID",
+    "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f89",
+    "schemaType": "Table",
+    "idField": "pageID",
     "dashboardFormSchemaInfoDTOView": {
-      "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-      "schemaHeader": "Daily Staff Attendance",
-      "addingHeader": "New Attendance",
-      "editingHeader": "Edit Attendance"
+      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
+      "schemaHeader": "Menu Item",
+      "addingHeader": "Add Menu Item",
+      "editingHeader": "Edit Menu Item"
     },
     "dashboardFormSchemaParameters": [
-      {
-        "dashboardFormSchemaParameterID": "a976a142-5acf-4f4c-9dbf-81ae92ef2400",
-        "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-        "isEnable": true,
-        "parameterType": "scanInput",
-        "parameterField": "invoiceNumber",
-        "parameterTitel": "barcode",
-        "parameterLookupTitel": null,
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 0,
-        "isFilterOperation": true,
-        "dashboardFormSchemaParameterDependencies": []
-      }
-    ],
-    "projectProxyRoute": "BrandingMartHR",
-    "isMainSchema": true,
-    "dataSourceName": "StaffAttendance",
-    "propertyName": null,
-    "indexNumber": 0
-  },
-  {
-    "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-    "schemaType": "Form",
-    "idField": "dailyStaffAttendanceID",
-    "dashboardFormSchemaInfoDTOView": {
-      "dashboardFormSchemaID": "6b1ec026-2638-45e3-9555-5f29e2f850fc",
-      "schemaHeader": "Daily Staff Attendance",
-      "addingHeader": "New Attendance",
-      "editingHeader": "Edit Attendance"
-    },
-    "dashboardFormSchemaParameters": [
-      {
-        "dashboardFormSchemaParameterID": "9e49c792-9b64-4d15-8c47-90a21c560e95",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "text",
-        "parameterField": "cartID",
-        "parameterTitel": "cart ID",
-        "parameterLookupTitel": null,
-        "isIDField": true,
-        "indexNumber": 1
-      },
-      {
-        "dashboardFormSchemaParameterID": "1d748453-042e-4d32-a805-86792a5d37a2",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "totalAmount",
-        "parameterField": "totalAmount",
-        "parameterTitel": "Total Amount",
-        "indexNumber": 2
-      },
-      {
-        "dashboardFormSchemaParameterID": "1d748453-042e-4d32-a805-86792a5d37a2",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "otherFeesAmount",
-        "parameterField": "otherFeesAmount",
-        "parameterTitel": "Other Fees Amount",
-        "indexNumber": 2
-      },
-      {
-        "dashboardFormSchemaParameterID": "bfd67a2d-2492-474e-9dc6-9a6c7e373eee",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "invoiceItemsTaxAmount",
-        "parameterField": "invoiceItemsTaxAmount",
-        "parameterTitel": "Invoice Items Tax",
-        "indexNumber": 3
-      },
-      {
-        "dashboardFormSchemaParameterID": "d03bb8a9-f236-4371-a8ed-71d5fdaec366",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "invoiceTaxAmount",
-        "parameterField": "invoiceTaxAmount",
-        "parameterTitel": "Invoice Tax",
-        "indexNumber": 4
-      },
-      {
-        "dashboardFormSchemaParameterID": "f46519c0-b5a4-4f4e-90fc-bb0b6ceff2f3",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "totalFeesAmount",
-        "parameterField": "totalFeesAmount",
-        "parameterTitel": "Total Fees Amount",
-        "indexNumber": 5
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "netAmount",
-        "parameterField": "netAmount",
-        "parameterTitel": "Net Amount",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "netPayAmount",
-        "parameterField": "netPayAmount",
-        "parameterTitel": "netPayAmount",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "7dcf2e85-7646-4d35-b875-1b57c37e7687",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "invoiceItemsDiscountAmount",
-        "parameterField": "invoiceItemsDiscountAmount",
-        "parameterTitel": "Items Discount",
-        "indexNumber": 7
-      },
-      {
-        "dashboardFormSchemaParameterID": "c439b6cd-e456-4139-8995-e4a3025fae44",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "invoiceDiscountAmount",
-        "parameterField": "invoiceDiscountAmount",
-        "parameterTitel": "Invoice Discount",
-        "indexNumber": 8
-      },
-      {
-        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "totalDiscountAmount",
-        "parameterField": "totalDiscountAmount",
-        "parameterTitel": "Total Discount",
-        "indexNumber": 9
-      },
-      {
-        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "totalTaxAmount",
-        "parameterField": "totalTaxAmount",
-        "parameterTitel": "Total Tax Amount",
-        "indexNumber": 9
-      },
-      {
-        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "otherFees",
-        "parameterField": "otherFees",
-        "parameterTitel": "Other Fees",
-        "indexNumber": 9
-      },
-      {
-        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "text",
-        "parameterField": "feesAmount",
-        "parameterTitel": "Shipment Fees",
-        "indexNumber": 9
-      },
-      {
-        "dashboardFormSchemaParameterID": "2b08bc1a-baa7-4d77-94ae-2e694d42fa1b",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "text",
-        "parameterField": "totalShipmentsNeeded",
-        "parameterTitel": "Total Shipments Needed",
-        "indexNumber": 9
-      },
-      {
-        "dashboardFormSchemaParameterID": "id-004",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": false,
-        "parameterType": "isPaid",
-        "parameterField": "isPaid",
-        "parameterTitel": "is Paid",
-        "isIDField": false,
-        "indexNumber": 4
-      },
-      {
-        "dashboardFormSchemaParameterID": "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f898",
-        "isEnable": false,
-        "parameterType": "lookupLocalization:orderState",
-        "parameterField": "node_Name",
-        "parameterTitel": "node_Name",
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 0
-      },
-      {
-        "dashboardFormSchemaParameterID": "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f898",
-        "isEnable": false,
-        "parameterType": "displayAddress",
-        "parameterField": "customerAddressLocation",
-        "parameterTitel": "addressLocationID",
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 0
-      },
-      {
-        "dashboardFormSchemaParameterID": "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f898",
-        "isEnable": false,
-        "parameterType": "orderTypeIndex",
-        "parameterField": "orderTypeIndex",
-        "parameterTitel": "orderTypeIndex",
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 0
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "nodeLatitudePoint",
-        "parameterField": "costumerLocationLatitudePoint",
-        "parameterTitel": "costumerLocation LatitudePoint",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "nodeLongitudePoint",
-        "parameterField": "costumerLocationLongitudePoint",
-        "parameterTitel": "costumerLocation LongitudePoint",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "nodeLatitudePoint",
-        "parameterField": "nodeLatitudePoint",
-        "parameterTitel": "NodeLatitudePoint",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "31f0de20-39e9-4eec-a199-d21b9f5d7611",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "nodeLongitudePoint",
-        "parameterField": "nodeLongitudePoint",
-        "parameterTitel": "NodeLongitudePoint",
-        "indexNumber": 6
-      },
-      {
-        "dashboardFormSchemaParameterID": "9e49c792-9b64-4d15-8c47-90a21c560e95",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "accountCreditUsed",
-        "parameterField": "accountCreditUsed",
-        "parameterTitel": "accountCreditUsed",
-        "parameterLookupTitel": null,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "isIDField": false,
-        "indexNumber": 1
-      },
-      {
-        "dashboardFormSchemaParameterID": "9e49c792-9b64-4d15-8c47-90a21c560e96",
-        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-        "isEnable": true,
-        "parameterType": "loyaltyPointsUsed",
-        "parameterField": "loyaltyPointsUsed",
-        "parameterTitel": "loyaltyPointsUsed",
-        "parameterLookupTitel": null,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "isIDField": false,
-        "indexNumber": 1
-      },
-      {
-        "dashboardFormSchemaParameterID": "auto-generated-id-12",
-        "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-        "isEnable": false,
-        "parameterType": "text",
-        "parameterField": "returnedQuantity",
-        "parameterTitel": "ReturnedQuantityt",
-        "parameterLookupTitel": null,
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 12
-      },
-      {
-        "dashboardFormSchemaParameterID": "auto-generated-id-12",
-        "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-        "isEnable": false,
-        "parameterType": "text",
-        "parameterField": "netRefundAmount",
-        "parameterTitel": "net Refund Amount",
-        "parameterLookupTitel": null,
-        "isIDField": false,
-        "lookupID": null,
-        "lookupReturnField": null,
-        "lookupDisplayField": null,
-        "indexNumber": 12
-      },
       {
         "dashboardFormSchemaParameterID": "b7100c23-a107-4898-afb3-0a4994aa3bd0",
         "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
         "isEnable": true,
-        "parameterType": "localDateTime",
-        "parameterField": "requestedDatetime",
-        "parameterTitel": "Requested Date time",
+        "parameterType": "pageID",
+        "parameterField": "pageID",
+        "parameterTitel": "pageID",
+        "parameterLookupTitel": null,
+        "isIDField": true,
+        "lookupID": null,
+        "lookupReturnField": null,
+        "lookupDisplayField": null,
+        "indexNumber": 1
+      },
+      {
+        "dashboardFormSchemaParameterID": "bad5a264-f5c4-48a0-b5a1-b5c0a9d7ac76",
+        "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
+        "isEnable": true,
+        "parameterType": "linkView",
+        "parameterField": "uri",
+        "parameterTitel": "uri",
         "parameterLookupTitel": null,
         "isIDField": false,
         "lookupID": null,
         "lookupReturnField": null,
         "lookupDisplayField": null,
-        "indexNumber": 1
+        "indexNumber": 2
+      },
+      {
+        "dashboardFormSchemaParameterID": "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
+        "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+        "isEnable": true,
+        "parameterType": "detailsCell",
+        "parameterField": "lastCards",
+        "parameterTitel": "last Cards",
+        "isIDField": false,
+        "lookupID": null,
+        "lookupReturnField": null,
+        "lookupDisplayField": null,
+        "indexNumber": 0
       }
     ],
     "projectProxyRoute": "BrandingMartPOS",
-    "isMainSchema": false,
-    "dataSourceName": "StaffAttendance",
+    "isMainSchema": true,
+    "dataSourceName": "scarpingPage",
     "propertyName": null,
     "indexNumber": 0
   }

@@ -49,7 +49,7 @@ function FormComponent({ tableSchema, ...props }) {
       setWS_Connected,
       fieldsType.dataSourceName,
       {},
-      wsAction && wsAction
+      wsAction && wsAction,
     )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
@@ -63,7 +63,7 @@ function FormComponent({ tableSchema, ...props }) {
 
   // 🧠 Reducer callback to update rows
   const callbackReducerUpdate = async (ws_updatedRows) => {
-    setFormRow(ws_updatedRows.rows[0]);
+    setFormRow(ws_updatedRows?.rows[0]);
   };
   const fieldsType = {
     idField: tableSchema.idField,

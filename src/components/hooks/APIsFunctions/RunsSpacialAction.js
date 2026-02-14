@@ -9,11 +9,12 @@ export const RunsSpacialAction = async (
   actions,
   runWithPrams = false,
   row = {},
-  setLoading = (o) => {}
+  setLoading = (o) => {},
 ) => {
   const action = actions.find(
-    (ac) => ac.dashboardFormActionMethodType.split(":")[1] === name
+    (ac) => ac.dashboardFormActionMethodType.split(":")[1] === name,
   );
+
   const actionWithRightNameAction = action
     ? {
         ...action,
@@ -25,8 +26,9 @@ export const RunsSpacialAction = async (
   if (action) {
     setLoading(true); // Disable the switch
     const getProjectUrl = GetProjectUrl(
-      actionWithRightNameAction.projectProxyRoute
+      actionWithRightNameAction.projectProxyRoute,
     );
+
     const buildUrl = buildApiUrl(actionWithRightNameAction, {
       ...row,
     });
@@ -39,10 +41,11 @@ export const RunsSpacialAction = async (
           actionWithRightNameAction.routeAdderss +
           "/" +
           id;
+
     const result = await APIHandling(
       reqUrl,
       actionWithRightNameAction.dashboardFormActionMethodType?.split(":")[0],
-      value
+      value,
     );
 
     if (result && result.success) {

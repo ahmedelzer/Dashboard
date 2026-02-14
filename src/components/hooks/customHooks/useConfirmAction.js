@@ -8,6 +8,7 @@ export function useConfirmAction() {
 
   // This function is what you'll call anywhere in the app
   const confirmAndRun = async (action, callback) => {
+    console.log("confirmDelete", action);
     if (action?.confirm) {
       // Store the callback and action temporarily
       setPendingAction(() => callback);

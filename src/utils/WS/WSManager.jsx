@@ -12,16 +12,16 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
   }
 
   const wsInstances = [];
-  console.log("getWSInstance called with:", { baseUrl, url });
-  console.log(
-    "wsInstances:",
-    wsInstances.map((inst) => ({
-      key: inst.key,
-      url: inst.url,
-      wsType: inst.ws?.constructor?.name || "Unknown",
-      handlerCount: inst.handlingMessages?.length || 0,
-    }))
-  );
+  // console.log("getWSInstance called with:", { baseUrl, url });
+  // console.log(
+  //   "wsInstances:",
+  //   wsInstances.map((inst) => ({
+  //     key: inst.key,
+  //     url: inst.url,
+  //     wsType: inst.ws?.constructor?.name || "Unknown",
+  //     handlerCount: inst.handlingMessages?.length || 0,
+  //   }))
+  // );
 
   let instance = wsInstances.find((inst) => inst.key === baseUrl);
 

@@ -3,6 +3,7 @@ import { baseURLWithoutApi, publicImageURL } from "../../../request";
 import TypeFile from "../PartingFrom/TypeFile";
 
 const filedFormat = ({ value, column }) => {
+  console.log("filedFormat",value);
   const isBlob = typeof value === "string" && value.startsWith("blob:");
 
   switch (column.type) {
@@ -51,5 +52,6 @@ const filedFormat = ({ value, column }) => {
 };
 
 export const TypeProvider = ({ ...props }) => {
+    console.log("TypeProvider",props);
   return <DataTypeProvider formatterComponent={filedFormat} {...props} />;
 };

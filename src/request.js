@@ -1,13 +1,21 @@
 import axios from "axios";
-import Cookies from "js-cookie";
+import LZString from "lz-string";
 
+import Cookies from "js-cookie";
+export function GetToken() {
+  const compressed = Cookies.get("user");
+
+  return compressed
+    ? LZString.decompressFromEncodedURIComponent(compressed)
+    : null;
+}
 // export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const domainURL = "ihs-solutions.com";
-export const baseURL = "https://" + domainURL + ":8882";
+export const baseURL = "https://" + domainURL;
 
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
-export const token = Cookies.get("user");
+export const token = GetToken();
 // export const publicImageURL = "http://41.196.0.25:5004/";
 // export const websocketBaseURI =
 //   "wss://maingatewayapi.ihs-solutions.com:8000/Chanels";
@@ -17,7 +25,7 @@ export const defaultProjectProxyRoute = `${baseURL}/Centralization/api`;
 export const defaultProjectProxyRouteWithoutBaseURL = `Centralization`;
 export const defaultProjectProxyRouteWithoutAPI = `${baseURL}/Centralization/`;
 export const publicImageURL = "https://" + domainURL + ":5055/";
-export const websocketBaseURI = "ws://" + domainURL + ":9001";
+export const websocketBaseURI = "wss://" + domainURL + ":9001";
 // export const baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
 export let isOnline = true;
 
@@ -34,14 +42,15 @@ export function GetProjectUrl(projectProxyRoute) {
   return `${baseURL}/${projectProxyRoute}/api`;
 }
 export function SetHeaders() {
-  const token = Cookies.get("user");
+  const token = GetToken();
   const headers = {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
-    // clientID:'',
+    clientID: "facebookClient",
     // "Access-Control-Allow-Credentials": "true",
     // "Access-Control-Allow-Origin": "*",
     token: token,
+
     languageID: window.localStorage.getItem("languageID"),
   };
 
@@ -49,7 +58,7 @@ export function SetHeaders() {
   Object.keys(headers).forEach(
     (key) =>
       (headers[key] === undefined || headers[key] === null) &&
-      delete headers[key]
+      delete headers[key],
   );
 
   return headers;

@@ -26,12 +26,15 @@ function DuringTransactionContainer({
   const [index, setIndex] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState(0); // Number of uploaded files
   const [totalFiles, setTotalFiles] = useState(0); // Total files to upload
+  const [openLoadingModel, setOpenLoadingModel] = useState(automated); // Total files to upload
   let editedRow = { ...initialRow };
   useEffect(() => {
     if (selectionContext.length > 0) {
       setInitialRow(selectionContext[0]);
       setIndex(0);
       setTotalFiles(selectionContext.length);
+      setUploadedFiles(0);
+      setOpenLoadingModel(automated);
       // Calculate total size in MB
       // const totalSizeMB = selectionContext.reduce(
       //   (acc, file) => acc + (file.size || 0) / (1024 * 1024),
@@ -81,7 +84,7 @@ function DuringTransactionContainer({
       true,
       action,
       proxyRoute,
-      tableSchema.dashboardFormSchemaParameters
+      tableSchema.dashboardFormSchemaParameters,
     );
     setResult(apply);
     if (apply && apply.success === true) {
@@ -96,15 +99,15 @@ function DuringTransactionContainer({
     if (selectionContext.length > 0) {
       setSelectionContext([]);
       const tasks = selectionContext.map(
-        (item, index) =>
+        (item) =>
           onApply(
             item,
             iDField,
             true,
             action,
             proxyRoute,
-            tableSchema.dashboardFormSchemaParameters
-          ).then(() => MoveOn()) // Move on after each task
+            tableSchema.dashboardFormSchemaParameters,
+          ).then(() => MoveOn()), // Move on after each task
       );
       // Wait for all tasks to complete concurrently
       await Promise.all(tasks);
@@ -112,8 +115,11 @@ function DuringTransactionContainer({
       // Invoke TransformDone once all tasks are finished
       TransformDone();
       setAutomatic(false);
-      setTotalFiles(0);
-      setUploadedFiles(0);
+      setTotalFiles(selectionContext.length);
+      setUploadedFiles(selectionContext.length);
+      setTimeout(() => {
+        setOpenLoadingModel(false);
+      }, 5000);
     }
   };
   //todo here the key of the solve
@@ -123,7 +129,7 @@ function DuringTransactionContainer({
       console.log("fire autometed");
       AutomatedTransform();
     }
-  });
+  }, [automated, selectionContext, proxyRoute]);
   const ReturnRow = (updatedRow) => {
     editedRow = { ...updatedRow(), ...initialRow };
   };
@@ -152,7 +158,7 @@ function DuringTransactionContainer({
         </div>
       )}
       <ProgressFilesLoading
-        modalOpen={automated}
+        modalOpen={openLoadingModel}
         totalFiles={totalFiles}
         uploadedFiles={uploadedFiles}
       />

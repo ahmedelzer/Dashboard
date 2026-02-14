@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { baseURLWithoutApi, baseURL } from "../../../../request";
+import { baseURLWithoutApi, publicImageURL } from "../../../../request";
 import { buildApiUrl } from "../../../hooks/APIsFunctions/BuildApiUrl";
 import LoadData from "../../../hooks/APIsFunctions/loadData";
 import DotsLoading from "../../../loading/DotsLoading";
@@ -46,8 +46,8 @@ function FilesWithScrollPaging({
               [...state.rows, ...payload?.rows].map((item) => [
                 item[idField],
                 item,
-              ])
-            ).values()
+              ]),
+            ).values(),
           ), // Append new rows to the existing rows
           totalCount: payload.totalCount,
           loading: false,
@@ -110,7 +110,7 @@ function FilesWithScrollPaging({
   // Load data whenever skip or take state changes
   useEffect(() => {
     LoadData(state, dataSourceAPI, getAction, cache, updateRows, dispatch);
-  });
+  }, [currentSkip]);
   const { rows, skip, totalCount, loading } = state;
 
   const observerCallback = useCallback(
@@ -121,7 +121,7 @@ function FilesWithScrollPaging({
         setCurrentSkip(currentSkip + 1);
       }
     },
-    [rows, totalCount, loading, skip]
+    [rows, totalCount, loading, skip],
   );
 
   useEffect(() => {
@@ -145,13 +145,12 @@ function FilesWithScrollPaging({
     // file.fileCodeNumber === "image"
     //   ? (file.fileCodeNumber = 0)
     //   : (file.fileCodeNumber = 1);
-    setSelectedServerFiles((prevSelected) =>
-      prevSelected.includes(file)
-        ? prevSelected.filter((i) => i !== file)
-        : [...prevSelected, { ...file, ...row }]
+    setSelectedServerFiles(
+      selectedServerFiles.some((serverFile) => serverFile.id === file.id)
+        ? selectedServerFiles.filter((i) => i.id !== file.id)
+        : [...selectedServerFiles, { ...file, ...row }],
     );
   };
-
   return (
     <div className={stylesFile.fileListContainer}>
       {state.rows
@@ -159,7 +158,7 @@ function FilesWithScrollPaging({
           ...row,
 
           displayFile: `${row[fileFieldName]}`,
-          file: `${baseURL}/${proxyRoute}/${row[fileFieldName]}`,
+          file: `${publicImageURL}/${row[fileFieldName]}`,
           fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
           id: row[idField],
         }))
@@ -171,7 +170,9 @@ function FilesWithScrollPaging({
           >
             <div className={stylesFile.fileControls + " mb-1"}>
               <CheckBox
-                value={selectedServerFiles.includes(photo)}
+                value={selectedServerFiles.some(
+                  (serverFile) => serverFile.id === photo.id,
+                )}
                 onValueChanged={() => handleCheckboxChange(photo)}
               />
               {/* {deleteAction && (

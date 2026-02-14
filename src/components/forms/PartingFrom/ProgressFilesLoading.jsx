@@ -21,24 +21,28 @@ export default function ProgressFilesLoading({
     totalFiles > 0 ? Math.round((uploadedFiles / totalFiles) * 100) : 0;
   const [showProgressIcon, setShowProgressIcon] = useState(false); // Show icon once modal closes
   useEffect(() => {
-    if (modalOpen && totalFiles > 0) {
+    if (modalOpen && uploadedFiles !== totalFiles) {
       setShowModal(true);
-    } else if (modalOpen) {
+    } else {
       setShowProgressIcon(false);
     }
-  }, [modalOpen, totalFiles]); // Dependencies are modalOpen, uploadedFiles, and totalFiles
+  }, [modalOpen, totalFiles, uploadedFiles]); // Dependencies are modalOpen, uploadedFiles, and totalFiles
 
   // Handle modal close and show progress icon
   const closeModalAndShowProgress = () => {
     setShowModal(false);
-    setShowProgressIcon(true); // Show the progress icon after closing the modal
+    if (uploadedFiles !== totalFiles) {
+      setShowProgressIcon(true); // Show the progress icon after closing the modal
+    } else {
+      setShowProgressIcon(false);
+    }
   };
 
   return (
     <div>
       {/* Modal */}
       <Modal isOpen={showModal} size="lg" toggle={() => setShowModal(false)}>
-        <ModalHeader>Loading items to the Server</ModalHeader>
+        <ModalHeader>{localization.filesLoading.header}</ModalHeader>
         <ModalBody>
           <div className="progress-container">
             <div className="progress-info">

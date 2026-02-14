@@ -39,7 +39,7 @@ function App() {
     } else if (user?.UsersGroupDashboardMenuItems) {
       window.sessionStorage.setItem(
         "routes",
-        user?.UsersGroupDashboardMenuItems
+        user?.UsersGroupDashboardMenuItems,
       );
       setRoutes(JSON.parse(user?.UsersGroupDashboardMenuItems));
     }
@@ -86,7 +86,7 @@ function App() {
           <SideNavBarLayout title={localization.appInfo.title}>
             <Routes>
               <Route path="/home" element={<Home />} />
-              <Route path="/test" element={<PolygonMapParameter />} />
+              <Route path="/test" element={<Test />} />
               <Route path="/tree/:id" element={<DynamicTree />} />
               {ApiRoutes(routes).map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />
@@ -113,6 +113,7 @@ function App() {
             component={languageComponent}
           >
             {/* <Test /> */}
+
             <LoginForm />
           </SingleCard>
         }

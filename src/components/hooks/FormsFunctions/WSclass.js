@@ -25,19 +25,19 @@ export class WSclass {
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {
-      console.log("✅ WebSocket connected:", this.url);
+      //console.log("✅ WebSocket connected:", this.url);
       this.connectionCallbacks.forEach((cb) => cb(true));
       if (onConnect) onConnect();
     };
 
     this.socket.onclose = () => {
-      console.warn("⚠️ WebSocket closed:", this.url);
+      //console.warn("⚠️ WebSocket closed:", this.url);
       this.connectionCallbacks.forEach((cb) => cb(false));
 
       if (this.shouldReconnect) {
-        console.log(
-          `🔁 Attempting to reconnect in ${this.reconnectInterval / 1000}s...`
-        );
+        // console.log(
+        //   `🔁 Attempting to reconnect in ${this.reconnectInterval / 1000}s...`
+        // );
         this.reconnectTimeout = setTimeout(() => {
           this.connect(onConnect);
         }, this.reconnectInterval);
@@ -49,7 +49,7 @@ export class WSclass {
     };
 
     this.socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
+     // console.error("WebSocket error:", error);
       this.socket.close(); // triggers onclose → reconnect
     };
   }

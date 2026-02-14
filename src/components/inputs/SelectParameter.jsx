@@ -14,7 +14,7 @@ function SelectParameter({
 }) {
   const { localization } = useContext(LanguageContext);
   const [selectedValue, setSelectedValue] = useState(
-    displayField || initialValue || ""
+    displayField || initialValue || "",
   );
 
   const handleChange = (event) => {
@@ -41,7 +41,7 @@ function SelectParameter({
       const key = type.split(":")[1];
       const values = localization[key] || [];
       const found = values.find(
-        (val) => val.id?.toString() === initialValue?.toString()
+        (val) => val.id?.toString() === initialValue?.toString(),
       );
       if (found) {
         setSelectedValue(found.id);

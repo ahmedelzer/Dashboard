@@ -34,7 +34,7 @@ const DynamicTable = ({
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
   schemaActions = schemaActions ? schemaActions : SchemaActions;
   const {

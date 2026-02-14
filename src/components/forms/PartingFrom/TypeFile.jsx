@@ -42,7 +42,7 @@ function TypeFile({ file, title, type = false }) {
             observer.disconnect();
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0.1 },
       );
       observer.observe(videoRef.current);
 
@@ -57,7 +57,7 @@ function TypeFile({ file, title, type = false }) {
           <img
             src={fileSrc}
             alt={title}
-            className="w-full h-auto"
+            className="w-full h-auto object-contain"
             loading="lazy"
           />
         );

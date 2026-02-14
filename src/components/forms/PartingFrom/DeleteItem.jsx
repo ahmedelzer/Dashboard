@@ -1,3 +1,4 @@
+import { GetProjectUrl } from "../../../request";
 import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 import WaringPop from "./WaringPop";
 
@@ -8,14 +9,14 @@ export default function DeleteItem({
   DeleteItemCallback,
   deleteWithApi,
   action,
-  proxyRoute,
 }) {
   const confirmDelete = async () => {
     if (deleteWithApi) {
+      const getProjectUrl = GetProjectUrl(action.projectProxyRoute);
       const deleteRequest = await APIHandling(
-        action.routeAdderss + "/" + id,
+        getProjectUrl + "/" + action.routeAdderss + "/" + id,
         action.dashboardFormActionMethodType,
-        ""
+        "",
       );
       if (deleteRequest.data && deleteRequest.success) {
         DeleteItemCallback();

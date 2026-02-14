@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import DotsLoading from "../../loading/DotsLoading";
 import SelectForm from "../SelectForm";
 import { customRowStyle } from "./styles";
@@ -19,11 +19,11 @@ export default function CustomRow({
   fieldName,
   title,
   columns,
-  setSelectedRow,
+  isSelected,
   ...restProps
 }) {
   const { localization } = useContext(LanguageContext);
-
+  console.log("newRow", selectedRow);
   const isRowSelected =
     selectedRow && row[schema.idField] === selectedRow[schema.idField];
 
@@ -69,11 +69,11 @@ export default function CustomRow({
                 restProps.selected ? "var(--main-color2)" : "white"
               }`,
             },
-          })
+          }),
         )}
       </Table.Row>
     );
-  } else if (setSelectedRow) {
+  } else if (isSelected) {
     const rowElement = (
       <Table.Row
         {...restProps}
@@ -87,7 +87,7 @@ export default function CustomRow({
             } group-hover:!bg-accent transition-all duration-300 ${
               isRowSelected ? "!bg-accent" : ""
             }`,
-          })
+          }),
         )}
       </Table.Row>
     );

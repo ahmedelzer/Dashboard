@@ -16,11 +16,16 @@ import {
   DirectionButtonParameter,
   ButtonInput,
   PolygonMapParameter,
+  IframeParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
     return SelectParameter;
   }
+  // else if(type.startsWith("lookupDependents:")){
+  //   return SelectParameter;
+  // }
+
   switch (type) {
     case "text":
     case "float":
@@ -51,6 +56,8 @@ export function GetInputComponent(type) {
       return DirectionButtonParameter;
     case "drawPolygon":
       return PolygonMapParameter;
+    case "linkView":
+      return IframeParameter;
 
     case "scanInput":
       return BarcodeInput;

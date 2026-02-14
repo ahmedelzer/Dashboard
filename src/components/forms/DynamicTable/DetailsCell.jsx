@@ -14,7 +14,8 @@
 // import StarsIcons from "../../../utils/StarsIcons";
 // import APIHandling from "../../hooks/APIsFunctions/APIHandling";
 // import { useConfirmAction } from "../../hooks/customHooks/useConfirmAction";
-// import { PolygonMapParameter } from "../../inputs";
+// import { IframeParameter, PolygonMapParameter } from "../../inputs";
+// import DisplayIframe from "../../../utils/components/DisplayIframe";
 
 // export const DetailsButton = ({ row, fieldName, title, onClick }) => {
 //   return (
@@ -102,7 +103,7 @@
 //   const [loading, setLoading] = useState(false);
 //   if (column.type === "detailsCell") {
 //     const findSubSchemas = subSchemas?.find(
-//       (schema) => schema.dashboardFormSchemaID === column.lookupID
+//       (schema) => schema.dashboardFormSchemaID === column.lookupID,
 //     );
 //     setSubSchema(findSubSchemas);
 
@@ -122,7 +123,8 @@
 //     );
 //   } else if (column.name === "switchAction" || column.type === "boolean") {
 //     const fieldAction = specialActions.find(
-//       (item) => item.dashboardFormActionMethodType.split(":")[1] === column.name
+//       (item) =>
+//         item.dashboardFormActionMethodType.split(":")[1] === column.name,
 //     );
 //     const sendRequest = async (newValue) => {
 //       try {
@@ -130,7 +132,7 @@
 //         const response = await APIHandling(
 //           `${fieldAction.routeAdderss}/${props.row[schema.idField]}`,
 //           fieldAction.dashboardFormActionMethodType?.split(":")[0],
-//           newValue
+//           newValue,
 //         );
 //         if (response.success) {
 //           setIsOn(newValue);
@@ -638,6 +640,13 @@
 //         </button>
 //       </Table.Cell>
 //     );
+//   } else if (column.type === "linkView") {
+//     const url = props.row[column.name];
+//     return (
+//       <Table.Cell {...props}>
+//         <DisplayIframe url={url} />
+//       </Table.Cell>
+//     );
 //   }
 
 //   return <Table.Cell {...props} />;
@@ -661,6 +670,10 @@ import { useConfirmAction } from "../../hooks/customHooks/useConfirmAction";
 import LocationMap from "../../inputs/LocationMap";
 import { PolygonMapParameter } from "../../inputs";
 import firstColsFound from "../DynamicPopup/firstColsFound.json";
+import TypeFile from "../PartingFrom/TypeFile";
+import { publicImageURL } from "../../../request";
+import DisplayIframe from "../../../utils/components/DisplayIframe";
+import WebsiteIcon from "../../../utils/components/WebsiteIcon";
 
 /* -------------------------------------------------------------------------- */
 /*                              Small UI Parts                                 */
@@ -703,7 +716,7 @@ const BooleanCell = ({ row, column, schema, specialActions }) => {
   const { confirmAndRun, ConfirmModal } = useConfirmAction();
 
   const action = specialActions.find(
-    (a) => a.dashboardFormActionMethodType.split(":")[1] === column.name
+    (a) => a.dashboardFormActionMethodType.split(":")[1] === column.name,
   );
 
   const updateValue = async (newValue) => {
@@ -712,7 +725,7 @@ const BooleanCell = ({ row, column, schema, specialActions }) => {
       const res = await APIHandling(
         `${action.routeAdderss}/${row[schema.idField]}`,
         action.dashboardFormActionMethodType.split(":")[0],
-        newValue
+        newValue,
       );
       if (res?.success) setIsOn(newValue);
     } finally {
@@ -798,7 +811,7 @@ export const DetailsCell = ({
     switch (column.type) {
       case "detailsCell": {
         const sub = subSchemas?.find(
-          (s) => s.dashboardFormSchemaID === column.lookupID
+          (s) => s.dashboardFormSchemaID === column.lookupID,
         );
         setSubSchema(sub);
 
@@ -849,6 +862,22 @@ export const DetailsCell = ({
 
       case "flag":
         return <FlagView value={row[column.name]} />;
+      case "linkView":
+        return <DisplayIframe url={row[column.name]} />;
+      case "websiteIcon":
+        return <WebsiteIcon url={row[column.name]} />;
+      case "publicImage":
+        const value = row[column.name];
+        const isBlob = typeof value === "string" && value.startsWith("blob:");
+        return (
+          <div style={{ width: "50px", height: "50px" }}>
+            <TypeFile
+              file={isBlob ? value : `${publicImageURL}/${value}`}
+              title={`${column.name}-image`}
+              type={"publicImage"}
+            />
+          </div>
+        );
 
       default:
         if (firstColsFound.includes(column.type)) {

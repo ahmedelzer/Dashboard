@@ -291,7 +291,6 @@ function BaseTable({
   addMessage,
   editMessage,
   deleteMessage,
-  setSelectedRow,
   paging,
   setPanelOpen,
   popupComponent,
@@ -309,7 +308,7 @@ function BaseTable({
 }) {
   const [state, dispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, schema.idField)
+    initialState(VIRTUAL_PAGE_SIZE, schema.idField),
   );
   const { localization } = useContext(LanguageContext);
   const [filters, setFilters] = useState(null);
@@ -324,13 +323,20 @@ function BaseTable({
   const { _wsMessageTable, setWSMessageTable } = useWS();
   const [WS_Connected, setWS_Connected] = useState(false);
   const observerRef = useRef();
+
   const getRowId = (row) => row[schema.idField];
+  const [isRowSelected, setIsRowSelected] = useState(false);
+  const [newRow, setNewRow] = useState({});
   const toggleRowExpanded = (row) => {
-    setExpandedRows((prevExpandedRows) =>
-      prevExpandedRows.includes(row)
+    // console.log("toggleRowExpanded",row);
+    setExpandedRows((prevExpandedRows) => {
+      const result = prevExpandedRows.includes(row)
         ? prevExpandedRows.filter((id) => id !== row)
-        : [...prevExpandedRows, row]
-    );
+        : [...prevExpandedRows, row];
+      setIsRowSelected(true);
+      setNewRow(result);
+      return result;
+    });
   };
   const dataSourceAPI = (query, skip, take) => {
     return buildApiUrl(query, {
@@ -347,18 +353,19 @@ function BaseTable({
         field: columnName,
         values: value,
         ...rest,
-      })
+      }),
     );
     setFilters(transformedFilters); // Update filters state with new values
   };
 
   const rowDoubleClick = (row) => {
-    if (setSelectedRow) {
-      setSelectedRow(row); // Update selectedRow state with the clicked row
+    if (setNewRow) {
+      setNewRow(row); // Update selectedRow state with the clicked row
       setPanelOpen(false);
     }
   };
   const [columns, setColumns] = useState([]);
+
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
     const dynamicColumns =
@@ -367,7 +374,7 @@ function BaseTable({
           return (
             !column.isIDField &&
             !avoidColsTypes.find(
-              (columnType) => column.parameterType === columnType
+              (columnType) => column.parameterType === columnType,
             )
           );
         })
@@ -394,16 +401,7 @@ function BaseTable({
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE));
   //e
   //load data every render
-  useEffect(() => {
-    if (
-      selectedRow &&
-      Object.keys(selectedRow).length === 0 &&
-      setSelectedRow &&
-      state.rows.length > 0
-    ) {
-      setSelectedRow(state.rows[0]);
-    }
-  });
+
   useEffect(() => {
     if (!getAction) return;
     LoadData(
@@ -412,7 +410,7 @@ function BaseTable({
       getAction,
       cache,
       updateRows(dispatch, cache, state),
-      dispatch
+      dispatch,
     );
   }, [currentSkip, filters, getAction]);
   // useEffect(() => {
@@ -428,7 +426,7 @@ function BaseTable({
   // }, [filters]);
   useEffect(() => {
     const findServerContainer = subSchemas?.filter(
-      (schema) => schema.schemaType === "ServerFilesContainer"
+      (schema) => schema.schemaType === "ServerFilesContainer",
     );
 
     setIncludeSchemas(findServerContainer);
@@ -448,7 +446,7 @@ function BaseTable({
   };
   const confirmDelete = () => {
     state.rows = rows.filter(
-      (row) => row[schema.idField] !== rowToDelete[schema.idField]
+      (row) => row[schema.idField] !== rowToDelete[schema.idField],
     );
     setModalIsOpen(false);
     setRowToDelete(null);
@@ -464,21 +462,23 @@ function BaseTable({
       (column) =>
         column.type === "image" ||
         column.type === "publicImage" ||
-        column.type === "time"
+        column.type === "time",
     )
     .map((column) => column.name);
   const handleRowClick = (row) => {
     const isSelected = selection.some(
-      (selectedRow) => selectedRow[schema.idField] === row[schema.idField]
+      (selectedRow) => selectedRow[schema.idField] === row[schema.idField],
     );
     setSelection((prevSelection) =>
       isSelected
         ? prevSelection.filter(
-            (selectedRow) => selectedRow[schema.idField] !== row[schema.idField]
+            (selectedRow) =>
+              selectedRow[schema.idField] !== row[schema.idField],
           )
-        : [...prevSelection, row]
+        : [...prevSelection, row],
     );
   };
+
   ///todo make sure the observers work every time you get to the div after calling the new rows
   const observerCallback = useCallback(
     (entries) => {
@@ -488,7 +488,7 @@ function BaseTable({
         setCurrentSkip(currentSkip + 1);
       }
     },
-    [rows, totalCount, loading, skip]
+    [rows, totalCount, loading, skip],
   );
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
@@ -520,7 +520,7 @@ function BaseTable({
       setWS_Connected,
       fieldsType.dataSourceName,
       {},
-      wsAction
+      wsAction,
     )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {
@@ -608,7 +608,9 @@ function BaseTable({
             selection={selection.map((row) => row[schema.idField])}
             onSelectionChange={(newSelection) => {
               setSelection(
-                rows.filter((row) => newSelection.includes(row[schema.idField]))
+                rows.filter((row) =>
+                  newSelection.includes(row[schema.idField]),
+                ),
               );
             }}
           />
@@ -621,7 +623,8 @@ function BaseTable({
               schema={schema}
               onRowClick={handleRowClick}
               rowDoubleClick={rowDoubleClick}
-              selectedRow={selectedRow}
+              selectedRow={newRow}
+              isSelected={isRowSelected}
               expandedRows={expandedRows}
               setExpandedRows={setExpandedRows}
               includeSchemas={includeSchemas}
@@ -630,7 +633,6 @@ function BaseTable({
               title={title}
               columns={columns}
               selection={selection}
-              setSelectedRow={setSelectedRow}
             />
           )}
           // cellComponent={DetailsCell}

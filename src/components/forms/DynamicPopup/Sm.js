@@ -31,6 +31,7 @@ export function Sm(param) {
     case "likes":
     case "dislikes":
     case "drawPolygon":
+    case "linkView":
       // todo: ActiveInputInde is the first item of these parmters that only appear ignore the others
       return 12;
     default:

@@ -6,6 +6,8 @@ import Form, {
 } from "devextreme-react/form";
 import LoadIndicator from "devextreme-react/load-indicator";
 import notify from "devextreme/ui/notify";
+import LZString from "lz-string";
+
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -36,7 +38,7 @@ export default function LoginForm() {
       const postAction =
         schemaActions &&
         schemaActions.find(
-          (action) => action.dashboardFormActionMethodType === "Post"
+          (action) => action.dashboardFormActionMethodType === "Post",
         );
       e.preventDefault();
       const form = e.target;
@@ -48,16 +50,27 @@ export default function LoginForm() {
         "",
         true,
         postAction,
-        schema.projectProxyRoute
+        schema.projectProxyRoute,
       );
       if (apply && apply.success === true) {
         const decodedToken = jwtDecode(apply.data.token);
         const expiresInSeconds = decodedToken.exp;
         const expirationDate = new Date(expiresInSeconds * 1000);
         if (formJson.rememberMe) {
-          Cookies.set("user", apply.data.token, { expires: expirationDate });
+          const now = Math.floor(Date.now() / 1000);
+          const expiresInDays = (decodedToken.exp - now) / 86400;
+
+          const compressed = LZString.compressToEncodedURIComponent(
+            apply.data.token,
+          );
+
+          Cookies.set("user", compressed, { expires: expiresInDays });
         } else {
-          Cookies.set("user", apply.data.token);
+          const compressed = LZString.compressToEncodedURIComponent(
+            apply.data.token,
+          );
+
+          Cookies.set("user", compressed);
         }
         const user = {
           avatarUrl:
@@ -67,7 +80,7 @@ export default function LoginForm() {
         setUser(user);
         window.sessionStorage.setItem(
           "routes",
-          user?.UsersGroupDashboardMenuItems
+          user?.UsersGroupDashboardMenuItems,
         );
         navigate("/home");
       } else if (!apply.success) {
@@ -77,7 +90,7 @@ export default function LoginForm() {
       setLoading(false);
     },
 
-    [signIn]
+    [signIn],
   );
   schema.dashboardFormSchemaParameters.map((param) => {
     param.parameterTitel = localization.login[param.parameterField];

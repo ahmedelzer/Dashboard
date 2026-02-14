@@ -1,22 +1,8 @@
-import React, { useContext, useState } from "react";
-import TreeView from "devextreme-react/tree-view";
-import Button from "devextreme-react/button";
-import { LanguageContext } from "../../../contexts/Language";
-import TreeList, {
-  Column,
-  Editing,
-  Paging,
-  Scrolling,
-} from "devextreme-react/tree-list";
-import BarcodeIframe from "./BarcodeIframe";
+import { useState } from "react";
+import Table from "../../../components/forms/DynamicTable/Table";
 import testSchema from "./testSchema.json";
-import BarcodeInput from "../../inputs/BarcodeInput";
-import DynamicReport from "../../../pages/dynamicReport/DynamicReport";
-import Form from "../../../contexts/Form";
-import DrawPartitionForms from "../PartingFrom/DrawPartitionForms";
-// import testSchema from "./testSchema.json";
-import PartitionFrom from "../PartingFrom/PartionFrom";
-import LocationButton from "../../../utils/components/LocationButton";
+import SelectForm from "../SelectForm";
+import FormContainer from "../DynamicPopup/FormContainer";
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
   // const [treeData, setTreeData] = useState([
@@ -485,7 +471,7 @@ const Test = () => {
         // Recursively flatten children if the value is an object
         if (isObject) {
           result = result.concat(
-            flattenData(data[key], currentNode.id, `${idPrefix}.${index}`)
+            flattenData(data[key], currentNode.id, `${idPrefix}.${index}`),
           );
         }
 
@@ -510,6 +496,8 @@ const Test = () => {
   };
 
   const treeData = flattenData(initialData[0]);
+  const mainSchema = testSchema?.find((item) => item.isMainSchema);
+  const subSchemas = testSchema?.filter((item) => !item.isMainSchema);
   return (
     // <TreeList
     //   id="collapsible-treeview"
@@ -542,9 +530,76 @@ const Test = () => {
     //   type={""}
     //   placeholder="enter barcode"
     // />
-    <Form schemas={testSchema}>
-      <DrawPartitionForms Schemas={testSchema} />
-    </Form>
+    // <FormContainer
+    //   errorResult={{}}
+    //   returnRow={() => {}}
+    //   row={{}}
+    //   tableSchema={mainSchema}
+    // />
+    <SelectForm
+      key={mainSchema.idField}
+      schema={mainSchema}
+      fieldName={"displayFile"}
+      includeSchemas={[
+        {
+          dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+          schemaType: "ServerFilesContainer",
+          idField: "fileID",
+          dashboardFormSchemaInfoDTOView: {
+            dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+            schemaHeader: "Archive Files",
+            addingHeader: "Add Archive File",
+            editingHeader: "Edit Archive File",
+          },
+          dashboardFormSchemaParameters: [
+            {
+              dashboardFormSchemaParameterID:
+                "4460b03b-d440-45ff-8ce5-cd517376112c",
+              dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+              isEnable: false,
+              parameterType: "text",
+              parameterField: "fileID",
+              parameterTitel: "File ID",
+              parameterLookupTitel: "File ID",
+              isIDField: true,
+              lookupID: null,
+              lookupReturnField: null,
+              lookupDisplayField: null,
+              indexNumber: 0,
+              isFilterOperation: true,
+              dashboardFormSchemaParameterDependencies: [],
+            },
+            {
+              dashboardFormSchemaParameterID:
+                "6d9cb789-211a-44ce-ae7f-8a259d716e52",
+              dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+              isEnable: true,
+              parameterType: "image",
+              parameterField: "fileContent",
+              parameterTitel: "File Content",
+              parameterLookupTitel: "File Content",
+              isIDField: false,
+              lookupID: null,
+              lookupReturnField: null,
+              lookupDisplayField: null,
+              indexNumber: 1,
+              isFilterOperation: true,
+              dashboardFormSchemaParameterDependencies: [],
+            },
+          ],
+          projectProxyRoute: "BrandingMartArchiving",
+          isMainSchema: false,
+          dataSourceName: "",
+          propertyName: null,
+          indexNumber: 0,
+        },
+      ]}
+      parentSchemaParameters={mainSchema.dashboardFormSchemaParameters}
+      row={{}}
+      title={"test"}
+      isSearchingTable={false}
+      subSchemas={subSchemas}
+    />
   );
 };
 
