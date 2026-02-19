@@ -22,7 +22,8 @@ export const stylesFile = {
   paginationButton: "px-4 py-2 border rounded",
   hiddenInput: "hidden",
   label: "cursor-pointer w-[100%]",
-  fileListContainer: "flex overflow-x-auto whitespace-nowrap gap-4 py-2 mb-4",
+  fileListContainer:
+    "flex overflow-x-auto overflow-y-hidden whitespace-nowrap gap-4 py-2 mb-4",
   fileScroll: "inline-block w-1/2 min-w-[200px] border p-2 rounded",
   parentFileContainer: "border rounded mb-2",
   buttonsContainer: "flex justify-end my-2",

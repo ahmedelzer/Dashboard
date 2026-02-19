@@ -18,12 +18,19 @@ export default function CustomRow({
   subSchema,
   fieldName,
   title,
+  isExpandedRow,
   columns,
-  isSelected,
+  isSelectedRow,
   ...restProps
 }) {
   const { localization } = useContext(LanguageContext);
-  console.log("newRow", selectedRow);
+  console.log(
+    "expandedRows",
+    row,
+    expandedRows.includes(row),
+    isExpandedRow,
+    expandedRows,
+  );
   const isRowSelected =
     selectedRow && row[schema.idField] === selectedRow[schema.idField];
 
@@ -36,10 +43,9 @@ export default function CustomRow({
       </Table.Row>
     );
   }
-
   const expandedElement = expandedRows.includes(row) ? (
-    <tr className="w-full">
-      <td colSpan={columns.length + 1}>
+    <Table.Row>
+      <Table.Cell colSpan={columns.length + 1}>
         <div className={customRowStyle.expandedRow}>
           <SelectForm
             row={row}
@@ -50,8 +56,8 @@ export default function CustomRow({
             title={title}
           />
         </div>
-      </td>
-    </tr>
+      </Table.Cell>
+    </Table.Row>
   ) : null;
 
   if (selection) {
@@ -73,7 +79,21 @@ export default function CustomRow({
         )}
       </Table.Row>
     );
-  } else if (isSelected) {
+  } else if (isExpandedRow) {
+    const rowElement = (
+      <Table.Row {...restProps}>
+        {React.Children.map(restProps.children, (child) =>
+          React.cloneElement(child, {}),
+        )}
+      </Table.Row>
+    );
+    return (
+      <>
+        {rowElement}
+        {expandedElement}
+      </>
+    );
+  } else if (isSelectedRow) {
     const rowElement = (
       <Table.Row
         {...restProps}
@@ -91,12 +111,7 @@ export default function CustomRow({
         )}
       </Table.Row>
     );
-    return (
-      <>
-        {rowElement}
-        {expandedElement}
-      </>
-    );
+    return <>{rowElement}</>;
   } else {
     return (
       // <>

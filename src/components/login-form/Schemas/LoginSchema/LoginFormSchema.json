@@ -28,19 +28,6 @@
       "lookupReturnField": null,
       "lookupDisplayField": null,
       "indexNumber": 0
-    },
-    {
-      "dashboardFormSchemaParameterID": "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
-      "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-      "isEnable": true,
-      "parameterType": "drawPolygon",
-      "parameterField": "drawPolygon",
-      "parameterTitel": "drawPolygon",
-      "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 0
     }
   ],
 

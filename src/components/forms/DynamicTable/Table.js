@@ -58,6 +58,7 @@ const DynamicTable = ({
         // result={result}
         proxyRoute={schema.projectProxyRoute}
         schema={schema}
+        subSchemas={subSchemas}
         addSelectedList={addSelectedList}
         specialActions={specialActions}
       />

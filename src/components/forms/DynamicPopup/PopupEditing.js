@@ -20,6 +20,7 @@ const PopupEditing = React.memo(
     putAction,
     state,
     dispatch,
+    subSchemas,
     // setResult,
     // result,
     schema,
@@ -49,7 +50,7 @@ const PopupEditing = React.memo(
                 stopEditRows,
                 cancelAddedRows,
                 cancelChangedRows,
-              }
+              },
             ) => {
               const isNew = addedRows.length > 0;
               let editedRow;
@@ -63,7 +64,7 @@ const PopupEditing = React.memo(
               } else {
                 [rowId] = editingRowIds;
                 const targetRow = rows.filter(
-                  (row) => getRowId(row) === rowId
+                  (row) => getRowId(row) === rowId,
                 )[0];
                 editedRow = { ...targetRow, ...rowChanges[rowId] };
                 originalRow = { ...targetRow, ...rowChanges[rowId] };
@@ -98,7 +99,7 @@ const PopupEditing = React.memo(
                     }
                     // If not a boolean field, return the value as-is
                     return [key, value];
-                  })
+                  }),
                 );
 
                 const formJson = {
@@ -120,7 +121,7 @@ const PopupEditing = React.memo(
                   iDField,
                   isNew,
                   action,
-                  proxyRoute
+                  proxyRoute,
                 );
                 setResult(apply);
                 if (apply && apply.success === true) {
@@ -178,6 +179,7 @@ const PopupEditing = React.memo(
                   onCancelChanges={cancelChanges}
                   tableSchema={schema}
                   errorResult={result}
+                  subSchemas={subSchemas}
                   isNewRow={isNew}
                 />
               );
@@ -190,6 +192,6 @@ const PopupEditing = React.memo(
         </Template>
       </Plugin>
     );
-  }
+  },
 );
 export default PopupEditing;

@@ -46,7 +46,8 @@ export function SetHeaders() {
   const headers = {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
-    clientID: "facebookClient",
+    clientID: "d3804355-a09c-46ec-910c-dc024a4bae1b",
+    // clientID: "facebookClient",
     // "Access-Control-Allow-Credentials": "true",
     // "Access-Control-Allow-Origin": "*",
     token: token,

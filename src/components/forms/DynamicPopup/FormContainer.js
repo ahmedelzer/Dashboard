@@ -31,7 +31,7 @@ function FormContainer({
   // Get expected field names from schema
   const expectedFields =
     tableSchema?.dashboardFormSchemaParameters?.map((param) =>
-      param.parameterField?.toLowerCase()
+      param.parameterField?.toLowerCase(),
     ) || [];
 
   // Get unmatched error messages (e.g., "userError")
@@ -55,14 +55,14 @@ function FormContainer({
           currentError,
           "error",
           4000,
-          "top right"
+          "top right",
         );
       }, 0);
     }
   }, [globalErrorMessages, showToast, localization.inputs.notifyError]);
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
-    (e) => e.isEnable
-  ).parameterField;
+    (e) => e.isEnable,
+  )?.parameterField;
 
   //todo check if this we want const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
   //todo(e) => e.isEnable && Math.max(e.indexNumber)
@@ -72,7 +72,7 @@ function FormContainer({
     specialActions,
     tableSchema.projectProxyRoute,
     row,
-    tableSchema
+    tableSchema,
   );
   function SetValue(param) {
     if (
@@ -91,7 +91,7 @@ function FormContainer({
   function GetActiveIndexInput() {
     return (
       tableSchema?.dashboardFormSchemaParameters.find((pram) =>
-        firstColsFound.includes(pram.parameterType)
+        firstColsFound.includes(pram.parameterType),
       )?.parameterType || null
     );
   }
@@ -110,7 +110,7 @@ function FormContainer({
               return (
                 (!column.isIDField || column.lookupID) &&
                 !avoidColsTypes.find(
-                  (columnType) => column.parameterType === columnType
+                  (columnType) => column.parameterType === columnType,
                 )
               );
             })
@@ -118,7 +118,9 @@ function FormContainer({
               <Col sm={Sm(param)} className="px-2" key={param.parameterField}>
                 <DataCellRender
                   isActionField={
-                    actionField === param.parameterField ? true : false
+                    actionField && actionField === param.parameterField
+                      ? true
+                      : false
                   }
                   data={param}
                   value={SetValue(param)}

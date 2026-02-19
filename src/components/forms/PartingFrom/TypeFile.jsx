@@ -49,17 +49,22 @@ function TypeFile({ file, title, type = false }) {
       return () => observer.disconnect();
     }
   }, [videoRef]);
-  const renderFileContent = () => {
+  const renderFileContent = (height = "12rem") => {
     switch (true) {
       case typeFile.startsWith("image"):
       case typeFile === "publicImage":
         return (
-          <img
-            src={fileSrc}
-            alt={title}
-            className="w-full h-auto object-contain"
-            loading="lazy"
-          />
+          <div
+            className="w-full overflow-hidden rounded-md"
+            style={{ height: height }}
+          >
+            <img
+              src={fileSrc}
+              alt={title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
         );
       case typeFile.startsWith("video"):
         return (
@@ -80,7 +85,7 @@ function TypeFile({ file, title, type = false }) {
   };
 
   return (
-    <div>
+    <div className="size-full">
       <button type="button" onClick={() => setModalOpen(true)}>
         {renderFileContent()}
       </button>

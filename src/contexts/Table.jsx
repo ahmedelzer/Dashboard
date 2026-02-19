@@ -9,24 +9,24 @@ const TableProvider = ({ children, schemas }) => {
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [actionsForm, setActionsForm] = useState(null);
-  const {
-    getAction,
-    postAction,
-    putAction,
-    searchAction,
-    getDependenciesAction,
-    getActionByID,
-  } = GetActionsFromSchema(mainSchema);
+  // const {
+  //   getAction,
+  //   postAction,
+  //   putAction,
+  //   searchAction,
+  //   getDependenciesAction,
+  //   getActionByID,
+  // } = GetActionsFromSchema(mainSchema);
 
   return (
     <TableContext.Provider
       value={{
-        getAction,
-        postAction,
-        putAction,
-        searchAction,
-        getDependenciesAction,
-        getActionByID,
+        // getAction,
+        // postAction,
+        // putAction,
+        // searchAction,
+        // getDependenciesAction,
+        // getActionByID,
         selectedRow,
         setSelectedRow,
         mainSchema,

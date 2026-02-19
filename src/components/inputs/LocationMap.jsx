@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { LanguageContext } from "../../contexts/Language";
 import { locationMap } from "./styles";
+import PolygonForm from "../forms/Polygon/PolygonForm";
 // Fix for Leaflet marker icons not showing correctly
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -22,23 +23,27 @@ L.Icon.Default.mergeOptions({
 
 const LocationMap = ({
   location,
-  onLocationChange,
+  onLocationChange = () => {},
   clickable,
   fields,
   haveRadius,
+  findServerContainer,
+  clickAction = "pin",
+  setClickAction = () => {},
+  setNewPolygon = () => {},
 }) => {
   const { localization } = useContext(LanguageContext);
 
   const latitudeField = fields.find(
     (param) =>
       param.parameterType ===
-      (haveRadius ? "areaMapLatitudePoint" : "mapLatitudePoint")
+      (haveRadius ? "areaMapLatitudePoint" : "mapLatitudePoint"),
   )?.parameterField;
 
   const longitudeField = fields.find(
     (param) =>
       param.parameterType ===
-      (haveRadius ? "areaMapLongitudePoint" : "mapLongitudePoint")
+      (haveRadius ? "areaMapLongitudePoint" : "mapLongitudePoint"),
   )?.parameterField;
 
   const radiusField = haveRadius
@@ -53,8 +58,20 @@ const LocationMap = ({
 
   const MapClickHandler = () => {
     useMapEvents({
-      click(e) {
+      async click(e) {
         const { lat, lng } = e.latlng;
+        // const response = await fetch(
+        //   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+        // );
+
+        // const data = await response.json();
+
+        // const isoCode = data?.address?.country_code?.toUpperCase(); // EG
+        // const city =
+        //   data?.address?.city ||
+        //   data?.address?.town ||
+        //   data?.address?.village ||
+        //   data?.address?.state;
         onLocationChange({
           [latitudeField]: lat,
           [longitudeField]: lng,
@@ -79,11 +96,13 @@ const LocationMap = ({
     }
   }, []);
   useEffect(() => {
-    onLocationChange({
-      [latitudeField]: lat,
-      [longitudeField]: lng,
-      // [radiusField]: radius,
-    });
+    if (lng && lat) {
+      onLocationChange({
+        [latitudeField]: lat,
+        [longitudeField]: lng,
+        // [radiusField]: radius,
+      });
+    }
   }, []);
   return (
     <div className={locationMap.container}>
@@ -94,7 +113,12 @@ const LocationMap = ({
         attributionControl={false}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {clickable && <MapClickHandler />}
+        {clickable && clickAction === "pin" && <MapClickHandler />}
+        <PolygonForm
+          schema={findServerContainer}
+          enable={clickAction === "polygon"}
+          setNewPolygon={setNewPolygon}
+        />
         {location && (
           <>
             <Marker position={[lat, lng]}>
@@ -112,7 +136,31 @@ const LocationMap = ({
           </>
         )}
       </MapContainer>
+      {clickable && findServerContainer && (
+        <div className="flex gap-2 justify-center">
+          <button
+            type="button"
+            onClick={() => setClickAction("pin")}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              clickAction === "pin" ? "bg-accent text-bg" : "bg-bg text-text"
+            }`}
+          >
+            {localization.inputs.locationMap.pinTap}
+          </button>
 
+          <button
+            type="button"
+            onClick={() => setClickAction("polygon")}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              clickAction === "polygon"
+                ? "bg-accent text-bg"
+                : "bg-bg text-text"
+            }`}
+          >
+            {localization.inputs.locationMap.polygonTap}
+          </button>
+        </div>
+      )}
       {radiusField && clickable && haveRadius && (
         <div className={locationMap.radiusContainer}>
           <label>

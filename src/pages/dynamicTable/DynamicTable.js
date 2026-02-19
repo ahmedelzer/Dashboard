@@ -10,13 +10,14 @@ import {
   defaultProjectProxyRouteWithoutBaseURL,
 } from "../../request";
 import "./DynamicTable.scss";
+import TableProvider from "../../contexts/Table";
 
 export default function DynamicTable() {
   // const { dashboardItemID } = useParams();
   const dashboardItemID = ExtractIDFromPath(window.location.pathname);
   const { data, error, isLoading } = useFetch(
     GetFormSchema(dashboardItemID),
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
 
   // const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
@@ -34,14 +35,14 @@ export default function DynamicTable() {
   function SelectForm(schema, subSchemas) {
     if (schema.schemaType === "Table") {
       return (
-        <div>
-          <Table
-            key={schema.idField}
-            schema={schema}
-            isSearchingTable={false}
-            subSchemas={subSchemas}
-          />
-        </div>
+        // <TableProvider schemas={data}>
+        <Table
+          key={schema.idField}
+          schema={schema}
+          isSearchingTable={false}
+          subSchemas={subSchemas}
+        />
+        // </TableProvider>
       );
     }
   }

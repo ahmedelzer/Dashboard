@@ -7,6 +7,7 @@ export default function SelectForm({
   fieldName,
   title,
   includeSchemas,
+  subSchemas = [],
 }) {
   if (schema?.schemaType === "Table") {
     return (
@@ -19,26 +20,42 @@ export default function SelectForm({
           {
             dashboardFormSchemaActionID: "40cfb6e5-2d09-4960-a311-21df3eeb8d26",
             dashboardFormActionMethodType: "Get",
-            routeAdderss: "scraping/getPages",
+            routeAdderss: "AreaPolygon/GetAreasPolygon",
             body: "string",
             returnPropertyName: "string",
-            projectProxyRoute: "i-marketer1",
+            projectProxyRoute: "BrandingMartLogistic",
             dashboardFormSchemaActionQueryParams: [
               {
                 dashboardFormSchemaActionQueryParameterID:
                   "26bc9d7e-781f-4638-a25d-50b9c516e00d",
                 dashboardFormSchemaActionID:
                   "40cfb6e5-2d09-4960-a311-21df3eeb8d26",
-                parameterName: "PageSize",
-                dashboardFormParameterField: "pageSize",
+                parameterName: "NorthEastLatitude",
+                dashboardFormParameterField: "northEastLatitude",
               },
               {
                 dashboardFormSchemaActionQueryParameterID:
                   "54fb6bb3-32ad-42ff-bd09-ab0fb6378886",
                 dashboardFormSchemaActionID:
                   "40cfb6e5-2d09-4960-a311-21df3eeb8d26",
-                parameterName: "pageNumber",
-                dashboardFormParameterField: "pageIndex",
+                parameterName: "NorthEastLongitude",
+                dashboardFormParameterField: "northEastLongitude",
+              },
+              {
+                dashboardFormSchemaActionQueryParameterID:
+                  "26bc9d7e-781f-4638-a25d-50b9c516e00d",
+                dashboardFormSchemaActionID:
+                  "40cfb6e5-2d09-4960-a311-21df3eeb8d26",
+                parameterName: "SouthWestLatitude",
+                dashboardFormParameterField: "southWestLatitude",
+              },
+              {
+                dashboardFormSchemaActionQueryParameterID:
+                  "54fb6bb3-32ad-42ff-bd09-ab0fb6378886",
+                dashboardFormSchemaActionID:
+                  "40cfb6e5-2d09-4960-a311-21df3eeb8d26",
+                parameterName: "SouthWestLongitude",
+                dashboardFormParameterField: "southWestLongitude",
               },
             ],
           },
@@ -52,9 +69,23 @@ export default function SelectForm({
             dashboardFormSchemaActionQueryParams: [],
           },
         ]}
+        subSchemas={subSchemas}
       />
     );
   } else if (schema?.schemaType === "FilesContainer") {
+    return (
+      <FileContainer
+        schema={schema}
+        row={row}
+        serverSchema={includeSchemas.find(
+          (s) => s.schemaType === "ServerFilesContainer",
+        )}
+        parentSchemaParameters={parentSchemaParameters}
+        fieldName={fieldName}
+        title={title}
+      />
+    );
+  } else if (schema?.schemaType === "PolygonContainer") {
     return (
       <FileContainer
         schema={schema}

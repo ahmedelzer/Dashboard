@@ -674,6 +674,7 @@ import TypeFile from "../PartingFrom/TypeFile";
 import { publicImageURL } from "../../../request";
 import DisplayIframe from "../../../utils/components/DisplayIframe";
 import WebsiteIcon from "../../../utils/components/WebsiteIcon";
+import PolygonForm from "../Polygon/PolygonForm";
 
 /* -------------------------------------------------------------------------- */
 /*                              Small UI Parts                                 */
@@ -715,7 +716,7 @@ const BooleanCell = ({ row, column, schema, specialActions }) => {
   const [isOn, setIsOn] = useState(row[column.name]);
   const { confirmAndRun, ConfirmModal } = useConfirmAction();
 
-  const action = specialActions.find(
+  const action = specialActions?.find(
     (a) => a.dashboardFormActionMethodType.split(":")[1] === column.name,
   );
 
@@ -845,18 +846,32 @@ export const DetailsCell = ({
               location={row}
               fields={schema?.dashboardFormSchemaParameters}
               clickable={false}
+              haveRadius={props.type === "areaMapLongitudePoint"}
+              subSchemas={subSchemas}
             />
           </MapModalCell>
         );
 
       case "drawPolygon":
+        const subSchema = subSchemas?.find(
+          (s) => s.dashboardFormSchemaID === column.lookupID,
+        );
+        const findServerContainer = subSchemas?.filter(
+          (schema) => schema.schemaType === "ServerPolygonContainer",
+        );
         return (
           <MapModalCell label={localization.table.areaColumnTitle}>
-            <PolygonMapParameter
+            <PolygonForm
+              schema={subSchema}
+              serverSchema={findServerContainer}
+            />
+            {/* <PolygonMapParameter
               enable={false}
               value={row[column.name]}
+              setSubSchema={sub}
+              includedSchema={findServerContainer}
               fields={schema?.dashboardFormSchemaParameters}
-            />
+            /> */}
           </MapModalCell>
         );
 

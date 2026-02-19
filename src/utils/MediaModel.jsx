@@ -8,7 +8,7 @@ export default function MediaModel({
 }) {
   return (
     <Modal isOpen={modalOpen} toggle={toggleModal} size="lg">
-      <ModalBody>{renderFileContent()}</ModalBody>
+      <ModalBody>{renderFileContent("100%")}</ModalBody>
     </Modal>
   );
 }

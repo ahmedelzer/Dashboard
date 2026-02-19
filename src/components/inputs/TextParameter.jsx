@@ -31,7 +31,7 @@ class TextParameter extends BaseInput {
   setParameterTypeStep = (parameterType) => {
     switch (parameterType) {
       case "float":
-        return "0.001";
+        return "0.1";
       case "numeric":
         return "1";
       default:

@@ -23,3 +23,11 @@ make cookie for expaire time //Done
 1- the problem of overloping is nodeMenuItemID is not found in the schema
 2-make boolean inputs hide and make switch in the table and he can modify items
 3-why in put in table loop in all prams can we make marge
+
+
+
+
+
+1-the prams of the collaps are from which schema
+2-are the get polygons runs with it when add new open
+3-

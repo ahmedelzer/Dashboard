@@ -54,8 +54,8 @@ export function GetInputComponent(type) {
       return LookupInput;
     case "nodeLongitudePoint":
       return DirectionButtonParameter;
-    case "drawPolygon":
-      return PolygonMapParameter;
+    // case "drawPolygon":
+    //   return PolygonMapParameter;
     case "linkView":
       return IframeParameter;
 

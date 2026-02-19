@@ -15,10 +15,11 @@ const Popup = ({
   tableSchema,
   errorResult,
   isNewRow,
+  subSchemas,
 }) => {
   const { localization, Right } = useContext(LanguageContext);
   const [doneButtonText, setDoneButtonText] = useState(
-    localization.popup.submitButton
+    localization.popup.submitButton,
   );
   const [doneButtonDisable, setDoneButtonDisable] = useState(false);
   const testSchema = {
@@ -266,7 +267,7 @@ const Popup = ({
         onSubmit={async (e) => {
           e.preventDefault();
           setDoneButtonText(
-            <LoadIndicator width={"24px"} height={"24px"} visible={true} />
+            <LoadIndicator width={"24px"} height={"24px"} visible={true} />,
           );
           setDoneButtonDisable(true);
           await onApplyChanges(e);
@@ -295,6 +296,7 @@ const Popup = ({
             row={row}
             returnRow={() => {}}
             errorResult={errorResult}
+            subSchemas={subSchemas}
           />
         </ModalBody>
         <ModalFooter>

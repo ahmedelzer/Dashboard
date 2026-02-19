@@ -9,6 +9,9 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { PolygonContextMenu } from "../../utils/components/ContextMenu";
+import { BoundsWatcher } from "../../utils/components/BoundsWatcher";
+import { reverseGeocode } from "../../utils/operation/reverseGeocode";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -17,6 +20,7 @@ L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
+
 const DRAW_THRESHOLD = 0.00005;
 
 /* =========================
@@ -46,6 +50,7 @@ function DrawHandler({
   livePath,
   setLivePath,
   setFinalPolygon,
+  onPolygonFinished = () => {},
 }) {
   const map = useMap();
   const pathRef = useRef([]);
@@ -71,13 +76,29 @@ function DrawHandler({
       setLivePath([...pathRef.current]);
     },
 
-    mouseup() {
+    async mouseup() {
       if (!isDrawing) return;
 
       setIsDrawing(false);
 
       if (pathRef.current.length > 2) {
-        setFinalPolygon([...pathRef.current, pathRef.current[0]]);
+        const polygon = [...pathRef.current, pathRef.current[0]];
+        setFinalPolygon(polygon);
+
+        // ✅ Get polygon center using Leaflet bounds
+        const bounds = L.latLngBounds(polygon);
+        const center = bounds.getCenter();
+
+        // ✅ Reverse Geocode center point
+        const locationInfo = await reverseGeocode(center.lat, center.lng);
+
+        // ✅ Send result to parent
+        onPolygonFinished({
+          polygon,
+          centerLat: center.lat,
+          centerLng: center.lng,
+          ...locationInfo,
+        });
       }
 
       setLivePath([]);
@@ -99,84 +120,190 @@ function DrawHandler({
 }
 
 /* =========================
-   🧩 MAIN PARAMETER COMPONENT
+   🧩 MAIN COMPONENT
 ========================= */
 export default function PolygonMapParameter({
   value,
   fieldName,
   title,
-  enable = true,
+  enable = false,
   className,
+  setBoundsData = () => {},
+  setNewPolygon,
+  fieldsType,
 }) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [livePath, setLivePath] = useState([]);
-  const [finalPolygon, setFinalPolygon] = useState(
-    value ? JSON.parse(value) : []
-  );
+  const polygonFieldName = fieldsType.polygon;
+  // ✅ NOW ARRAY OF POLYGONS
+  const [oldPolygons, setOldPolygons] = useState([]);
+  const [newPolygon, setNewPolygonState] = useState(null);
+
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    latlng: null,
+    polygonIndex: null,
+  });
 
   /* 🔁 Sync incoming value (edit mode) */
   useEffect(() => {
     if (value) {
       try {
-        setFinalPolygon(JSON.parse(value));
-      } catch {}
-    }
-  }, [value]);
+        const parsed = typeof value === "string" ? JSON.parse(value) : value;
 
-  /* 🧾 Serialize polygon for form submit */
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const extractedPolygons = parsed
+            .map((item) => item?.[polygonFieldName])
+            .filter((points) => Array.isArray(points) && points.length > 2);
+
+          setOldPolygons(extractedPolygons);
+          setNewPolygonState(null); // ✅ reset new polygon when value changes
+        } else {
+          setOldPolygons([]);
+          setNewPolygonState(null);
+        }
+      } catch (err) {
+        console.log("Parse error:", err);
+        setOldPolygons([]);
+        setNewPolygonState(null);
+      }
+    }
+  }, [value, polygonFieldName]);
+
+  const finalPolygons = newPolygon ? [...oldPolygons, newPolygon] : oldPolygons;
+
+  /* 🧾 Serialize polygons */
   const serializedValue =
-    finalPolygon.length > 2 ? JSON.stringify(finalPolygon) : "";
+    finalPolygons.length > 0 ? JSON.stringify(finalPolygons) : "";
 
   return (
-    <div className={className}>
+    <div className={className} style={{ position: "relative" }}>
       {title && <label>{title}</label>}
 
       {/* ✅ HIDDEN FORM FIELD */}
       <input type="hidden" name={fieldName} value={serializedValue} readOnly />
 
-      <MapContainer
-        center={[30.05, 31.45]}
-        zoom={12}
-        style={{ height: "400px", width: "100%" }}
-        zoomControl={true}
-        attributionControl={false}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <BoundsWatcher setBoundsData={setBoundsData} />
 
-        {enable && (
-          <DrawHandler
-            isDrawing={isDrawing}
-            setIsDrawing={setIsDrawing}
-            livePath={livePath}
-            setLivePath={setLivePath}
-            setFinalPolygon={setFinalPolygon}
-          />
+      {/* ✍️ DRAW HANDLER */}
+      {enable && (
+        <DrawHandler
+          isDrawing={isDrawing}
+          setIsDrawing={setIsDrawing}
+          livePath={livePath}
+          setLivePath={setLivePath}
+          setFinalPolygon={(polygon) => {
+            if (polygon.length > 2) {
+              setNewPolygonState(polygon); // ✅ always overwrite only the new polygon
+            }
+          }}
+          onPolygonFinished={(data) => {
+            const polygonPoints = data.polygon;
+
+            let maxDistance = 0;
+
+            for (let i = 0; i < polygonPoints.length; i++) {
+              for (let j = i + 1; j < polygonPoints.length; j++) {
+                const dist = L.latLng(polygonPoints[i]).distanceTo(
+                  L.latLng(polygonPoints[j]),
+                );
+
+                if (dist > maxDistance) {
+                  maxDistance = dist;
+                }
+              }
+            }
+
+            const radius = maxDistance / 2 / 1000;
+            const mappedValue = {
+              [fieldsType.polygon]: data.polygon,
+              [fieldsType.centerLatitudePoint]: data.centerLat,
+              [fieldsType.centerLongitudePoint]: data.centerLng,
+              [fieldsType.cityISO_CodeValue]: data.countryIsoCode,
+              [fieldsType.description]: data.fullAddress,
+              [fieldsType.areaName]: data.city,
+              [fieldsType.radius]: radius, // if you calculate later
+            };
+
+            setNewPolygon(mappedValue);
+          }}
+        />
+      )}
+
+      {/* LIVE LINE */}
+      {isDrawing && livePath.length > 1 && (
+        <Polyline
+          positions={livePath}
+          pathOptions={{ color: "red", weight: 3 }}
+        />
+      )}
+
+      {/* LIVE POLYGON */}
+      {isDrawing && livePath.length > 2 && (
+        <Polygon
+          positions={livePath}
+          pathOptions={{ color: "red", fillOpacity: 0.1 }}
+        />
+      )}
+
+      {/* ✅ FINAL POLYGONS */}
+      {finalPolygons.length > 0 &&
+        finalPolygons.map((polygon, index) =>
+          polygon.length > 2 ? (
+            <Polygon
+              key={index}
+              positions={polygon}
+              pathOptions={{ color: "#1E88E5", fillOpacity: 0.25 }}
+              eventHandlers={{
+                contextmenu: (e) => {
+                  e.originalEvent.preventDefault();
+
+                  setContextMenu({
+                    visible: true,
+                    latlng: e.latlng,
+                    polygonIndex: index,
+                  });
+                },
+              }}
+            />
+          ) : null,
         )}
 
-        {/* LIVE LINE */}
-        {isDrawing && livePath.length > 1 && (
-          <Polyline
-            positions={livePath}
-            pathOptions={{ color: "red", weight: 3 }}
-          />
-        )}
+      {/* RIGHT CLICK MENU */}
+      {contextMenu.visible &&
+        contextMenu.latlng &&
+        contextMenu.polygonIndex !== null && (
+          <PolygonContextMenu
+            latlng={contextMenu.latlng}
+            onClose={() =>
+              setContextMenu({
+                visible: false,
+                latlng: null,
+                polygonIndex: null,
+              })
+            }
+            onDelete={() => {
+              setNewPolygon((prev) =>
+                prev.filter((_, i) => i !== contextMenu.polygonIndex),
+              );
 
-        {/* LIVE POLYGON */}
-        {isDrawing && livePath.length > 2 && (
-          <Polygon
-            positions={livePath}
-            pathOptions={{ color: "red", fillOpacity: 0.1 }}
-          />
-        )}
+              setContextMenu({
+                visible: false,
+                latlng: null,
+                polygonIndex: null,
+              });
+            }}
+            onEdit={() => {
+              alert("Edit Polygon Clicked 😄");
 
-        {/* FINAL POLYGON */}
-        {finalPolygon.length > 2 && (
-          <Polygon
-            positions={finalPolygon}
-            pathOptions={{ color: "#1E88E5", fillOpacity: 0.25 }}
+              setContextMenu({
+                visible: false,
+                latlng: null,
+                polygonIndex: null,
+              });
+            }}
           />
         )}
-      </MapContainer>
     </div>
   );
 }

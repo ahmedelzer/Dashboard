@@ -81,6 +81,9 @@
     "base": { "placeholder": "Enter " },
     "locationMap": {
       "popupTitle": "Your selected location",
+      "mapInputs": "Map Information",
+      "pinTap": "📍 Pin Location",
+      "polygonTap": "🟦 Draw Polygon",
       "radius": "Circle Radius: {radius} meters"
     },
     "timeDuring": {
