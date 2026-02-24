@@ -81,6 +81,7 @@ function FormContainer({
       param.parameterType === "mapLongitudePoint" ||
       param.parameterType === "nodeLongitudePoint" ||
       param.parameterType === "button" ||
+      param.parameterType.startsWith("calculate") ||
       param.parameterType === "rate"
     ) {
       return row;

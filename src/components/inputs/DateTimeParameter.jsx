@@ -40,7 +40,7 @@ class DateTimeParameter extends BaseInput {
     if (type === "localDateTime") {
       // Convert UTC to local by using Date() directly (browser auto-adjusts)
       const localDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000
+        date.getTime() - date.getTimezoneOffset() * 60000,
       );
 
       // Optionally use your util if needed

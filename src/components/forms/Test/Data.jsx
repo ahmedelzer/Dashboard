@@ -498,6 +498,56 @@ const Test = () => {
   const treeData = flattenData(initialData[0]);
   const mainSchema = testSchema?.find((item) => item.isMainSchema);
   const subSchemas = testSchema?.filter((item) => !item.isMainSchema);
+  const schema = {
+    dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    schemaType: "Table",
+    idField: "AssetID",
+    dashboardFormSchemaInfoDTOView: {
+      dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+      schemaHeader: "Archive Files",
+      addingHeader: "Add Archive File",
+      editingHeader: "Edit Archive File",
+    },
+    dashboardFormSchemaParameters: [
+      {
+        dashboardFormSchemaParameterID: "4460b03b-d440-45ff-8ce5-cd517376112c",
+        dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+        isEnable: false,
+        parameterType: "text",
+        parameterField: "AssetID",
+        parameterTitel: "AssetID",
+        parameterLookupTitel: null,
+        isIDField: true,
+        lookupID: null,
+        lookupReturnField: null,
+        lookupDisplayField: null,
+        indexNumber: 0,
+        isFilterOperation: true,
+        dashboardFormSchemaParameterDependencies: [],
+      },
+      {
+        dashboardFormSchemaParameterID: "6d9cb789-211a-44ce-ae7f-8a259d716e52",
+        dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+        isEnable: true,
+        parameterType: "installment",
+        parameterField: "minAge",
+        parameterTitel: "MinAge",
+        parameterLookupTitel: null,
+        isIDField: false,
+        lookupID: null,
+        lookupReturnField: null,
+        lookupDisplayField: null,
+        indexNumber: 1,
+        isFilterOperation: true,
+        dashboardFormSchemaParameterDependencies: [],
+      },
+    ],
+    projectProxyRoute: "BrandingMartAssets",
+    isMainSchema: true,
+    dataSourceName: "",
+    propertyName: null,
+    indexNumber: 0,
+  };
   return (
     // <TreeList
     //   id="collapsible-treeview"

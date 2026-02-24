@@ -9,6 +9,9 @@ export default function SelectForm({
   includeSchemas,
   subSchemas = [],
 }) {
+  console.log("====================================");
+  console.log("opening SelectForm", schema);
+  console.log("====================================");
   if (schema?.schemaType === "Table") {
     return (
       <Table

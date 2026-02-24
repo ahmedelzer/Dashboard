@@ -7,11 +7,13 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
+  useNavigate,
 } from "react-router-dom";
 import ApiRoutes from "./app-routes";
 import { Footer, LoginForm } from "./components";
 import LanguageSelector from "./components/header/LanguageSelector";
 import Language, { LanguageContext } from "./contexts/Language";
+import { NetworkProvider } from "./contexts/NetworkContext";
 import { WSProvider } from "./contexts/WSContext";
 import { AuthProvider, useAuth } from "./contexts/auth";
 import { NavigationProvider } from "./contexts/navigation";
@@ -20,18 +22,20 @@ import { SideNavInnerToolbar as SideNavBarLayout, SingleCard } from "./layouts";
 import { Test } from "./pages";
 import DynamicTree from "./pages/dynamicTree/DynamicTree";
 import Home from "./pages/home/Home";
+import ErrorScreen from "./pages/serverError/ErrorScreen";
 import "./themes/generated/theme.additional.css";
 import "./themes/generated/theme.base.css";
+import { useDisplayToast } from "./utils/components/useDisplayToast";
 import { useScreenSizeClass } from "./utils/media-query";
-import { NetworkProvider } from "./contexts/NetworkContext";
-import WaringPop from "./components/forms/PartingFrom/WaringPop";
-import { PolygonMapParameter } from "./components/inputs";
+import { redirectManager } from "./utils/operation/redirectManager";
 function App() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const { Right, localization } = useContext(LanguageContext);
 
   const [routes, setRoutes] = useState("");
   const [open, setopen] = useState(false);
+  const { showToast } = useDisplayToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (window.sessionStorage.getItem("routes")) {
@@ -58,7 +62,32 @@ function App() {
       import("./themes/generated/Right.css");
     }
   }, [Right]);
+  useEffect(() => {
+    const unsubscribe = redirectManager.subscribe((redirect) => {
+      console.log("====================================");
+      console.log(redirect, "redirect");
+      console.log("====================================");
+      if (!redirect?.route) return;
 
+      if (redirect.route === "login") {
+        signOut();
+      }
+
+      if (redirect.mess) {
+        showToast(
+          redirect.mess,
+          "",
+          "info",
+          4000,
+          Right ? "top left" : "top right",
+        );
+      }
+
+      navigate(redirect.route);
+    });
+
+    return unsubscribe;
+  }, []);
   if (loading) {
     return <LoadPanel visible={true} />;
   }
@@ -86,6 +115,7 @@ function App() {
           <SideNavBarLayout title={localization.appInfo.title}>
             <Routes>
               <Route path="/home" element={<Home />} />
+              <Route path="/serverError" element={<ErrorScreen />} />
               <Route path="/test" element={<Test />} />
               <Route path="/tree/:id" element={<DynamicTree />} />
               {ApiRoutes(routes).map(({ path, element }) => (

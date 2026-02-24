@@ -86,10 +86,15 @@
       "polygonTap": "🟦 Draw Polygon",
       "radius": "Circle Radius: {radius} meters"
     },
+
     "timeDuring": {
       "labelDays": "Days:",
       "labelHours": "Hours:",
       "labelMinutes": "Minutes:"
+    },
+    "installment": {
+      "maxHint": "Total cannot exceed",
+      "maximum": "Maximum allowed:"
     },
     "notifyError": "Invalid Form"
   },
@@ -101,6 +106,7 @@
     "username": "User Name",
     "password": "Password",
     "loginText": "Login",
+    "loginNotify": "you have to sign in to make that actions",
     "logoutText": "Logout",
     "switchText": "Switch Account",
     "forgotPassword": "Forgot password",
@@ -191,5 +197,12 @@
   "websites": [
     { "name": "facebook", "id": "0" },
     { "name": "facebookPost", "id": "1" }
-  ]
+  ],
+  "ErrorScreen": {
+    "title": "Oops! An Error Occurred",
+    "subTitle": "The server returned a \"500 Internal Server Error\".",
+    "description": "Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused.",
+    "buttonText": "Retry in {sec} seconds",
+    "goBackButton": "Go Back to Home"
+  }
 }

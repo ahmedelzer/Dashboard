@@ -15,6 +15,9 @@ export const baseURL = "https://" + domainURL;
 
 export const languageName = window.localStorage.getItem("language");
 export const languageID = window.localStorage.getItem("languageID");
+export const localization = JSON.parse(
+  window.localStorage.getItem("localization"),
+);
 export const token = GetToken();
 // export const publicImageURL = "http://41.196.0.25:5004/";
 // export const websocketBaseURI =
@@ -41,6 +44,7 @@ export function GetProjectUrl(projectProxyRoute) {
   baseURLWithoutApi = `${baseURL}/${projectProxyRoute}`;
   return `${baseURL}/${projectProxyRoute}/api`;
 }
+
 export function SetHeaders() {
   const token = GetToken();
   const headers = {

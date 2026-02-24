@@ -1,9 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DotsLoading from "../../loading/DotsLoading";
 import SelectForm from "../SelectForm";
 import { customRowStyle } from "./styles";
 import { LanguageContext } from "../../../contexts/Language";
 import { Table } from "@devexpress/dx-react-grid-bootstrap4";
+import useFetch, { fetchData } from "../../hooks/APIsFunctions/useFetch";
+import GetFormSchema from "../../hooks/DashboardAPIs/GetFormSchema";
+import GetSchemaUrl from "../../hooks/DashboardAPIs/GetSchemaUrl";
+import { defaultProjectProxyRouteWithoutBaseURL } from "../../../request";
 
 export default function CustomRow({
   row,
@@ -15,7 +19,7 @@ export default function CustomRow({
   expandedRows,
   setExpandedRows,
   includeSchemas,
-  subSchema,
+  lookupSchema,
   fieldName,
   title,
   isExpandedRow,
@@ -24,16 +28,9 @@ export default function CustomRow({
   ...restProps
 }) {
   const { localization } = useContext(LanguageContext);
-  console.log(
-    "expandedRows",
-    row,
-    expandedRows.includes(row),
-    isExpandedRow,
-    expandedRows,
-  );
+
   const isRowSelected =
     selectedRow && row[schema.idField] === selectedRow[schema.idField];
-
   if (row.isLoading) {
     return (
       <Table.Row {...restProps}>
@@ -43,6 +40,9 @@ export default function CustomRow({
       </Table.Row>
     );
   }
+  console.log("====================================");
+  console.log(lookupSchema, "lookupSchema");
+  console.log("====================================");
   const expandedElement = expandedRows.includes(row) ? (
     <Table.Row>
       <Table.Cell colSpan={columns.length + 1}>
@@ -51,7 +51,7 @@ export default function CustomRow({
             row={row}
             parentSchemaParameters={schema?.dashboardFormSchemaParameters}
             includeSchemas={includeSchemas}
-            schema={subSchema}
+            schema={lookupSchema}
             fieldName={fieldName}
             title={title}
           />

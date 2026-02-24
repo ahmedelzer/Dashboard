@@ -28,6 +28,7 @@ export default function DataCellRender({
   const displayLabel = () => {
     if (
       data.parameterType === "button" ||
+      data.parameterType === "calculateTimes" ||
       data.parameterType === "nodeLongitudePoint"
     )
       return false;

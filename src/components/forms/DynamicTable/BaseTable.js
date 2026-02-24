@@ -316,9 +316,9 @@ function BaseTable({
   const [expandedRows, setExpandedRows] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
-  const [subSchema, setSubSchema] = useState(null);
   const [includeSchemas, setIncludeSchemas] = useState(null);
   const [fieldName, setFieldName] = useState("");
+  const [lookupSchema, setLookupSchema] = useState({});
   const [title, setTitle] = useState("");
   const [currentSkip, setCurrentSkip] = useState(1);
   const { _wsMessageTable, setWSMessageTable } = useWS();
@@ -369,35 +369,40 @@ function BaseTable({
 
   useEffect(() => {
     // Assuming schema[0].dashboardFormSchemaParameters is an array of parameters
-    const dynamicColumns =
-      schema?.dashboardFormSchemaParameters
-        .filter((column) => {
-          return (
-            !column.isIDField &&
-            !avoidColsTypes.find(
-              (columnType) => column.parameterType === columnType,
-            )
-          );
-        })
-        ?.map((param) => ({
-          name: param.parameterField,
-          title: param.lookupID
-            ? param.lookupDisplayField
-            : param.parameterTitel,
-          type: param.parameterType,
-          lookupID: param.lookupID,
-          isFilterOperation: param.isFilterOperation,
-          // isWithFlag: param.filedFlag,
-          getCellValue: (row) =>
-            row[
-              param.lookupID ? param.lookupDisplayField : param.parameterField
-            ],
-        })) || [];
-    setColumns([
-      ...dynamicColumns,
-      // haveAreaMap && areaMap,
-      // { name: "switchAction", title: "switch" },
-    ]);
+    console.log("====================================");
+    console.log(schema);
+    console.log("====================================");
+    if (schema?.dashboardFormSchemaParameters) {
+      const dynamicColumns =
+        schema?.dashboardFormSchemaParameters
+          .filter((column) => {
+            return (
+              !column.isIDField &&
+              !avoidColsTypes.find(
+                (columnType) => column.parameterType === columnType,
+              )
+            );
+          })
+          ?.map((param) => ({
+            name: param.parameterField,
+            title: param.lookupID
+              ? param.lookupDisplayField
+              : param.parameterTitel,
+            type: param.parameterType,
+            lookupID: param.lookupID,
+            isFilterOperation: param.isFilterOperation,
+            // isWithFlag: param.filedFlag,
+            getCellValue: (row) =>
+              row[
+                param.lookupID ? param.lookupDisplayField : param.parameterField
+              ],
+          })) || [];
+      setColumns([
+        ...dynamicColumns,
+        // haveAreaMap && areaMap,
+        // { name: "switchAction", title: "switch" },
+      ]);
+    }
   }, [schema]);
   //load data every render
   useEffect(() => {
@@ -578,14 +583,16 @@ function BaseTable({
       assetID: "5f78a506-f0f9-43f8-a705-9742c66afd47",
       productID: "5f78a506-f0f9-43f8-a705-9742c66afd47",
       creationDate: "2024-04-27T15:57:51.33",
+      assetPricePlan: "19622B91-0C4C-4990-927B-3C2D53983412",
       // streetName: "streetName",
       // drawPolygon
       streetName:
         '[{"lat":30.081033713894428,"lng":31.40208434429951},{"lat":30.081033713894428,"lng":31.404830926330767},{"lat":30.081033713894428,"lng":31.40826415386983},{"lat":30.08043954581447,"lng":31.41135405865498},{"lat":30.0798453741655,"lng":31.41478728619405},{"lat":30.079251198947592,"lng":31.41822051373311},{"lat":30.07806283780513,"lng":31.42096709576436},{"lat":30.076874462387376,"lng":31.42371367779561},{"lat":30.075686072694708,"lng":31.426116937072955},{"lat":30.073903461390955,"lng":31.42783355084248},{"lat":30.073012143695262,"lng":31.42920684185811},{"lat":30.071229484216918,"lng":31.430923455627642},{"lat":30.06855543478424,"lng":31.432296746643267},{"lat":30.066772695020685,"lng":31.43332671490498},{"lat":30.06528705402091,"lng":31.43332671490498},{"lat":30.063504255386075,"lng":31.43332671490498},{"lat":30.062018565328508,"lng":31.43195342388936},{"lat":30.060235707826237,"lng":31.430923455627642},{"lat":30.057561361370894,"lng":31.428863519104205},{"lat":30.055778423601065,"lng":31.427146905334666},{"lat":30.0536982889592,"lng":31.425086968811236},{"lat":30.05250962097339,"lng":31.42371367779561},{"lat":30.05102376592684,"lng":31.421653741272173},{"lat":30.049240710444277,"lng":31.418907159240923},{"lat":30.04805198895538,"lng":31.416160577209673},{"lat":30.047160438476183,"lng":31.413070672424517},{"lat":30.046863253199813,"lng":31.410324090393267},{"lat":30.046863253199813,"lng":31.40826415386983},{"lat":30.046863253199813,"lng":31.406204217346385},{"lat":30.047754806353982,"lng":31.40448760357686},{"lat":30.04864635148318,"lng":31.403114312561236},{"lat":30.0495378885873,"lng":31.40208434429951},{"lat":30.05102376592684,"lng":31.400711053283885},{"lat":30.05250962097339,"lng":31.399337762268267},{"lat":30.0536982889592,"lng":31.39830779400655},{"lat":30.054589780585005,"lng":31.397621148498736},{"lat":30.055481264184767,"lng":31.39727782574483},{"lat":30.05637273975831,"lng":31.39727782574483},{"lat":30.081033713894428,"lng":31.40208434429951}]',
       zoneName: "zoneName",
       locationLongitudePoint: 30,
-      locationLatitudePoint: 20,
-      postTitle: "ABOUT OUR COMPANY",
+      displayFile: 20,
+      assetSerialNumber: "ABOUT OUR COMPANY",
+
       postDescription:
         "Giem House is a general contractor founded in 2020, specialized in building retail spaces, restaurants, entertainment venues, and residential properties. We partner with clients to provide project management and construction services. Giem House has successfully partnered with and completed projects for residential project owners, as well as national and international developers and brands.\n\nWe provide comprehensive planning, coordination, and control of your project from start to finish. Giem House offers project management, risk management, quality assurance, and financial management to help accommodate and execute your vision.",
     },
@@ -650,7 +657,7 @@ function BaseTable({
               expandedRows={expandedRows}
               setExpandedRows={setExpandedRows}
               includeSchemas={includeSchemas}
-              subSchema={subSchema}
+              lookupSchema={lookupSchema}
               fieldName={fieldName}
               title={title}
               columns={columns}
@@ -662,12 +669,12 @@ function BaseTable({
             CustomDetailsCell({
               props,
               subSchemas,
-              setSubSchema,
               setFieldName,
               setTitle,
               toggleRowExpanded,
               specialActions,
               schema,
+              setLookupSchema,
             })
           }
         />

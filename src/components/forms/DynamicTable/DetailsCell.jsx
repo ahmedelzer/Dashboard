@@ -671,14 +671,20 @@ import LocationMap from "../../inputs/LocationMap";
 import { PolygonMapParameter } from "../../inputs";
 import firstColsFound from "../DynamicPopup/firstColsFound.json";
 import TypeFile from "../PartingFrom/TypeFile";
-import { publicImageURL } from "../../../request";
+import {
+  defaultProjectProxyRouteWithoutBaseURL,
+  publicImageURL,
+} from "../../../request";
 import DisplayIframe from "../../../utils/components/DisplayIframe";
 import WebsiteIcon from "../../../utils/components/WebsiteIcon";
 import PolygonForm from "../Polygon/PolygonForm";
+import { fetchData } from "../../hooks/APIsFunctions/useFetch";
+import GetSchemaUrl from "../../hooks/DashboardAPIs/GetSchemaUrl";
 
 /* -------------------------------------------------------------------------- */
 /*                              Small UI Parts                                 */
 /* -------------------------------------------------------------------------- */
+const lookupMap = new Map();
 
 const DetailsButton = ({ onClick }) => (
   <button className={detailsButtonStyle.button} onClick={onClick}>
@@ -792,16 +798,15 @@ const IconValueCell = ({ value, type }) => (
 /* -------------------------------------------------------------------------- */
 /*                              MAIN CELL                                      */
 /* -------------------------------------------------------------------------- */
-
 export const DetailsCell = ({
   props,
   subSchemas,
-  setSubSchema,
   setFieldName,
   setTitle,
   toggleRowExpanded,
   schema,
   specialActions,
+  setLookupSchema,
 }) => {
   const { column, row } = props;
   const { localization } = useContext(LanguageContext);
@@ -811,17 +816,31 @@ export const DetailsCell = ({
   const renderCell = () => {
     switch (column.type) {
       case "detailsCell": {
-        const sub = subSchemas?.find(
-          (s) => s.dashboardFormSchemaID === column.lookupID,
-        );
-        setSubSchema(sub);
-
+        // subSchemasMap.set([column.lookupID, sub]);
         return (
           <DetailsButton
-            onClick={() => {
+            onClick={async () => {
               setFieldName(column.name);
               setTitle(column.title);
               toggleRowExpanded(row);
+
+              let lookup = lookupMap.get(column.lookupID);
+
+              console.log(lookup, !lookup);
+
+              if (!lookup) {
+                const { data, error, isLoading } = await fetchData(
+                  GetSchemaUrl(column.lookupID),
+                  defaultProjectProxyRouteWithoutBaseURL,
+                );
+
+                // ✅ Correct way to set in Map
+                lookupMap.set(column.lookupID, data);
+
+                lookup = data;
+              }
+
+              setLookupSchema(lookup);
             }}
           />
         );

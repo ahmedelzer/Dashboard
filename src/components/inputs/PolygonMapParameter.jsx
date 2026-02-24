@@ -213,13 +213,13 @@ export default function PolygonMapParameter({
                 }
               }
             }
-
             const radius = maxDistance / 2 / 1000;
             const mappedValue = {
               [fieldsType.polygon]: data.polygon,
-              [fieldsType.centerLatitudePoint]: data.centerLat,
-              [fieldsType.centerLongitudePoint]: data.centerLng,
-              [fieldsType.cityISO_CodeValue]: data.countryIsoCode,
+              [fieldsType.centerLatitudePoint]: `${data.centerLat}`,
+              [fieldsType.centerLongitudePoint]: `${data.centerLng}`,
+              [fieldsType.cityISO_CodeValue]:
+                data?.raw?.address?.["ISO3166-2-lvl4"],
               [fieldsType.description]: data.fullAddress,
               [fieldsType.areaName]: data.city,
               [fieldsType.radius]: radius, // if you calculate later

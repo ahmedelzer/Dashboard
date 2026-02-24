@@ -17,6 +17,7 @@ import {
   ButtonInput,
   PolygonMapParameter,
   IframeParameter,
+  InstallmentParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
@@ -52,6 +53,12 @@ export function GetInputComponent(type) {
       return TimeDuringParameter;
     case "lookup":
       return LookupInput;
+    case "calculateMaxValue":
+    case "calculateTimes":
+    case "calculateValue":
+    case "calculateAccatlyValue":
+      // case "calculateAccatlyValue":
+      return InstallmentParameter;
     case "nodeLongitudePoint":
       return DirectionButtonParameter;
     // case "drawPolygon":

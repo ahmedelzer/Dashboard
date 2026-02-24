@@ -22,6 +22,7 @@ class TextParameter extends BaseInput {
       case "float" || "numeric":
         return "number";
       case "numeric":
+      case "percage":
         return "number";
       default:
         return parameterType;
@@ -51,6 +52,8 @@ class TextParameter extends BaseInput {
         id={fieldName}
         title={title}
         readOnly={!enable}
+        min={type === "percage" && 0}
+        max={type === "percage" && 100}
         {...props}
         step={this.setParameterTypeStep(type)}
       />

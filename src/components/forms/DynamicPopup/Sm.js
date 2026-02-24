@@ -20,6 +20,7 @@ export function Sm(param) {
     case "mapLongitudePoint":
     case "timeDuring": //input for days and hours amd minutes then send total minutes
     case "theDurationPerMinuites":
+    case "calculateTimes":
     case "lookup":
     case "addingLookup":
     case "barcodeInput":

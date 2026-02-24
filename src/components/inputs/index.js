@@ -15,4 +15,5 @@ export { default as BarcodeInput } from "./BarcodeInput";
 export { default as DirectionButtonParameter } from "./DirectionButtonParameter";
 export { default as IframeParameter } from "./IframeParameter";
 export { default as PolygonMapParameter } from "./PolygonMapParameter";
+export { default as InstallmentParameter } from "./InstallmentParameter";
 export { default as ButtonInput } from "./ButtonInput";

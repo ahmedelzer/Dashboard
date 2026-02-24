@@ -1,1 +1,11 @@
-["rate", "orders", "reviews", "likes", "dislikes"]
+[
+  "rate",
+  "orders",
+  "reviews",
+  "likes",
+  "dislikes",
+  "calculateTimes",
+  "calculateValue",
+  "calculateAccatlyValue",
+  "calculateMaxValue"
+]

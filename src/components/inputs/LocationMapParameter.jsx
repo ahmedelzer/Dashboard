@@ -55,29 +55,29 @@ function LocationMapParameter({ ...props }) {
   };
   const { getAction, postAction, putAction, deleteAction, error } =
     GetActionsFromSchema(findServerContainer);
-
   const addNewPolygon = async (e) => {
-    // 1. Stop the default browser submission immediately
+    // Prevent any bubbling to the parent form
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    const form = e.target;
-    const formData = new FormData(form);
-    const formJson = Object.fromEntries(formData.entries());
-
     setDisable(true);
     try {
+      // Combine the location data and any polygon data into your request object
+      const payload = { ...newPolygon };
+
       const request = await onApply(
-        formJson,
+        payload, // Pass the object directly
         null,
         true,
         postAction,
         findServerContainer.projectProxyRoute,
       );
+
       if (request.success === true) {
         console.log("Success:", request);
+        // Optional: Clear polygon state or show success toast
       } else {
         setResult(request);
       }
@@ -101,27 +101,25 @@ function LocationMapParameter({ ...props }) {
         setClickAction={setClickAction}
         setNewPolygon={setNewPolygon}
       />
-      {findServerContainer &&
-        clickAction === "polygon" &&
-        props.formSchemaParameters
-          .filter(
-            (i) =>
-              i.parameterType.startsWith("areaMap") ||
-              i.parameterType.startsWith("map"),
-          )
-          .map((pram) => (
-            <input
-              type="hidden"
-              name={pram.parameterField}
-              value={location[pram.parameterField]}
-            />
-          ))}
+      {props.formSchemaParameters
+        .filter(
+          (i) =>
+            i.parameterType.startsWith("areaMap") ||
+            i.parameterType.startsWith("map"),
+        )
+        .map((pram) => (
+          <input
+            type="hidden"
+            name={pram.parameterField}
+            value={location[pram.parameterField]}
+          />
+        ))}
 
       <div className="mt-6 pt-3">
         <form onSubmit={addNewPolygon} action="">
           <CollapsibleSection title={localization.inputs.locationMap.mapInputs}>
             <FormContainer
-              errorResult={{}}
+              errorResult={result}
               key={JSON.stringify({ ...location, ...newPolygon })}
               returnRow={() => {}}
               row={{ ...location, ...newPolygon }}
@@ -131,7 +129,8 @@ function LocationMapParameter({ ...props }) {
               <div className={panelActionsStyle.containerWithButton}>
                 <div className={panelActionsStyle.buttonContainer}>
                   <Button
-                    type="submit"
+                    type="button"
+                    onClick={addNewPolygon}
                     disabled={disable}
                     className="pop flex items-center gap-2"
                   >

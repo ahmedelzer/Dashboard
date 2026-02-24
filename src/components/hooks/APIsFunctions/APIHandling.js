@@ -2,9 +2,12 @@ import {
   GetProjectUrl,
   languageID,
   languageName,
+  localization,
   SetHeaders,
+  SetRedirect,
   token,
 } from "../../../request";
+import { redirectManager } from "../../../utils/operation/redirectManager";
 export default async function APIHandling(url, methodType, sendBody) {
   var myHeaders = new Headers();
   for (const [key, value] of Object.entries(SetHeaders())) {
@@ -38,10 +41,17 @@ export default async function APIHandling(url, methodType, sendBody) {
         success: false,
         error: result, // You can customize this based on your API response structure
       };
-      if (result.code === 401) {
+      if (result.status === 401) {
         //todo handle error message
-        // RedirectToLogin(navigate, result);
-        return;
+        redirectManager.set({
+          route: "login",
+          mess: localization?.login?.loginNotify,
+        });
+      } else if (result.status === 500) {
+        redirectManager.set({
+          route: "serverError",
+          mess: "",
+        });
       }
       return errorResponse;
     }
