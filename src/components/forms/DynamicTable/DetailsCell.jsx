@@ -859,38 +859,19 @@ export const DetailsCell = ({
 
       case "mapLongitudePoint":
       case "areaMapLongitudePoint":
+        const findServerContainer = subSchemas.find(
+          (s) => s.schemaType === "ServerPolygonContainer",
+        );
         return (
           <MapModalCell label={localization.table.areaColumnTitle}>
             <LocationMap
               location={row}
               fields={schema?.dashboardFormSchemaParameters}
               clickable={false}
+              findServerContainer={findServerContainer}
               haveRadius={props.type === "areaMapLongitudePoint"}
               subSchemas={subSchemas}
             />
-          </MapModalCell>
-        );
-
-      case "drawPolygon":
-        const subSchema = subSchemas?.find(
-          (s) => s.dashboardFormSchemaID === column.lookupID,
-        );
-        const findServerContainer = subSchemas?.filter(
-          (schema) => schema.schemaType === "ServerPolygonContainer",
-        );
-        return (
-          <MapModalCell label={localization.table.areaColumnTitle}>
-            <PolygonForm
-              schema={subSchema}
-              serverSchema={findServerContainer}
-            />
-            {/* <PolygonMapParameter
-              enable={false}
-              value={row[column.name]}
-              setSubSchema={sub}
-              includedSchema={findServerContainer}
-              fields={schema?.dashboardFormSchemaParameters}
-            /> */}
           </MapModalCell>
         );
 

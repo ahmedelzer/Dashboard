@@ -114,11 +114,13 @@ const LocationMap = ({
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {clickable && clickAction === "pin" && <MapClickHandler />}
-        <PolygonForm
-          schema={findServerContainer}
-          enable={clickAction === "polygon"}
-          setNewPolygon={setNewPolygon}
-        />
+        {findServerContainer && (
+          <PolygonForm
+            schema={findServerContainer}
+            enable={clickAction === "polygon"}
+            setNewPolygon={setNewPolygon}
+          />
+        )}
         {location && (
           <>
             <Marker position={[lat, lng]}>
