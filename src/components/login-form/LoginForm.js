@@ -19,6 +19,7 @@ import "./LoginForm.scss";
 import schema from "./Schemas/LoginSchema/LoginFormSchema.json";
 import schemaActions from "./Schemas/LoginSchema/LoginFormSchemaActions.json";
 import { LanguageContext } from "../../contexts/Language";
+import { setToken } from "../../request";
 
 export default function LoginForm() {
   const { setUser, signIn } = useAuth();
@@ -69,9 +70,10 @@ export default function LoginForm() {
           const compressed = LZString.compressToEncodedURIComponent(
             apply.data.token,
           );
-
-          Cookies.set("user", compressed);
         }
+
+        setToken(apply.data.token);
+
         const user = {
           avatarUrl:
             "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",

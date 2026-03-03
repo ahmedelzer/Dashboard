@@ -23,6 +23,9 @@ function LocationMapParameter({ ...props }) {
   // );
   useEffect(() => {
     if (navigator.geolocation && !props.value) {
+      console.log("====================================");
+      console.log(props.value, navigator.geolocation, "innnn");
+      console.log("====================================");
       navigator.geolocation.getCurrentPosition((pos) => {
         const { latitude, longitude } = pos.coords;
         setLocation({ latitude, longitude });
@@ -77,6 +80,8 @@ function LocationMapParameter({ ...props }) {
 
       if (request.success === true) {
         console.log("Success:", request);
+        // set
+        setNewPolygon([]);
         // Optional: Clear polygon state or show success toast
       } else {
         setResult(request);

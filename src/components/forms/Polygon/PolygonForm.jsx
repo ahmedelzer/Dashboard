@@ -172,9 +172,6 @@ function PolygonForm({ schema, enable, setNewPolygon }) {
         fieldsType={fieldsType}
         setNewPolygon={setNewPolygon}
         setBoundsData={setBoundsData}
-        // setSubSchema={sub}
-        // includedSchema={findServerContainer}
-        // fields={schema?.dashboardFormSchemaParameters}
       />
     </div>
   );

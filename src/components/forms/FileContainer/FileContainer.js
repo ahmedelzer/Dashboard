@@ -71,7 +71,10 @@ function FileContainer({
   function handleUpload(postAction, containerSelectedFiles, route) {
     setSelectPostAction(postAction);
     if (containerSelectedFiles.length > 0) {
-      setSelectedFilesContext(containerSelectedFiles);
+      const mappedfiles = containerSelectedFiles.map((file) => {
+        return { ...file, ...row };
+      });
+      setSelectedFilesContext(mappedfiles);
       setProxyRoute(route);
     }
     setOpen(!isSubset);
@@ -170,7 +173,7 @@ function FileContainer({
         </div>
       </div>
       <DuringTransactionContainer
-        tableSchema={schema.dashboardFormSchemaParameters}
+        tableSchema={schema}
         TransformDone={RefreshFiles}
         automated={automated}
         selectionContext={selectedFilesContext}

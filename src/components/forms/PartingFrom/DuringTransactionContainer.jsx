@@ -84,7 +84,7 @@ function DuringTransactionContainer({
       true,
       action,
       proxyRoute,
-      tableSchema.dashboardFormSchemaParameters,
+      // tableSchema.dashboardFormSchemaParameters,
     );
     setResult(apply);
     if (apply && apply.success === true) {

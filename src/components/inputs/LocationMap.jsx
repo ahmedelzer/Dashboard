@@ -53,8 +53,8 @@ const LocationMap = ({
 
   const [radius, setRadius] = useState(location[radiusField] || 100);
 
-  const lat = +location[latitudeField] || 20; // Default latitude
-  const lng = +location[longitudeField] || 24; // Default longitude
+  const lat = +location[latitudeField] || 30.16768827811798; // Default latitude
+  const lng = +location[longitudeField] || 31.348134877841108; // Default longitude
 
   const MapClickHandler = () => {
     useMapEvents({
@@ -111,6 +111,8 @@ const LocationMap = ({
         zoom={13}
         className={locationMap.mapContainer}
         attributionControl={false}
+        touchZoom={true} // enable pinch zoom
+        scrollWheelZoom={true}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {clickable && clickAction === "pin" && <MapClickHandler />}

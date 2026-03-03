@@ -2,12 +2,17 @@ import axios from "axios";
 import LZString from "lz-string";
 
 import Cookies from "js-cookie";
+export var storeToken;
+export function setToken(_storeToken) {
+  storeToken = _storeToken;
+  localStorage.setItem("user", _storeToken);
+}
 export function GetToken() {
   const compressed = Cookies.get("user");
 
   return compressed
     ? LZString.decompressFromEncodedURIComponent(compressed)
-    : null;
+    : (storeToken ?? localStorage.getItem("user"));
 }
 // export const baseURL = "https://maingatewayapi.ihs-solutions.com:8000";
 export const domainURL = "ihs-solutions.com";
@@ -50,7 +55,7 @@ export function SetHeaders() {
   const headers = {
     languageName: encodeURIComponent(window.localStorage.getItem("language")),
     "Content-Type": "application/json",
-    clientID: "d3804355-a09c-46ec-910c-dc024a4bae1b",
+    // clientID: "d3804355-a09c-46ec-910c-dc024a4bae1b",
     // clientID: "facebookClient",
     // "Access-Control-Allow-Credentials": "true",
     // "Access-Control-Allow-Origin": "*",
