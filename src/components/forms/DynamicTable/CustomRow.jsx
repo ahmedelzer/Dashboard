@@ -40,9 +40,6 @@ export default function CustomRow({
       </Table.Row>
     );
   }
-  console.log("====================================");
-  console.log(lookupSchema, "lookupSchema");
-  console.log("====================================");
   const expandedElement = expandedRows.includes(row) ? (
     <Table.Row>
       <Table.Cell colSpan={columns.length + 1}>
@@ -59,7 +56,6 @@ export default function CustomRow({
       </Table.Cell>
     </Table.Row>
   ) : null;
-
   if (selection) {
     return (
       <Table.Row

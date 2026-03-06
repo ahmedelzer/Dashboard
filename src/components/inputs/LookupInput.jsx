@@ -27,7 +27,7 @@ class LookupInput extends BaseInput {
     const { data, error, isLoading } = await fetchData(
       `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${this.props.lookupID}`,
       defaultProjectProxyRoute,
-      options
+      options,
     );
 
     this.setState({
@@ -52,7 +52,7 @@ class LookupInput extends BaseInput {
     console.log(externalRow(), "externalRow");
 
     const panelContent = (
-      <div className="drop-list max-w-[450px] max-h-[400px] overflow-auto">
+      <div className="drop-list w-full max-h-[400px] overflow-auto">
         {data && (
           <Table
             schema={data}

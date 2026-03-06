@@ -24,19 +24,19 @@ const DynamicTable = ({
   PopupComponent = false,
   schemaActions = false,
   refreshData,
-  rowDetails = false,
+  rowDetails = {},
   subSchemas,
   selectedRow,
 }) => {
   const {
-    data: SchemaActions,
+    data: _schemaActions,
     error,
     isLoading,
   } = useFetch(
     GetSchemaActionsUrl(schema.dashboardFormSchemaID),
     defaultProjectProxyRouteWithoutBaseURL,
   );
-  schemaActions = schemaActions ? schemaActions : SchemaActions;
+  schemaActions = schemaActions ? schemaActions : _schemaActions;
   const {
     getAction,
     postAction,
@@ -44,7 +44,7 @@ const DynamicTable = ({
     deleteAction,
     wsAction,
     specialActions,
-  } = GetActionsFromSchemaAction(schemaActions);
+  } = GetActionsFromSchemaAction(_schemaActions);
 
   const PopupComponentTable = ({ state, dispatch }) => {
     return (
@@ -54,6 +54,7 @@ const DynamicTable = ({
         postAction={postAction}
         state={state}
         dispatch={dispatch}
+        rowDetails={rowDetails}
         // setResult={setResult}
         // result={result}
         proxyRoute={schema.projectProxyRoute}

@@ -13,11 +13,13 @@ import Tree from "../../components/forms/DynamicTree/Tree";
 
 export default function DynamicTree() {
   // const { dashboardItemID } = useParams();
-  const dashboardItemID = ExtractIDFromPath(window.location.pathname);
+  const dashboardItemID =
+    "dcf7aa71-60d1-4071-9086-51eb67b01a77" ||
+    ExtractIDFromPath(window.location.pathname);
   const { Right } = useContext(LanguageContext);
   const { data, error, isLoading } = useFetch(
     GetFormSchema(dashboardItemID),
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
 
   // const rightSchema = TransFormSchema.find((schema) => schema.isMainSchema); //baseTable
@@ -32,18 +34,16 @@ export default function DynamicTree() {
   }
   const mainSchema = data?.find((item) => item.isMainSchema);
   const subSchemas = data?.filter((item) => !item.isMainSchema);
-  function SelectForm(schema, subSchemas) {
-    if (schema.schemaType === "Table") {
-      return (
-        <Tree
-          key={schema.idField}
-          schema={schema}
-          isSearchingTable={false}
-          subSchemas={subSchemas}
-        />
-      );
-    }
-  }
+  console.log(mainSchema, "mainSchema from dynamicTree");
 
-  return <div>{data && SelectForm(mainSchema, subSchemas)}</div>;
+  return (
+    <div>
+      <Tree
+        key={mainSchema.idField}
+        schema={mainSchema}
+        isSearchingTable={false}
+        subSchemas={subSchemas}
+      />
+    </div>
+  );
 }

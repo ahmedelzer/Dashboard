@@ -14,13 +14,15 @@ export default function DataCellRender({
   //todo make lookup in data.parameterType
   const inputKey = () => {
     if (
-      data.parameterType === "detailsCell" ||
-      !data.lookupID ||
-      data.parameterType === "addingLookup"
+      data.parameterType !== "detailsCell" &&
+      data.parameterType !== "checkbox" &&
+      data.parameterType !== "radio" &&
+      data.lookupID &&
+      data.parameterType !== "addingLookup"
     ) {
-      return data.parameterType;
-    } else {
       return "lookup";
+    } else {
+      return data.parameterType;
     }
   };
 

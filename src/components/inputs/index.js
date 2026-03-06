@@ -16,4 +16,6 @@ export { default as DirectionButtonParameter } from "./DirectionButtonParameter"
 export { default as IframeParameter } from "./IframeParameter";
 export { default as PolygonMapParameter } from "./PolygonMapParameter";
 export { default as InstallmentParameter } from "./InstallmentParameter";
+export { default as RadioParameter } from "./RadioParameter";
+export { default as CheckBoxParameter } from "./CheckBoxParameter";
 export { default as ButtonInput } from "./ButtonInput";

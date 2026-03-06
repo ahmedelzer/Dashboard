@@ -3,6 +3,10 @@ import Table from "../../../components/forms/DynamicTable/Table";
 import testSchema from "./testSchema.json";
 import SelectForm from "../SelectForm";
 import FormContainer from "../DynamicPopup/FormContainer";
+import Form from "../../../contexts/Form";
+import PartitionFrom from "../PartingFrom/PartionFrom";
+import DynamicTree from "../../../pages/dynamicTree/DynamicTree";
+import Tree from "../DynamicTree/Tree";
 const Test = () => {
   // // Define the initial tree structure with `shortName` as the parent
   // const [treeData, setTreeData] = useState([
@@ -586,70 +590,74 @@ const Test = () => {
     //   row={{}}
     //   tableSchema={mainSchema}
     // />
-    <SelectForm
-      key={mainSchema.idField}
-      schema={mainSchema}
-      fieldName={"displayFile"}
-      includeSchemas={[
-        {
-          dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
-          schemaType: "ServerFilesContainer",
-          idField: "fileID",
-          dashboardFormSchemaInfoDTOView: {
-            dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
-            schemaHeader: "Archive Files",
-            addingHeader: "Add Archive File",
-            editingHeader: "Edit Archive File",
-          },
-          dashboardFormSchemaParameters: [
-            {
-              dashboardFormSchemaParameterID:
-                "4460b03b-d440-45ff-8ce5-cd517376112c",
-              dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
-              isEnable: false,
-              parameterType: "text",
-              parameterField: "fileID",
-              parameterTitel: "File ID",
-              parameterLookupTitel: "File ID",
-              isIDField: true,
-              lookupID: null,
-              lookupReturnField: null,
-              lookupDisplayField: null,
-              indexNumber: 0,
-              isFilterOperation: true,
-              dashboardFormSchemaParameterDependencies: [],
-            },
-            {
-              dashboardFormSchemaParameterID:
-                "6d9cb789-211a-44ce-ae7f-8a259d716e52",
-              dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
-              isEnable: true,
-              parameterType: "image",
-              parameterField: "fileContent",
-              parameterTitel: "File Content",
-              parameterLookupTitel: "File Content",
-              isIDField: false,
-              lookupID: null,
-              lookupReturnField: null,
-              lookupDisplayField: null,
-              indexNumber: 1,
-              isFilterOperation: true,
-              dashboardFormSchemaParameterDependencies: [],
-            },
-          ],
-          projectProxyRoute: "BrandingMartArchiving",
-          isMainSchema: false,
-          dataSourceName: "",
-          propertyName: null,
-          indexNumber: 0,
-        },
-      ]}
-      parentSchemaParameters={mainSchema.dashboardFormSchemaParameters}
-      row={{}}
-      title={"test"}
-      isSearchingTable={false}
-      subSchemas={subSchemas}
-    />
+    // <SelectForm
+    //   key={mainSchema.idField}
+    //   schema={mainSchema}
+    //   fieldName={"displayFile"}
+    //   includeSchemas={[
+    //     {
+    //       dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    //       schemaType: "ServerFilesContainer",
+    //       idField: "fileID",
+    //       dashboardFormSchemaInfoDTOView: {
+    //         dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    //         schemaHeader: "Archive Files",
+    //         addingHeader: "Add Archive File",
+    //         editingHeader: "Edit Archive File",
+    //       },
+    //       dashboardFormSchemaParameters: [
+    //         {
+    //           dashboardFormSchemaParameterID:
+    //             "4460b03b-d440-45ff-8ce5-cd517376112c",
+    //           dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    //           isEnable: false,
+    //           parameterType: "text",
+    //           parameterField: "fileID",
+    //           parameterTitel: "File ID",
+    //           parameterLookupTitel: "File ID",
+    //           isIDField: true,
+    //           lookupID: null,
+    //           lookupReturnField: null,
+    //           lookupDisplayField: null,
+    //           indexNumber: 0,
+    //           isFilterOperation: true,
+    //           dashboardFormSchemaParameterDependencies: [],
+    //         },
+    //         {
+    //           dashboardFormSchemaParameterID:
+    //             "6d9cb789-211a-44ce-ae7f-8a259d716e52",
+    //           dashboardFormSchemaID: "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    //           isEnable: true,
+    //           parameterType: "image",
+    //           parameterField: "fileContent",
+    //           parameterTitel: "File Content",
+    //           parameterLookupTitel: "File Content",
+    //           isIDField: false,
+    //           lookupID: null,
+    //           lookupReturnField: null,
+    //           lookupDisplayField: null,
+    //           indexNumber: 1,
+    //           isFilterOperation: true,
+    //           dashboardFormSchemaParameterDependencies: [],
+    //         },
+    //       ],
+    //       projectProxyRoute: "BrandingMartArchiving",
+    //       isMainSchema: false,
+    //       dataSourceName: "",
+    //       propertyName: null,
+    //       indexNumber: 0,
+    //     },
+    //   ]}
+    //   parentSchemaParameters={mainSchema.dashboardFormSchemaParameters}
+    //   row={{}}
+    //   title={"test"}
+    //   isSearchingTable={false}
+    //   subSchemas={subSchemas}
+    // />
+    // <Form schemas={testSchema}>
+    //   <PartitionFrom Schemas={testSchema} />
+    // </Form>
+    <DynamicTree />
   );
 };
 

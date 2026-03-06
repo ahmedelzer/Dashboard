@@ -2,6 +2,7 @@ import CompainedLiveTable from "./CompainedLiveTable";
 import { DependenciesCategory } from "./DependenciesCategory";
 import FormComponent from "./FormComponent";
 import LiveFormPartions from "./LiveFormPartions";
+import Table from "./../DynamicTable/Table";
 
 export function SchemaType({
   Schema,
@@ -9,7 +10,11 @@ export function SchemaType({
   setEditedgRow,
   updatedData,
   actions,
+  selectedRow,
 }) {
+  console.log("====================================");
+  console.log(editedRow, selectedRow, "editedRow");
+  console.log("====================================");
   switch (Schema.schemaType) {
     case "LiveForm":
       return (
@@ -49,6 +54,16 @@ export function SchemaType({
           row={updatedData}
           // errorResult={result}
           returnRow={() => {}}
+        />
+      );
+    case "Table":
+      return (
+        <Table
+          key={Schema.idField}
+          schema={Schema}
+          isSearchingTable={false}
+          rowDetails={selectedRow}
+          schemaActions={[]}
         />
       );
     default:

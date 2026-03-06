@@ -9,7 +9,7 @@ import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
 import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
 import testSchemaAction from "../Test/testSchemaAction.json";
 function FormComponent({ tableSchema, ...props }) {
-  const { mainSchema, selectedRow, dependenceRow, setDependenceRow } =
+  const { mainSchema, selectedRow, dependenceRow, setSelectedRow } =
     useContext(FormContext);
   const {
     getAction,
@@ -97,7 +97,7 @@ function FormComponent({ tableSchema, ...props }) {
         <FormContainer
           tableSchema={tableSchema}
           specialActions={specialActions}
-          setDependenceRow={setDependenceRow}
+          setDependenceRow={setSelectedRow}
           {...props}
           row={formRow}
         />

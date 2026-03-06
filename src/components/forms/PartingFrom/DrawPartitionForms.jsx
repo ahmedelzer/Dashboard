@@ -11,15 +11,8 @@ import { ConnectToWS } from "../../../utils/WS/ConnectToWS";
 import { WSMessageHandler } from "../../../utils/WS/handleWSMessage";
 
 function DrawPartitionForms({ Schemas }) {
-  const {
-    getAction,
-    selectedRow,
-    setSelectedRow,
-    mainSchema,
-    subSchemas,
-    dependenceRow,
-    setDependenceRow,
-  } = useContext(FormContext);
+  const { getAction, selectedRow, setSelectedRow, mainSchema, subSchemas } =
+    useContext(FormContext);
 
   // const [data, setData] = useState([{ invoice: {}, invoiceItems: [] }]);
   const [mainID, setMainID] = useState("");
@@ -55,10 +48,10 @@ function DrawPartitionForms({ Schemas }) {
         // WSClient.connect();
         WSClient.ReciveMessages((datasources) => {
           let schemaDataSource = Schemas?.map(
-            (data) => datasources[0][data?.dataSourceName]
+            (data) => datasources[0][data?.dataSourceName],
           );
 
-          setDependenceRow(schemaDataSource);
+          setSelectedRow(schemaDataSource);
         });
       }
     };
@@ -71,7 +64,12 @@ function DrawPartitionForms({ Schemas }) {
 
   return (
     <div>
-      {mainSchema && <DrawPartionFrom mainID={mainID} Schema={mainSchema} />}
+      {mainSchema && (
+        <DrawPartionFrom
+          mainID={mainID}
+          Schema={{ ...mainSchema, schemaType: "Form" }}
+        />
+      )}
       {subSchemas.length > 0 &&
         subSchemas.map((Schema) => (
           <div key={Schema?.dashboardFormSchemaID}>

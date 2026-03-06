@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 
 import "@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-import { defaultProjectProxyRoute } from "../../../request";
+import {
+  defaultProjectProxyRoute,
+  defaultProjectProxyRouteWithoutAPI,
+  defaultProjectProxyRouteWithoutBaseURL,
+} from "../../../request";
 import useFetch from "../../hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../hooks/DashboardAPIs/GetSchemaActionsUrl";
 import BaseTree from "./BaseTree";
@@ -25,20 +29,6 @@ const Tree = ({
   rowDetails = false,
   subSchemas,
 }) => {
-  const [result, setResult] = useState({});
-
-  const {
-    data: SchemaActions,
-    error,
-    isLoading,
-  } = useFetch(
-    GetSchemaActionsUrl(schema.dashboardFormSchemaID),
-    schema.projectProxyRoute
-  );
-  schemaActions = schemaActions ? schemaActions : SchemaActions;
-  const { getAction, postAction, putAction, deleteAction } =
-    GetActionsFromSchemaAction(schemaActions);
-
   //   const PopupComponentTable = ({ state }) => {
   //     return (
   //       <PopupEditing
@@ -54,6 +44,7 @@ const Tree = ({
   //       />
   //     );
   //   };
+  console.log(schema, "mainSchema from tree");
 
   return (
     <div>
@@ -61,15 +52,15 @@ const Tree = ({
         key={schema.idField}
         schema={schema}
         selectionRow={selectionRow}
-        addMessage={addMessage && postAction}
-        editMessage={editMessage && putAction}
-        deleteMessage={deleteMessage && deleteAction}
+        // addMessage={addMessage && postAction}
+        // editMessage={editMessage && putAction}
+        // deleteMessage={deleteMessage && deleteAction}
         isSearchingTable={isSearchingTable}
         setSelectedRow={setSelectedRow}
         paging={paging}
         setPanelOpen={setPanelOpen}
         // popupComponent={PopupComponent ? PopupComponent : PopupComponentTable}
-        getAction={getAction}
+        // getAction={getAction}
         selection={selection}
         setSelection={setSelection}
         addSelectedList={addSelectedList}

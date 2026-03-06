@@ -46,7 +46,7 @@ export const stylesWaringPop = {
 export const panelActionsStyle = {
   containerWithButton: "w-full relative mt-12",
   buttonContainer: "flex justify-end items-center absolute bottom-0 right-0",
-  button: "pop mr-2",
+  button: "pop me-2",
 };
 export const buttonContainerStyle = {
   container: "flex justify-end",

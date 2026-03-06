@@ -28,6 +28,20 @@
       "lookupReturnField": null,
       "lookupDisplayField": null,
       "indexNumber": 0
+    },
+    {
+      "dashboardFormSchemaParameterID": "38ad2bc8-7d4f-46a5-9a59-8a2104e960f4",
+      "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
+      "isEnable": true,
+      "parameterType": "radio",
+      "parameterField": "radio",
+      "parameterTitel": "radio",
+      "isIDField": false,
+      "values": ["test1", "test2", "test3"],
+      "lookupID": "C595C97B-584E-48BE-A059-E1019CB8D060",
+      "lookupReturnField": "id",
+      "lookupDisplayField": "test",
+      "indexNumber": 0
     }
   ],
 

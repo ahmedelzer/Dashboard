@@ -82,26 +82,26 @@ function PartitionFrom({ Schemas, AdditionForm }) {
   //     // Assuming cancelAddedRows is a function to cancel added rows
   //   }
   // };
-  useEffect(() => {
-    const GetDataSources = () => {
-      if (mainID) {
-        WSClient = new WSclass(`${BuildWSURL(getAction, mainID)}`);
-        // WSClient.connect();
-        WSClient.ReciveMessages((datasources) => {
-          let schemaDataSource = Schemas?.map(
-            (data) => datasources[0][data?.dataSourceName]
-          );
+  // useEffect(() => {
+  //   const GetDataSources = () => {
+  //     if (mainID) {
+  //       WSClient = new WSclass(`${BuildWSURL(getAction, mainID)}`);
+  //       // WSClient.connect();
+  //       WSClient.ReciveMessages((datasources) => {
+  //         let schemaDataSource = Schemas?.map(
+  //           (data) => datasources[0][data?.dataSourceName]
+  //         );
 
-          setData(schemaDataSource);
-        });
-      }
-    };
+  //         setData(schemaDataSource);
+  //       });
+  //     }
+  //   };
 
-    if (selectedRow) {
-      setMainID(selectedRow[mainSchema.idField]);
-      GetDataSources();
-    }
-  }, [panelOpen]);
+  //   if (selectedRow) {
+  //     setMainID(selectedRow[mainSchema.idField]);
+  //     GetDataSources();
+  //   }
+  // }, [panelOpen]);
   return (
     <div>
       <DrawPartitionForms Schemas={Schemas} />

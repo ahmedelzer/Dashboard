@@ -25,6 +25,7 @@ const PopupEditing = React.memo(
     // result,
     schema,
     proxyRoute,
+    rowDetails,
     specialActions,
   }) => {
     const [result, setResult] = useState({}); //that is make re-render to the rows
@@ -103,6 +104,7 @@ const PopupEditing = React.memo(
                 );
 
                 const formJson = {
+                  ...rowDetails,
                   ...editedRow,
                   ...fromEntries,
                 };

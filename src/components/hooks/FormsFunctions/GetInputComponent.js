@@ -18,6 +18,8 @@ import {
   PolygonMapParameter,
   IframeParameter,
   InstallmentParameter,
+  RadioParameter,
+  CheckBoxParameter,
 } from "../../inputs";
 export function GetInputComponent(type) {
   if (type.startsWith("lookupLocalization:")) {
@@ -26,7 +28,6 @@ export function GetInputComponent(type) {
   // else if(type.startsWith("lookupDependents:")){
   //   return SelectParameter;
   // }
-
   switch (type) {
     case "text":
     case "float":
@@ -65,7 +66,11 @@ export function GetInputComponent(type) {
     //   return PolygonMapParameter;
     case "linkView":
       return IframeParameter;
+    case "checkbox":
+      return CheckBoxParameter;
 
+    case "radio":
+      return RadioParameter;
     case "scanInput":
       return BarcodeInput;
     case "button":
